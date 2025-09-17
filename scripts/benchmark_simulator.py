@@ -44,6 +44,16 @@ LAUNCH_CONFIGS = {
             "robot:=rbwatcher", "robot_model:=rbwatcher"
         ],
         "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"]
+    },
+    "isaac_sim": {
+        "LAUNCH_SIMULATOR_CMD": [
+            "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
+        ],
+        "LAUNCH_ROBOT_CMD": [
+            "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
+            "robot:=rbwatcher", "robot_model:=rbwatcher"
+        ],
+        "NODES_TO_KILL": ["rviz2", "gz"]
     }
 }
 

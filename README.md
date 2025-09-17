@@ -16,8 +16,10 @@ ros2 run..
 
 ### Isaac Sim
 
+
+Requirements: `isaac_sim.sh` located in `$HOME/isaac_sim`
 ```
-./isaac-sim.sh --exec /home/robotnik/rvasquez/RB-WATCHER/load_usd_and_run.py
+ros2 launch isaac_sim isaac_sim_complete.launch.py
 ```
 
 ### Unity

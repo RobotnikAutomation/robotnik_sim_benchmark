@@ -11,7 +11,7 @@ git clone https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
 ```
 
 
-### Gazebo
+### 1.1 Gazebo
 
 install vcstool
 ```
@@ -51,13 +51,13 @@ source install/setup.bash
 ros2 run...
 ```
 
-### Webots
+### 1.2 Webots
 
 ```
 ros2 run..
 ```
 
-### Isaac Sim
+### 1.3 Isaac Sim
 
 
 Requirements: `isaac_sim.sh` located in `$HOME/isaac_sim`
@@ -65,7 +65,7 @@ Requirements: `isaac_sim.sh` located in `$HOME/isaac_sim`
 ros2 launch isaac_sim isaac_sim_complete.launch.py
 ```
 
-### Unity
+### 1.4 Unity
 
 ```
 ./unity.sh...
@@ -73,6 +73,23 @@ ros2 launch isaac_sim isaac_sim_complete.launch.py
 
 ## 2. Benchmark
 
+Go to benchmark repository:
+
 ```
-.//robotnik_benchmark.sh...
+cd ~/benchmark_ws/src/robotnik_sim_benchmark/scripts
+```
+
+### 2.1 Gazebo
+Run `gazebo_harmonic` benchmark:
+
+```
+python3 benchmark_simulator.py gazebo_harmonic
+```
+
+### 2.3 Isaac Sim
+
+Run `isaac_sim` benchmark 
+
+```
+python3 benchmark_simulator.py isaac_sim
 ```

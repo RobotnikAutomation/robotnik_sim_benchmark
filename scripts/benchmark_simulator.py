@@ -68,10 +68,22 @@ LAUNCH_CONFIGS = {
     },
 }
 
+CATEGORY = [
+    "",
+    "one_robot_emtpy_world",
+    "two_robot_emtpy_world",
+    "three_robot_emtpy_world",
+    "one_robot_simple_world",
+    "two_robot_simple_world",
+    "three_robot_simple_world",
+]
+
 parser = argparse.ArgumentParser(description="Benchmark simulator script")
 parser.add_argument("simulator", help="Simulator name (gazebo_harmonic, isaac_sim, webots)")
 parser.add_argument("--image_topic", default="/robot/front_rgbd_camera/color/image_raw", help="Image topic to subscribe to")
 parser.add_argument("--csv_file", default="", help="CSV file to store results")
+parser.add_argument("--iterations", default=1, help="Number of interations")
+parser.add_argument("--category", default=0, help="Category name for an specific set of benchmarks")
 if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
     parser.print_help()
     sys.exit(0)
@@ -89,14 +101,16 @@ SELECTED_SIMULATOR = args.simulator
 IMAGE_TOPIC = args.image_topic
 CSV_FILE = args.csv_file
 
+SELECTED_CATEGORY = CATEGORY[int(args.category)]
+
 if CSV_FILE == "":
     timestamp = int(time.time())
-    os.makedirs(f"benchmarks/{SELECTED_SIMULATOR}", exist_ok=True)
-    CSV_PATH = f"benchmarks/{SELECTED_SIMULATOR}/ros2_launch_timings_{timestamp}.csv"
+    os.makedirs(f"benchmarks/{SELECTED_SIMULATOR}/{SELECTED_CATEGORY}", exist_ok=True)
+    CSV_PATH = f"benchmarks/{SELECTED_SIMULATOR}/{SELECTED_CATEGORY}/ros2_launch_timings_{timestamp}.csv"
 else:
     CSV_PATH = "ros2_launch_timings.csv"
 
-ITERATIONS = 3  # Cambia esto para más/menos iteraciones
+ITERATIONS = int(args.iterations)  # Cambia esto para más/menos iteraciones
 
 class ImageListener(Node):
     def __init__(self):

@@ -118,13 +118,45 @@ TO DO
 ```
 TO DO
 ```
+<details>
+<summary style="font-size:1.25em; font-weight:bold;">1.5 Webots</summary>
 
-### 1.5 Webots
-
+1. Download required repositories:
 ```
-TO DO
+mkdir -p ~/robotnik_benchmark_webots_ws/src
+cd ~/robotnik_benchmark_webots_ws/src
+git clone https://github.com/RobotnikAutomation/robotnik_webots.git
+git clone https://github.com/RobotnikAutomation/robotnik_common.git
+```
+2. Install missing dependencies:
+Follow the guide to install webots from via apt: https://cyberbotics.com/doc/guide/installation-procedure#installation-on-linux
+```
+sudo apt-get install ros-humble-webots-ros2
+cd ~/robotnik_benchmark_webots_ws
+rosdep update --rosdistro humble
+rosdep install --from-paths src --ignore-src -r -y 
 ```
 
+3. Build workspace:
+```
+source /opt/ros/humble/setup.bash
+cd ~/robotnik_benchmark_webots_ws
+colcon build --symlink-install
+```
+
+Run Webots simulation:
+
+1. Spawn world:
+```
+source ~/robotnik_benchmark_webots_ws/install/setup.bash
+ros2 launch robotnik_webots spawn_world.launch.py
+```
+
+2. Spawn a robot instance (e.g., `robot_a`):
+```
+ros2 launch robotnik_webots spawn_robot.launch.py robot_id:=robot_a robot:=rbwatcher
+```
+</details>
 
 
 ## 2. Benchmarks
@@ -200,7 +232,7 @@ TO DO
 Run `webots` benchmark:
 
 ```
-TO DO
+python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 4 --iterations 1 webots
 ```
 
 ## 3. Results

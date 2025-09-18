@@ -102,7 +102,7 @@ ros2 launch robotnik_gazebo_ignition spawn_robot.launch.py robot_id:=robot_a rob
 
 Requirements: `isaac_sim.sh` located in `$HOME/isaac_sim`
 ```
-ros2 launch isaac_sim isaac_sim_complete.launch.py
+ros2 launch isaac_sim isaac_sim_complete.launch.py num_robots:=1 world_file:=simple_world.usd run_rviz:=false
 ```
 
 </details>
@@ -304,7 +304,7 @@ TO DO
 Run `isaac_sim` benchmark 
 
 ```
-python3 scripts/benchmark_simulator.py isaac_sim --category 4 --iterations 1 --image_topic front_rgbd_camera/color/image_raw
+python3 scripts/benchmark_simulator.py isaac_sim --category 4 --iterations 1 --image_topic front_rgbd_camera/color/image_raw --ros_args num_robots:=1 world_file:=simple_world.usd
 ```
 
 Run `o3de` benchmark:

@@ -46,7 +46,6 @@ for sim_folder in sorted(os.listdir(bench_dir)):
         summary_table[category_folder] = {
             "Startup time (s)": f"{duration:.2f} s",
             "RealTime Factor": f"{rtf:.2f}",
-            "FPS": f"{iterations/duration:.2f} FPS",
             "RAM": f"{ram:.2f} MB",
             "CPU": f"{cpu:.2f} %",
             "GPU": f"{gpu:.2f} %"
@@ -84,7 +83,7 @@ for sim_folder in sorted(os.listdir(bench_dir)):
 
     if category_blocks:
         # Tabla resumen siempre visible
-        metrics = ["Startup time (s)", "RealTime Factor", "FPS", "RAM", "CPU", "GPU"]
+        metrics = ["Startup time (s)", "RealTime Factor", "RAM", "CPU", "GPU"]
         table_header = "| Category | " + " | ".join(metrics) + " |"
         table_sep = "|" + "---|"*(len(metrics)+1)
         table_rows = []

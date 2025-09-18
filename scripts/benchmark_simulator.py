@@ -64,7 +64,7 @@ LAUNCH_CONFIGS = {
             "ros2", "launch", "webots_robotnik", "robot_launch_alfa.py",
             "robot:=rbwatcher", "namespace:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
         ],
-        "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor"]
+        "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"]
     },
 }
 

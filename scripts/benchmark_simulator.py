@@ -66,6 +66,16 @@ LAUNCH_CONFIGS = {
         ],
         "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"]
     },
+    "unity": {
+        "LAUNCH_SIMULATOR_CMD": [
+            "ros2", "launch", "unity_sim", "unity_complete.launch.py"
+        ],
+        "LAUNCH_ROBOT_CMD": [
+            "ros2", "launch", "robotnik_unity", "spawn_robot.launch.py",
+            "robot:=rbwatcher", "robot_id:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
+        ],
+        "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"]
+    }
 }
 
 CATEGORY = [

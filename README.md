@@ -120,7 +120,7 @@ Install and run the Unity simulation with ROS 2 Humble (also tested on ROS 2 Jaz
 
 ## 1. Prerequisites
 
-- ROS 2 Humble installed and sourced. *(Also works on Jazzy.)*
+- ROS 2 Humble installed and sourced. *(Also works on Humble or Jazzy.)*
 - ROS–Unity bridge: [ROS-TCP-Endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint). Add to your workspace:
   ```bash
   cd ~/workspace/src

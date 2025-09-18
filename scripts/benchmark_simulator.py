@@ -54,7 +54,7 @@ LAUNCH_CONFIGS = {
             "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
             "robot:=rbwatcher", "robot_model:=rbwatcher"
         ],
-        "NODES_TO_KILL": ["rviz2", "gz"]
+        "NODES_TO_KILL": ["rviz2", "isaac"]
     },
     "webots": {
         "LAUNCH_SIMULATOR_CMD": [
@@ -71,7 +71,7 @@ LAUNCH_CONFIGS = {
 parser = argparse.ArgumentParser(description="Benchmark simulator script")
 parser.add_argument("simulator", help="Simulator name (gazebo_harmonic, isaac_sim, webots)")
 parser.add_argument("--image_topic", default="/robot/front_rgbd_camera/color/image_raw", help="Image topic to subscribe to")
-parser.add_argument("--csv_file", default="ros2_launch_timings.csv", help="CSV file to store results")
+parser.add_argument("--csv_file", default="", help="CSV file to store results")
 if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
     parser.print_help()
     sys.exit(0)
@@ -88,7 +88,15 @@ NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["NODES_TO_KILL"]
 SELECTED_SIMULATOR = args.simulator
 IMAGE_TOPIC = args.image_topic
 CSV_FILE = args.csv_file
-ITERATIONS = 1  # Cambia esto para más/menos iteraciones
+
+if CSV_FILE == "":
+    timestamp = int(time.time())
+    os.makedirs(f"benchmarks/{SELECTED_SIMULATOR}", exist_ok=True)
+    CSV_PATH = f"benchmarks/{SELECTED_SIMULATOR}/ros2_launch_timings_{timestamp}.csv"
+else:
+    CSV_PATH = "ros2_launch_timings.csv"
+
+ITERATIONS = 3  # Cambia esto para más/menos iteraciones
 
 class ImageListener(Node):
     def __init__(self):
@@ -286,7 +294,7 @@ def main():
     for i in range(1, ITERATIONS + 1):
         elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time = run_iteration(i)
         timestamp = datetime.now().isoformat()
-        write_csv_row(CSV_FILE, [SELECTED_SIMULATOR, timestamp, i, elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time])
+        write_csv_row(CSV_PATH, [SELECTED_SIMULATOR, timestamp, i, elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time])
         time.sleep(5)  # Espera entre iteraciones
         print(f"[{i}] Iteración {i} completada y registrada.")
 

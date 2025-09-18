@@ -113,11 +113,99 @@ ros2 launch isaac_sim isaac_sim_complete.launch.py
 TO DO
 ```
 
-### 1.4 Unity
+<details>
+<summary style="font-size:1.25em; font-weight:bold;">1.4 Unity</summary>
 
-```
-TO DO
-```
+Install and run the Unity simulation with ROS 2 Humble:
+
+## 1. Prerequisites
+
+- ROS 2 Humble installed and sourced.
+- Unity binary (provided via download link).
+- ROS–Unity bridge: [ROS-TCP-Endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint).
+
+## 2. Download Unity Simulation
+
+To download the unity simulation, choose one of the following methods:
+
+1. Using `gdown` (command line)
+
+    1.1. Install `gdown` (Google Drive downloader for command line):
+    ```bash
+    pip install gdown
+    ```
+
+    1.2. Download the precompiled Unity binary automatically:
+    ```bash
+    gdown https://drive.google.com/uc?id=1NDRtJ9zw5TGTveNKsOdgXoxGDFOHcktZ
+    ```
+
+   This will download the file `unity_simulation.tar.gz`.
+2. Download from Google Drive using a web browser:
+   2.1. Go to the following link:  
+
+   [Unity Simulation Binary](https://drive.google.com/file/d/1NDRtJ9zw5TGTveNKsOdgXoxGDFOHcktZ/view?usp=drive_link)  
+   
+   2.2. Click on the download button to download the file `unity_simulation.tar.gz`.
+3. Extract the package to your preferred directory, for example:
+   ```bash
+   mkdir -p ~/robotnik_benchmark_unity
+   cd ~/robotnik_benchmark_unity
+   tar -xvzf unity_simulation.tar.gz
+   ```
+
+## 3. Install Unity–ROS bridge
+
+1. Clone the ROS–Unity bridge into your ROS 2 workspace:
+   ```bash
+   mkdir -p ~/robotnik_benchmark_unity_ws/src
+   cd ~/robotnik_benchmark_unity_ws/src
+   git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git
+   ```
+
+2. Build the workspace:
+   ```bash
+   source /opt/ros/humble/setup.bash
+   cd ~/robotnik_benchmark_unity_ws
+   colcon build --symlink-install
+   ```
+
+3. Source the workspace:
+   ```bash
+   source ~/robotnik_benchmark_unity_ws/install/setup.bash
+   ```
+
+## 4. Run Unity Simulation
+
+1. Launch the Unity simulation binary:
+   ```bash
+   cd ~/robotnik_benchmark_unity
+   ./PI_simulation_Unity_Robotnik.x86_64
+   ```
+
+2. Launch the ROS–Unity bridge:
+   ```bash
+   ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0
+   ```
+
+## 5. Run Simulation with Launch File
+
+> **TODO**: Integrate Unity simulation and ROS–Unity bridge into a single launch file.  
+> Example (to be completed later):
+> ```bash
+> ros2 launch robotnik_unity_simulation simulation.launch.py
+> ```
+
+---
+
+### Notes
+- Ensure Unity binary has execution permission:
+  ```bash
+  chmod +x UnitySimulation.x86_64
+  ```
+- If Unity and ROS are running on different machines, configure network settings accordingly (ROS_DOMAIN_ID, IPs, etc.).
+
+</details>
 
 ### 1.5 Webots
 

@@ -13,7 +13,7 @@ find_package(ament_cmake REQUIRED)
 
 install(DIRECTORY
   launch
-  scripts
+  utils
   worlds
   config
   DESTINATION share/${PROJECT_NAME}

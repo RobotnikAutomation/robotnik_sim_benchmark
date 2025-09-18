@@ -1,3 +1,4 @@
+import os
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, GroupAction, ExecuteProcess
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -27,14 +28,14 @@ def generate_launch_description():
 
     autorun_script = PathJoinSubstitution([
         FindPackageShare('isaac_sim'),
-        'scripts/load_usd_and_run.py'
+        'utils/load_usd_and_run.py'
     ])
 
 
     # run isaac
     isaac_sim = ExecuteProcess(
         cmd=[
-            "/home/robotnik/isaac_sim/isaac-sim.sh",
+            os.path.expanduser("~/isaac_sim/isaac-sim.sh"),
             "--exec", autorun_script
         ],
         output="screen"

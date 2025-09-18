@@ -113,11 +113,91 @@ ros2 launch isaac_sim isaac_sim_complete.launch.py
 TO DO
 ```
 
-### 1.4 Unity
+<details>
+<summary style="font-size:1.25em; font-weight:bold;">1.4 Unity</summary>
 
+Install and run the Unity simulation with ROS 2 Humble (also tested on ROS 2 Jazzy):
+
+## 1. Prerequisites
+
+- ROS 2 Humble installed and sourced. *(Also works on Humble or Jazzy.)*
+- ROS–Unity bridge: [ROS-TCP-Endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint). Add to your workspace:
+  ```bash
+  cd ~/workspace/src
+  git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git
+  ```
+- The Unity simulation archive placed at:
+  `unity_sim/worlds/unity_simulation.tar.gz`
+  *(The launch auto-extracts it on first run.)*
+
+## 2. Recommended: Run with Launch File
+
+This launch:
+- Starts **ROS-TCP-Endpoint** listening on **0.0.0.0**.
+- Starts **RViz2** with **use_sim_time:=true** and config `rviz/robot.rviz`.
+- Runs the bootstrap script `utils/load_usd_and_run.py` which **extracts** the tar (if needed) and starts the Unity binary.
+- Optionally **spawns N robots** via `/robot[/_N]/on` services.
+
+Run:
+```bash
+# 1 robot (default)
+ros2 launch unity_sim unity_complete.launch.py
+
+# 3 robots and RViz on
+ros2 launch unity_sim unity_complete.launch.py robot_count:=3 run_rviz:=true
 ```
-TO DO
+
+**Arguments**
+- `robot_count` (int, 1..5, default: 1) — spawns `robot`, `robot_2`, … `robot_5`.
+- `run_rviz` (bool, default: true) — toggles RViz2.
+
+> If the launch prints an error like
+> `Archive not found: .../unity_sim/worlds/unity_simulation.tar.gz`,
+> make sure the archive exists at that exact path (or the extracted binary is already present somewhere under `unity_sim/worlds/`).
+
+## 3. (Optional) Manual Download/Update of the Archive
+
+If you need to refresh the Unity build:
+
+**A) Using `gdown`**
+```bash
+pip install gdown
+gdown https://drive.google.com/uc?id=1NDRtJ9zw5TGTveNKsOdgXoxGDFOHcktZ
+mv unity_simulation.tar.gz unity_sim/worlds/
 ```
+
+**B) Using a web browser**
+- Open: [Unity Simulation Binary](https://drive.google.com/file/d/1NDRtJ9zw5TGTveNKsOdgXoxGDFOHcktZ/view?usp=drive_link)
+- Download `unity_simulation.tar.gz` and place it in `unity_sim/worlds/`.
+
+## 4. (Optional) Manual Run Without Launch
+
+1) Extract and run the Unity simulation:
+```bash
+cd unity_sim/worlds
+tar -xvzf unity_simulation.tar.gz
+chmod +x UnitySimulation.x86_64  # or your binary name (e.g., PI_simulation_Unity_Robotnik.x86_64)
+./UnitySimulation.x86_64         # replace with your actual filename if different
+```
+
+2) Start the ROS–Unity bridge on 0.0.0.0:
+```bash
+ros2 run ros_tcp_endpoint default_server_endpoint --ros-args -p ROS_IP:=0.0.0.0
+```
+
+## 5. Notes
+
+- **RViz time**: RViz launches with `use_sim_time:=true` because the simulator publishes `/clock`.
+- **Keyboard shortcuts in the simulator**:
+  - `F1`: show performance stats.
+  - `F2`: respawn/destroy robots.
+  - Navigation: arrow keys to move, mouse wheel to zoom; to follow a robot, pick it from the bottom-right dropdown.
+- **Robot services** (provided by the simulation):
+  - Spawn: `robot_{id}/on`   (e.g., `/robot/on`, `/robot_2/on`, …)
+  - Delete: `robot_{id}/off` (e.g., `/robot/off`, `/robot_2/off`, …)
+
+</details>
+
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">1.5 Webots</summary>
 

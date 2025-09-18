@@ -143,13 +143,23 @@ Run:
 # 1 robot (default)
 ros2 launch unity_sim unity_complete.launch.py
 
+# 1 robot in simple_world
+ros2 launch unity_sim unity_complete.launch.py world:=simple_world
+
 # 3 robots and RViz on
 ros2 launch unity_sim unity_complete.launch.py robot_count:=3 run_rviz:=true
+
+# 2 robots, no RViz, in simple_world
+ros2 launch unity_sim unity_complete.launch.py robot_count:=2 run_rviz:=false world:=simple_world
+
 ```
 
 **Arguments**
 - `robot_count` (int, 1..5, default: 1) — spawns `robot`, `robot_2`, … `robot_5`.
 - `run_rviz` (bool, default: true) — toggles RViz2.
+- `world` (string, default: `empty_world`) — choose the world to load. Available worlds:
+  - `empty_world` — empty plane.
+  - `simple_world` — simple scene with some objects.
 
 > If the launch prints an error like
 > `Archive not found: .../unity_sim/worlds/unity_simulation.tar.gz`,

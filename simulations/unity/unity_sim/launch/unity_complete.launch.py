@@ -9,7 +9,9 @@
 # Args:
 #   run_rviz      (bool)  : launch RViz2 (default: true)
 #   robot_count   (int)   : number of robots to spawn [1..5] (default: 1)
+#   world         (str)   : name of the world to load (default: empty_world)
 
+import os
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
@@ -22,6 +24,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+from ament_index_python.packages import get_package_share_directory
 
 
 def generate_launch_description():
@@ -40,21 +43,37 @@ def generate_launch_description():
         description="Number of robots to spawn via services [1..5]"
     )
 
-    # -------------------------
-    # Paths inside unity_sim pkg
-    # -------------------------
-    pkg_share = FindPackageShare("unity_sim")
-    rviz_config = PathJoinSubstitution([pkg_share, "rviz", "robot.rviz"])
-    autorun_script = PathJoinSubstitution([pkg_share, "utils", "load_usd_and_run.py"])
+    world_arg = DeclareLaunchArgument(
+        "world",
+        default_value="empty_world",
+        choices=["empty_world", "simple_world"],
+        description="Name of the world to load"
+    )
 
     # -------------------------
-    # Unity simulation bootstrap (runs the extractor/runner)
+    # OpaqueFunction para lanzar Unity con el mundo correcto
     # -------------------------
-    unity_bootstrap = ExecuteProcess(
-        cmd=["python3", autorun_script],
-        name="unity_sim_bootstrap",
-        output="screen"
-    )
+    def launch_unity_with_world(context, *args, **kwargs):
+        world_to_filename_map = {
+            "empty_world": "unity_simulation_only.tar.gz",
+            "simple_world": "unity_simulation.tar.gz"
+        }
+        selected_world_name = LaunchConfiguration("world").perform(context)
+        world_filename = world_to_filename_map[selected_world_name]
+        
+        print(f"[INFO] Selected world: '{selected_world_name}' -> using file: '{world_filename}'")
+
+        pkg_share_path = get_package_share_directory("unity_sim")
+        autorun_script_path = os.path.join(
+            pkg_share_path, "utils", "load_usd_and_run.py"
+        )
+        
+        unity_bootstrap = ExecuteProcess(
+            cmd=["python3", autorun_script_path, world_filename],
+            name="unity_sim_bootstrap",
+            output="screen"
+        )
+        return [unity_bootstrap]
 
     # -------------------------
     # ROS–TCP–Endpoint (listens on 0.0.0.0)
@@ -70,6 +89,9 @@ def generate_launch_description():
     # -------------------------
     # RViz2 (use_sim_time enabled)
     # -------------------------
+    pkg_share = FindPackageShare("unity_sim")
+    rviz_config = PathJoinSubstitution([pkg_share, "rviz", "robot.rviz"])
+    
     rviz = Node(
         package="rviz2",
         executable="rviz2",
@@ -81,26 +103,23 @@ def generate_launch_description():
     )
 
     # -------------------------
-    # Helper to build spawn service calls after a small delay
+    # Helper para generar las llamadas al servicio de spawn
     # -------------------------
     def build_spawn_calls(context, *args, **kwargs):
-        # Parse robot_count and clamp to [1..5]
         try:
             count = int(LaunchConfiguration("robot_count").perform(context))
-        except Exception:
+        except (TypeError, ValueError):
             count = 1
         count = max(1, min(5, count))
 
         processes = []
-        spawn_delay_sec = 5.0  # Give Unity some time to bring up services
+        spawn_delay_sec = 5.0
 
         for idx in range(1, count + 1):
             name = "robot" if idx == 1 else f"robot_{idx}"
             srv_name = f"/{name}/on"
             call = ExecuteProcess(
-                cmd=[
-                    "ros2", "service", "call", srv_name, "std_srvs/srv/Trigger", "{}"
-                ],
+                cmd=["ros2", "service", "call", srv_name, "std_srvs/srv/Trigger", "{}"],
                 name=f"spawn_{name}",
                 output="screen"
             )
@@ -115,7 +134,7 @@ def generate_launch_description():
     # -------------------------
     group = GroupAction([
         ros_tcp_endpoint,
-        unity_bootstrap,
+        OpaqueFunction(function=launch_unity_with_world),
         rviz,
         spawn_group,
     ])
@@ -123,5 +142,6 @@ def generate_launch_description():
     return LaunchDescription([
         run_rviz_arg,
         robot_count_arg,
+        world_arg,
         group,
     ])

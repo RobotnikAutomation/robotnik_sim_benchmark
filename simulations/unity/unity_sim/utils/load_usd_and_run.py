@@ -1,80 +1,109 @@
 #!/usr/bin/env python3
 # utils/load_usd_and_run.py
 #
-# Unpacks a pre-bundled Unity simulation archive from ../worlds (relative to this script),
+# Unpacks a Unity simulation archive into its own subfolder under ../worlds,
 # ensures executable permissions, and runs the simulation.
+#
+# Usage:
+#   python3 load_usd_and_run.py unity_simulation_only.tar.gz
+#   python3 load_usd_and_run.py unity_simulation.tar.gz
+#
+# If no argument is given, it falls back to ARCHIVE_NAME.
 
 import sys
 import subprocess
 from pathlib import Path
+from typing import Optional
 
-# Configuration
-ARCHIVE_NAME = "unity_simulation.tar.gz"
 BINARY_NAME  = "PI_simulation_Unity_Robotnik.x86_64"
+ARCHIVE_NAME = "unity_simulation_only.tar.gz"
 
-def find_binary(worlds_dir: Path, binary_name: str) -> Path | None:
-    """Search for the binary in worlds_dir (top-level) and recursively if needed."""
-    candidate = worlds_dir / binary_name
-    if candidate.exists():
-        return candidate
+def archive_to_world_id(archive_name: str) -> str:
+    """Derive a stable folder name from the archive file name."""
+    name = Path(archive_name).name
+    # Handle common compressed tar suffixes
+    for suffix in (".tar.gz", ".tgz", ".tar.bz2", ".tar.xz", ".tar.zst"):
+        if name.endswith(suffix):
+            return name[: -len(suffix)]
+    # Fallback to stem if it's something unusual
+    return Path(name).stem
 
-    for p in worlds_dir.rglob(binary_name):
+def find_binary(root_dir: Path, binary_name: str) -> Optional[Path]:
+    """Search for the binary inside root_dir only (not the whole worlds dir)."""
+    direct = root_dir / binary_name
+    if direct.exists() and direct.is_file():
+        return direct
+    for p in root_dir.rglob(binary_name):
         if p.is_file():
             return p
-
     return None
 
 def ensure_extracted(worlds_dir: Path, archive_name: str, binary_name: str) -> Path:
-    """If the binary isn't present, extract the tarball. Return the located binary path."""
-    sim_binary = find_binary(worlds_dir, binary_name)
-    if sim_binary:
-        # Already extracted
-        return sim_binary
-
-    tar_path = worlds_dir / archive_name
-    if not tar_path.exists():
-        print(f"[ERROR] Archive not found: {tar_path}")
+    """
+    Make sure the requested world is extracted into worlds/<world_id>/ and
+    return the path to the binary inside that folder.
+    """
+    archive_path = worlds_dir / archive_name
+    if not archive_path.exists():
+        print(f"[ERROR] Archive not found: {archive_path}")
         print("        Place the Unity simulation tar.gz in the 'worlds' folder with this exact name.")
         sys.exit(1)
 
-    print(f"[INFO] Extracting archive: {tar_path}")
+    world_id = archive_to_world_id(archive_name)
+    world_root = worlds_dir / world_id
+    world_root.mkdir(parents=True, exist_ok=True)
+
+    # If the binary already exists inside this world's root, reuse it
+    sim_binary = find_binary(world_root, binary_name)
+    if sim_binary:
+        return sim_binary
+
+    # Otherwise (first time), extract into the world's dedicated folder
+    print(f"[INFO] Extracting '{archive_path.name}' into '{world_root}'")
     try:
-        subprocess.check_call(["tar", "-xvzf", str(tar_path), "-C", str(worlds_dir)])
+        # Note: we don't --strip-components here; structure varies between archives.
+        subprocess.check_call(["tar", "-xvzf", str(archive_path), "-C", str(world_root)])
     except subprocess.CalledProcessError as e:
         print(f"[ERROR] Extraction failed: {e}")
         sys.exit(1)
 
-    sim_binary = find_binary(worlds_dir, binary_name)
+    sim_binary = find_binary(world_root, binary_name)
     if not sim_binary:
         print("[ERROR] Extraction completed but the expected binary was not found.")
-        print(f"        Looked for '{binary_name}' somewhere inside: {worlds_dir}")
+        print(f"        Looked for '{binary_name}' under: {world_root}")
         sys.exit(1)
 
     return sim_binary
 
-def main():
+def main(archive_name: str, binary_name: str = BINARY_NAME):
     # Base path is the folder of this script
     script_dir = Path(__file__).resolve().parent
     worlds_dir = script_dir.parent / "worlds"
     worlds_dir.mkdir(parents=True, exist_ok=True)
 
-    # Ensure we have an extracted simulation and get the binary path
-    sim_binary = ensure_extracted(worlds_dir, ARCHIVE_NAME, BINARY_NAME)
+    # Ensure extracted world and get its binary
+    sim_binary = ensure_extracted(worlds_dir, archive_name, binary_name)
 
-    # Ensure executable permission
+    # Ensure executable permission (best-effort)
     try:
         sim_binary.chmod(0o755)
     except Exception as e:
         print(f"[WARN] Could not change executable permissions: {e}")
 
-    # Run the simulation
+    # Run the simulation with its folder as CWD (keeps relative assets consistent)
     print(f"[INFO] Starting Unity simulation: {sim_binary}")
     try:
-        # Use cwd=sim_binary.parent to keep relative paths consistent for the app
         subprocess.run([str(sim_binary)], cwd=sim_binary.parent, check=False)
     except Exception as e:
         print(f"[ERROR] Failed to start simulation: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+    # Read the archive name from the first command-line argument (optional).
+    if len(sys.argv) >= 2 and sys.argv[1].strip():
+        archive_to_load = sys.argv[1]
+    else:
+        archive_to_load = ARCHIVE_NAME
+        print(f"[INFO] No archive name provided. Using default: {archive_to_load}")
+
+    main(archive_name=archive_to_load)

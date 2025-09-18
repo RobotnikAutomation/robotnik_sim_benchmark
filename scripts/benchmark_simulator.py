@@ -253,8 +253,11 @@ def run_iteration(iter_num):
     return elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time
 
 def kill_processes_by_name(names):
-     # Obtener y matar procesos por nombre usando NODES_TO_KILL
+    # Obtener y matar procesos por nombre usando NODES_TO_KILL, evitando matar el propio proceso padre
+    parent_pid = os.getpid()
     for proc in psutil.process_iter(['pid', 'cmdline']):
+        if proc.pid == parent_pid:
+            continue
         cmdline = proc.info.get('cmdline', [])
         if not isinstance(cmdline, list):
             continue

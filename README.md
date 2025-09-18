@@ -121,7 +121,11 @@ Install and run the Unity simulation with ROS 2 Humble (also tested on ROS 2 Jaz
 ## 1. Prerequisites
 
 - ROS 2 Humble installed and sourced. *(Also works on Jazzy.)*
-- ROS–Unity bridge: [ROS-TCP-Endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint).
+- ROS–Unity bridge: [ROS-TCP-Endpoint](https://github.com/Unity-Technologies/ROS-TCP-Endpoint). Add to your workspace:
+  ```bash
+  cd ~/workspace/src
+  git clone https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git
+  ```
 - The Unity simulation archive placed at:
   `unity_sim/worlds/unity_simulation.tar.gz`
   *(The launch auto-extracts it on first run.)*

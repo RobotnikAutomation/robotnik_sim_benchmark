@@ -58,11 +58,11 @@ LAUNCH_CONFIGS = {
     },
     "webots": {
         "LAUNCH_SIMULATOR_CMD": [
-            "ros2", "launch", "webots_robotnik", "world_launch.py"
+            "ros2", "launch", "robotnik_webots", "spawn_world.launch.py"
         ],
         "LAUNCH_ROBOT_CMD": [
-            "ros2", "launch", "webots_robotnik", "robot_launch_alfa.py",
-            "robot:=rbwatcher", "namespace:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
+            "ros2", "launch", "robotnik_webots", "spawn_robot.launch.py",
+            "robot:=rbwatcher", "robot_id:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
         ],
         "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"]
     },

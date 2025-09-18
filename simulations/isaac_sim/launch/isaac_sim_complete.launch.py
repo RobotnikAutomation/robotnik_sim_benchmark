@@ -15,11 +15,31 @@ def generate_launch_description():
 
     declared_arguments.append(
         DeclareLaunchArgument(
+            'num_robots',
+            default_value='1',
+            description='Número de robots a spawnear'
+        )
+    )
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            'world_file',
+            default_value='empty_world.usd',
+            description='Nombre del USD del mundo'
+        )
+    )
+
+    declared_arguments.append(
+        DeclareLaunchArgument(
             "run_rviz",
             default_value="true",
             description="Launch RViz2 with predefined config"
         )
     )
+
+    num_robots = LaunchConfiguration('num_robots')
+    world_file = LaunchConfiguration('world_file')
+    run_rviz = LaunchConfiguration("run_rviz")
 
     world_path = PathJoinSubstitution([
         FindPackageShare('isaac_sim'),
@@ -28,17 +48,19 @@ def generate_launch_description():
 
     autorun_script = PathJoinSubstitution([
         FindPackageShare('isaac_sim'),
-        'utils/load_usd_and_run.py'
+        'utils/isaac_sim_launcher.py'
     ])
 
-
-    # run isaac
     isaac_sim = ExecuteProcess(
         cmd=[
             os.path.expanduser("~/isaac_sim/isaac-sim.sh"),
             "--exec", autorun_script
         ],
-        output="screen"
+        output="screen",
+        additional_env={
+            'NUM_ROBOTS': num_robots,
+            'WORLD_FILE': world_file
+        }
     )
 
     # run rviz
@@ -54,7 +76,7 @@ def generate_launch_description():
         name="rviz2",
         arguments=["-d", rviz_config],
         output="screen",
-        condition=IfCondition(LaunchConfiguration("run_rviz"))
+        condition=IfCondition(run_rviz)
     )
 
 

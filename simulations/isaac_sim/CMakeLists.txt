@@ -15,6 +15,7 @@ install(DIRECTORY
   launch
   utils
   worlds
+  models
   config
   DESTINATION share/${PROJECT_NAME}
 )

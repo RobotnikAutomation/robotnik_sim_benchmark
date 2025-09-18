@@ -14,6 +14,7 @@ from rclpy.qos import qos_profile_sensor_data
 import threading
 import subprocess as sp
 from rosgraph_msgs.msg import Clock
+import argparse
 
 def get_gpu_usage():
     """Return total GPU utilization (%) and memory (MiB) if NVIDIA GPU is present, else (None, None)."""
@@ -54,14 +55,16 @@ LAUNCH_CONFIGS = {
             "robot:=rbwatcher", "robot_model:=rbwatcher"
         ],
         "NODES_TO_KILL": ["rviz2", "gz"]
-    }
-}
+parser = argparse.ArgumentParser(description="Benchmark simulator script")
+parser.add_argument("simulator", help="Simulator name (gazebo_harmonic, isaac_sim, webots)")
+parser.add_argument("--image_topic", default="/robot/front_rgbd_camera/color/image_raw", help="Image topic to subscribe to")
+parser.add_argument("--csv_file", default="ros2_launch_timings.csv", help="CSV file to store results")
+if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
+    parser.print_help()
+    sys.exit(0)
+args = parser.parse_args()
 
-# Selecciona el simulador a usar
-if len(sys.argv) < 2:
-    print("Usage: python startup.py <simulator_name>")
-    sys.exit(1)
-SELECTED_SIMULATOR = sys.argv[1]
+SELECTED_SIMULATOR = args.simulator
 if SELECTED_SIMULATOR not in LAUNCH_CONFIGS:
     print(f"Simulator '{SELECTED_SIMULATOR}' not found in LAUNCH_CONFIGS.")
     sys.exit(1)
@@ -69,8 +72,9 @@ LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_SIMULATOR_CMD"
 LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_ROBOT_CMD"]
 NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["NODES_TO_KILL"]
 
-IMAGE_TOPIC = "/robot/front_rgbd_camera/color/image_raw"  # Cambia esto si tu topic es diferente
-CSV_FILE = "ros2_launch_timings.csv"
+SELECTED_SIMULATOR = args.simulator
+IMAGE_TOPIC = args.image_topic
+CSV_FILE = args.csv_file
 ITERATIONS = 1  # Cambia esto para más/menos iteraciones
 
 class ImageListener(Node):
@@ -83,6 +87,7 @@ class ImageListener(Node):
             self.image_callback,
             10
         )
+        print(f"Subscribed to {IMAGE_TOPIC}")
 
     def image_callback(self, msg):
         self.image_received = True

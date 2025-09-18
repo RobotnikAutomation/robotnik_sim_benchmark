@@ -84,6 +84,7 @@ parser.add_argument("--image_topic", default="/robot/front_rgbd_camera/color/ima
 parser.add_argument("--csv_file", default="", help="CSV file to store results")
 parser.add_argument("--iterations", default=1, help="Number of interations")
 parser.add_argument("--category", default=0, help="Category name for an specific set of benchmarks")
+parser.add_argument("--ros_args", nargs="*", default=[], help="Additional ROS 2 args to pass to the launch files")
 if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
     parser.print_help()
     sys.exit(0)
@@ -93,8 +94,8 @@ SELECTED_SIMULATOR = args.simulator
 if SELECTED_SIMULATOR not in LAUNCH_CONFIGS:
     print(f"Simulator '{SELECTED_SIMULATOR}' not found in LAUNCH_CONFIGS.")
     sys.exit(1)
-LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_SIMULATOR_CMD"]
-LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_ROBOT_CMD"]
+LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_SIMULATOR_CMD"] + args.ros_args
+LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_ROBOT_CMD"] + args.ros_args
 NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["NODES_TO_KILL"]
 
 SELECTED_SIMULATOR = args.simulator

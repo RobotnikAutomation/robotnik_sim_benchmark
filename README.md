@@ -131,16 +131,17 @@ TO DO
 
 ### 2.1 Specifications
 
-This is the sensor configuration:
+This is the sensor configuration for 1 robot:
 
 | Sensor        | Frequency |
 |---------------|------------|
-| Front camera  | 30 fps     |
+| Front camera  | 1920x1080@30fps |
 | Lidar 3D      | 10 Hz      | 
 | IMU           | 200 Hz     |
-| Top camera    | 30 Hz      |
+| Top camera    | 1920x1080@30fps     |
 
-5 benchmarks
+
+### 2.1 Benchmarking
 
 Go to benchmark repository:
 
@@ -148,7 +149,29 @@ Go to benchmark repository:
 cd ~/benchmark_ws/src/robotnik_sim_benchmark
 ```
 
-### 2.1 Benchmarking
+The benchmark iterations is set by `--iteration`: 
+
+| Simulator        | Iterations |
+|---------------|------------|
+| Any  |   1 (default)     |
+
+
+
+The benchmark results are saved under the category folder specified by the `--category` argument.  
+
+> Changing the conditions of the simulation (e.g., number of robots or world type) must be done manually for each simulation.
+
+By default, this repository launches **one robot in a simple world**, which corresponds to **category 4**.
+
+| Category  | Name                            | Description 
+|----|------| --------------------------------| 
+| 0  |         No category                    | No folder
+| 1  |         one_robot_emtpy_world    | One robot without scene results
+| 2  |         two_robot_emtpy_world    | Two robot without scene results
+| 3  |         three_robot_emtpy_world  | Three robot without scene results
+| 4  |         one_robot_simple_world   | One robot in a lightweight scene results
+| 5  |         two_robot_simple_world   | Two robot in a lightweight scene results
+| 6  |         three_robot_simple_world | Three robot in a lightweight scene results
 
 Run `gazebo_harmonic` benchmark:
 
@@ -159,7 +182,7 @@ TO DO
 Run `isaac_sim` benchmark 
 
 ```
-python3 scripts/benchmark_simulator.py isaac_sim --image_topic front_rgbd_camera/color/image_raw
+python3 scripts/benchmark_simulator.py isaac_sim --category 4 --iterations 1 --image_topic front_rgbd_camera/color/image_raw
 ```
 
 Run `o3de` benchmark:

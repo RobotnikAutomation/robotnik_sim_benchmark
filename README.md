@@ -5,9 +5,11 @@
 Clone repository
 
 ```
-mkdir -p ~/benchmark_ws/src
-cd ~/benchmark_ws/src/
+mkdir -p ~/benchmark_ws/src && cd ~/benchmark_ws/src/
 git clone https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
+cd ~/benchmark_ws
+colcon build
+source  install/setup.bash
 ```
 
 Install `vcstool`.
@@ -16,8 +18,8 @@ sudo apt update
 sudo apt install python3-vcstool
 ```
 
-### 1.1 Gazebo
-
+<details>
+<summary style="font-size:1.25em; font-weight:bold;">1.1 Gazebo</summary>
 
 Install Gazebo Harmonic with ROS 2 Humble:
 
@@ -92,45 +94,106 @@ ros2 launch robotnik_gazebo_ignition spawn_world.launch.py
 ros2 launch robotnik_gazebo_ignition spawn_robot.launch.py robot_id:=robot_a robot:=rbwatcher
 ```
 
-### 1.2 Webots
+</details>
 
-```
-ros2 run..
-```
 
-### 1.3 Isaac Sim
-
+<details>
+<summary style="font-size:1.25em; font-weight:bold;">1.2 Isaac Sim</summary>
 
 Requirements: `isaac_sim.sh` located in `$HOME/isaac_sim`
 ```
 ros2 launch isaac_sim isaac_sim_complete.launch.py
 ```
 
+</details>
+
+### 1.3 O3DE
+
+```
+TO DO
+```
+
 ### 1.4 Unity
 
 ```
-./unity.sh...
+TO DO
 ```
 
-## 2. Benchmark
+### 1.5 Webots
+
+```
+TO DO
+```
+
+
+
+## 2. Benchmarks
+
+### 2.1 Specifications
+
+This is the sensor configuration:
+
+| Sensor        | Frequency |
+|---------------|------------|
+| Front camera  | 30 fps     |
+| Lidar 3D      | 10 Hz      | 
+| IMU           | 200 Hz     |
+| Top camera    | 30 Hz      |
+
+5 benchmarks
 
 Go to benchmark repository:
 
 ```
-cd ~/benchmark_ws/src/robotnik_sim_benchmark/scripts
+cd ~/benchmark_ws/src/robotnik_sim_benchmark
 ```
 
-### 2.1 Gazebo
+### 2.1 Benchmarking
+
 Run `gazebo_harmonic` benchmark:
 
 ```
-python3 benchmark_simulator.py gazebo_harmonic
+TO DO
 ```
-
-### 2.3 Isaac Sim
 
 Run `isaac_sim` benchmark 
 
 ```
-python3 benchmark_simulator.py isaac_sim
+python3 scripts/benchmark_simulator.py isaac_sim --image_topic front_rgbd_camera/color/image_raw
 ```
+
+Run `o3de` benchmark:
+
+```
+TO DO
+```
+
+Run `unity` benchmark:
+
+```
+TO DO
+```
+
+Run `webots` benchmark:
+
+```
+TO DO
+```
+
+## 3. Results
+
+For the performance report, see [performance_report.md](benchmarks/performance_report.md)
+
+Go to benchmark repository:
+
+```
+cd ~/benchmark_ws/src/robotnik_sim_benchmark
+```
+
+Generate report:
+
+```
+python3 scripts/benchmark_reporter.py
+```
+
+**Note**: Report file is created in `benchmark` folder

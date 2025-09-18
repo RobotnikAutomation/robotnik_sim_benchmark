@@ -1,0 +1,8 @@
+# Ignore all folder contents except the archive file
+*!unity_simulation.tar.gz
+# Ignore all extracted files and folders
+*
+# Keep this .git_ignore file
+!.git_ignore
+# Keep any README files
+!README.md

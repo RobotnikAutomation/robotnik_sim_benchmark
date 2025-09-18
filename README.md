@@ -204,6 +204,12 @@ To download the unity simulation, choose one of the following methods:
   chmod +x UnitySimulation.x86_64
   ```
 - If Unity and ROS are running on different machines, configure network settings accordingly (ROS_DOMAIN_ID, IPs, etc.).
+- In the program of simulation:
+    - Use `F1`to show the performance stats.
+    - Use `F2`to respawn/destroy the different robots.
+- The simulation create ros2 services to spawn and delete robots:
+    - Spawn robot service: `robot_{id}/on`
+    - Delete robot service: `robot_{id}/off`
 
 </details>
 

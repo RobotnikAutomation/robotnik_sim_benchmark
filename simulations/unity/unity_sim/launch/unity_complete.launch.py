@@ -10,7 +10,6 @@
 #   run_rviz      (bool)  : launch RViz2 (default: true)
 #   robot_count   (int)   : number of robots to spawn [1..5] (default: 1)
 
-import os
 from launch import LaunchDescription
 from launch.actions import (
     DeclareLaunchArgument,
@@ -23,6 +22,7 @@ from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch.conditions import IfCondition
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
+
 
 def generate_launch_description():
     # -------------------------
@@ -48,7 +48,7 @@ def generate_launch_description():
     autorun_script = PathJoinSubstitution([pkg_share, "utils", "load_usd_and_run.py"])
 
     # -------------------------
-    # Unity simulation bootstrap (runs the downloader/extractor/runner)
+    # Unity simulation bootstrap (runs the extractor/runner)
     # -------------------------
     unity_bootstrap = ExecuteProcess(
         cmd=["python3", autorun_script],
@@ -58,7 +58,6 @@ def generate_launch_description():
 
     # -------------------------
     # ROS–TCP–Endpoint (listens on 0.0.0.0)
-    # Parameter key used by the package is ROS_IP
     # -------------------------
     ros_tcp_endpoint = Node(
         package="ros_tcp_endpoint",
@@ -93,14 +92,11 @@ def generate_launch_description():
         count = max(1, min(5, count))
 
         processes = []
-        # Delay to give Unity time to bring up service servers
-        spawn_delay_sec = 5.0
+        spawn_delay_sec = 5.0  # Give Unity some time to bring up services
 
         for idx in range(1, count + 1):
-            # robot, robot_2, robot_3, ...
             name = "robot" if idx == 1 else f"robot_{idx}"
             srv_name = f"/{name}/on"
-            # Call std_srvs/Trigger (no request fields)
             call = ExecuteProcess(
                 cmd=[
                     "ros2", "service", "call", srv_name, "std_srvs/srv/Trigger", "{}"
@@ -110,7 +106,6 @@ def generate_launch_description():
             )
             processes.append(call)
 
-        # TimerAction to delay all spawns at once
         return [TimerAction(period=spawn_delay_sec, actions=processes)]
 
     spawn_group = OpaqueFunction(function=build_spawn_calls)

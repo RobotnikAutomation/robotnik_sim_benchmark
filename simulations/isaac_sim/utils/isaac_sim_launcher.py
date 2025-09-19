@@ -34,7 +34,7 @@ if num_robots > 0:
     print(f"Spawneando {num_robots} robot(s)...")
     for i in range(num_robots):
         robot_name = f"rbwatcher_{i+1}"
-        position = Gf.Vec3d(0.0, i * 1.0, 0.0)
+        position = Gf.Vec3d(0.0, i * 1.0, 0.2)
 
         # Crear prim contenedor
         prim_path = f"/World/{robot_name}"

@@ -55,5 +55,25 @@ isaac_benchmark category=5 num_robots=2 world_file="simple_world.usd" run_rviz="
 print_info "three_robot_simple_world"
 isaac_benchmark category=6 num_robots=3 world_file="simple_world.usd" run_rviz="false"
 
+
+print_info "one_robot_emtpy_world_rviz"
+isaac_benchmark category=7 num_robots=1 world_file="empty_world.usd" run_rviz="true"
+
+print_info "two_robot_emtpy_world_rviz"
+isaac_benchmark category=8 num_robots=2 world_file="empty_world.usd" run_rviz="true"
+
+print_info "three_robot_emtpy_world_rviz"
+isaac_benchmark category=9 num_robots=3 world_file="empty_world.usd" run_rviz="true"
+
+print_info "one_robot_simple_world_rviz"
+isaac_benchmark category=10 num_robots=1 world_file="simple_world.usd" run_rviz="true"
+
+print_info "two_robot_simple_world_rviz"
+isaac_benchmark category=11 num_robots=2 world_file="simple_world.usd" run_rviz="true"
+
+print_info "three_robot_simple_world_rviz"
+isaac_benchmark category=12 num_robots=3 world_file="simple_world.usd" run_rviz="true"
+
+
 popd > /dev/null
 

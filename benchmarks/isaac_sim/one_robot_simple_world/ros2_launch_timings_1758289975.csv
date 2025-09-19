@@ -1,0 +1,2 @@
+simulator,timestamp,iteration,elapsed_seconds,cpu_mean_percent,ram_mean_mb,gpu_mean_percent,gpu_mem_mean_mb,real_time_factor_mean,iteration_total_time
+isaac_sim,2025-09-19T15:54:08.756984,1,11.050143480300903,43.59642857142857,4823.321614583333,64.95238095238095,5135.190476190476,0.8313067322075112,73.46290135383606

@@ -53,7 +53,7 @@ def generate_launch_description():
 
     isaac_sim = ExecuteProcess(
         cmd=[
-            os.path.expanduser("~/isaac_sim/isaac-sim.sh"),
+            os.path.expanduser("~/isaacsim/isaac-sim.sh"),
             "--exec", autorun_script
         ],
         output="screen",

@@ -6,6 +6,23 @@ bench_dir = os.path.join(os.getcwd(), "benchmarks")
 if not os.path.exists(bench_dir):
     raise FileNotFoundError(f"The folder '{bench_dir}' does not exist.")
 
+# Orden fijo de categorías
+CATEGORY_ORDER = [
+    "",
+    "one_robot_emtpy_world",
+    "two_robot_emtpy_world",
+    "three_robot_emtpy_world",
+    "one_robot_simple_world",
+    "two_robot_simple_world",
+    "three_robot_simple_world",
+    "one_robot_emtpy_world_rviz",
+    "two_robot_emtpy_world_rviz",
+    "three_robot_emtpy_world_rviz",
+    "one_robot_simple_world_rviz",
+    "two_robot_simple_world_rviz",
+    "three_robot_simple_world_rviz",
+]
+
 md_blocks = []
 
 for sim_folder in sorted(os.listdir(bench_dir)):
@@ -82,17 +99,19 @@ for sim_folder in sorted(os.listdir(bench_dir)):
         category_blocks.append(cat_block)
 
     if category_blocks:
-        # Tabla resumen siempre visible
+        # Tabla resumen siempre visible, usando el orden definido
         metrics = ["Startup time (s)", "RealTime Factor", "RAM", "CPU", "GPU"]
         table_header = "| Category | " + " | ".join(metrics) + " |"
         table_sep = "|" + "---|"*(len(metrics)+1)
         table_rows = []
-        for cat, values in summary_table.items():
-            row = f"| {cat} "
-            for m in metrics:
-                row += f"| {values[m]} "
-            row += "|"
-            table_rows.append(row)
+        for cat in CATEGORY_ORDER:
+            if cat in summary_table:
+                values = summary_table[cat]
+                row = f"| {cat} "
+                for m in metrics:
+                    row += f"| {values[m]} "
+                row += "|"
+                table_rows.append(row)
         table_md = "\n".join([table_header, table_sep] + table_rows)
 
         # Bloque del simulador: título + tabla + categorías plegables

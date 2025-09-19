@@ -266,10 +266,14 @@ This is the sensor configuration for 1 robot:
 
 | Sensor        | Frequency |
 |---------------|------------|
-| Front camera  | 1920x1080@30fps |
-| Lidar 3D      | 10 Hz      | 
+| Front RGB camera  | 1920x1080@30fps |
+| Lidar 3D      | 10 Hz, 1800h 16v (15v deg, 360h deg)      | 
 | IMU           | 200 Hz     |
-| Top camera    | 1920x1080@30fps     |
+| Top RGB camera    | 1280x720@30fps     |
+
+| Simulator        | Physics |
+|---------------|------------|
+| Any  |   50 Hz (20ms)     |
 
 
 ### 2.1 Benchmarking

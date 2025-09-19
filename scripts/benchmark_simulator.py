@@ -86,6 +86,12 @@ CATEGORY = [
     "one_robot_simple_world",
     "two_robot_simple_world",
     "three_robot_simple_world",
+    "one_robot_emtpy_world_rviz",
+    "two_robot_emtpy_world_rviz",
+    "three_robot_emtpy_world_rviz",
+    "one_robot_simple_world_rviz",
+    "two_robot_simple_world_rviz",
+    "three_robot_simple_world_rviz",
 ]
 
 parser = argparse.ArgumentParser(description="Benchmark simulator script")

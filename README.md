@@ -316,7 +316,7 @@ TO DO
 Run `unity` benchmark:
 
 ```
-python3 scripts/benchmark_simulator.py unity --image_topic /robot/top_rgbd_camera/image_raw --iteration 1 --category 5 --ros_args robot_count:=2 world:=simple_world
+python3 scripts/benchmark_simulator.py unity --image_topic /robot/top_rgbd_camera/image_raw --iterations 1 --category 5 --ros_args robot_count:=2 world:=simple_world
 ```
 
 Run `webots` benchmark:

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<?xml-mode
+  href="http://download.ros.org/schema/package_format3.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>robotnik_sim_benchmark_utils</name>
+  <version>0.0.0</version>
+  <description>
+    Robotnik simulation benchmark utilities for ROS2 packages.
+  </description>
+  <maintainer email="rmartin@robotnik.es">Rafael Martín</maintainer>
+  <license>BSD</license>
+
+  <build_depend>ament_cmake_python</build_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

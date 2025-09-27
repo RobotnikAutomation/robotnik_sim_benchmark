@@ -15,25 +15,136 @@ import threading
 import subprocess as sp
 from rosgraph_msgs.msg import Clock
 import argparse
+import json
 
 def get_gpu_usage():
-    """Return total GPU utilization (%) and memory (MiB) if NVIDIA GPU is present, else (None, None)."""
-    try:
-        result = sp.run([
-            'nvidia-smi',
-            '--query-gpu=utilization.gpu,memory.used',
-            '--format=csv,noheader,nounits'
-        ], capture_output=True, text=True, check=True)
-        lines = result.stdout.strip().split('\n')
-        total_util = 0
-        total_mem = 0
-        for line in lines:
+    """Return total GPU utilization (%) and memory (MiB) if GPU is present, else (None, None)."""
+    def _try_float(value):
+        try:
+            return float(str(value).strip().split()[0])
+        except (ValueError, AttributeError):
+            return None
+
+    def _extract_json(text):
+        if not text:
+            return None
+        start = text.find('{')
+        end = text.rfind('}')
+        if start == -1 or end == -1 or end <= start:
+            return None
+        try:
+            return json.loads(text[start:end + 1])
+        except json.JSONDecodeError:
+            return None
+
+    def query_nvidia():
+        try:
+            result = sp.run(
+                [
+                    'nvidia-smi',
+                    '--query-gpu=utilization.gpu,memory.used',
+                    '--format=csv,noheader,nounits'
+                ],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except Exception:
+            return None
+        total_util = 0.0
+        total_mem = 0.0
+        for line in result.stdout.strip().splitlines():
             util, mem = line.split(',')
             total_util += float(util.strip())
             total_mem += float(mem.strip())
         return total_util, total_mem
-    except Exception:
-        return None, None
+
+    def query_amd():
+        try:
+            util_proc = sp.run(
+                ['rocm-smi', '--showuse', '--json'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            mem_proc = sp.run(
+                ['rocm-smi', '--showmeminfo', 'vram', '--json'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except Exception:
+            return None
+
+        util_json = _extract_json(util_proc.stdout) or _extract_json(util_proc.stderr)
+        mem_json = _extract_json(mem_proc.stdout) or _extract_json(mem_proc.stderr)
+        if not util_json:
+            return None
+
+        card_items = [(k, v) for k, v in util_json.items() if k.startswith('card')]
+        if not card_items:
+            return None
+
+        total_util = 0.0
+        total_mem_mib = 0.0
+
+        for card_key, card_data in card_items:
+            util_val = (
+                _try_float(card_data.get('GPU use (%)')) or
+                _try_float(card_data.get('GPU (%)')) or
+                _try_float(card_data.get('GPU Utilization (%)'))
+            )
+            if util_val is not None:
+                total_util += util_val
+
+            mem_used_mib = None
+            card_mem = mem_json.get(card_key, {}) if mem_json else {}
+
+            for key in (
+                'VRAM Used Memory (B)', 'GPU Memory Used (B)', 'VRAM Usage (B)',
+                'VRAM Used Memory (MB)', 'GPU Memory Used (MB)', 'VRAM Usage (MB)'
+            ):
+                if key in card_mem:
+                    val = _try_float(card_mem[key])
+                    if val is None:
+                        continue
+                    if key.endswith('(B)'):
+                        mem_used_mib = val / (1024 * 1024)
+                    else:
+                        mem_used_mib = val
+                    break
+
+            if mem_used_mib is None:
+                percent = _try_float(card_data.get('VRAM use (%)'))
+                total_bytes = None
+                for key in (
+                    'VRAM Total Memory (B)', 'Total VRAM Memory (B)',
+                    'GPU Memory Total (B)'
+                ):
+                    if key in card_mem:
+                        val = _try_float(card_mem[key])
+                        if val is not None:
+                            total_bytes = val
+                            break
+                if percent is not None and total_bytes is not None:
+                    mem_used_mib = (percent / 100.0) * (total_bytes / (1024 * 1024))
+
+            if mem_used_mib is not None:
+                total_mem_mib += mem_used_mib
+
+        if total_util == 0.0 and total_mem_mib == 0.0:
+            return None
+        return total_util, total_mem_mib if total_mem_mib > 0 else None
+
+    nvidia = query_nvidia()
+    if nvidia:
+        return nvidia
+    else:
+        amd = query_amd()
+        if amd:
+            print("********************* Using AMD GPU stats!!")
+            return amd
+    return None, None
 
 LAUNCH_CONFIGS = {
     "gazebo_harmonic": {
@@ -235,9 +346,9 @@ def run_iteration(iter_num):
                 gpu_util, gpu_mem = get_gpu_usage()
                 if gpu_util is not None:
                     gpu_util_samples.append(gpu_util)
-                    gpu_mem_samples.append(gpu_mem)
-                
-                    
+                    if gpu_mem is not None:
+                        gpu_mem_samples.append(gpu_mem)
+
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
 

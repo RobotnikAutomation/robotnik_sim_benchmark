@@ -258,6 +258,8 @@ class ImageListener(Node):
 class ClockListener(Node):
     def __init__(self):
         super().__init__('clock_listener')
+        self.first_clock_msg = None
+        self.first_received_time = None
         self.last_clock_msg = None
         self.last_received_time = None
         self.real_time_factor = 1.0
@@ -270,32 +272,62 @@ class ClockListener(Node):
         )
 
     def clock_callback(self, msg):
-
-        if self.last_clock_msg is not None:
-            clock_diff = msg.clock.sec - self.last_clock_msg.clock.sec + (msg.clock.nanosec - self.last_clock_msg.clock.nanosec) * 1e-9
-            time_diff = time.time() - self.last_received_time
-            self.real_time_factor = clock_diff / time_diff if time_diff > 0 else 1.0
-            self.real_time_factor_array.append(self.real_time_factor)
-            
-            #print(f"Clock diff: {clock_diff:.6f} s, Real time diff: {time_diff:.6f} s")
-            #print(f"Real time factor: {self.real_time_factor:.6f}")
-            #if len(self.real_time_factor_array) >= 10:
-            #    moving_avg = sum(self.real_time_factor_array[-10:]) / 10
-                #print(f"Real time factor (moving avg last 10): {moving_avg:.6f}")
+        """
+        Callback for processing simulator clock updates, tracking the real-time factor.
+        Args:
+            msg: ROS 2 Clock message containing the current simulation time.
+        Notes:
+            - On the first received message, initializes the reference simulation time
+              and the wall-clock timestamp for later comparisons.
+            - For subsequent messages, computes the ratio between the simulated time
+              elapsed and the real time elapsed (real-time factor) and appends it to
+              ``real_time_factor_array``.
+            - Updates internal timestamps and the last received clock message for
+              continuous monitoring.
+        """
+        if self.first_clock_msg is None:
+            self.first_clock_msg = msg
+            self.first_received_time = time.time()
 
         self.last_clock_msg = msg
         self.last_received_time = time.time()
+        
+        if self.first_clock_msg is not None:
+            clock_diff = msg.clock.sec - self.first_clock_msg.clock.sec + (msg.clock.nanosec - self.first_clock_msg.clock.nanosec) * 1e-9
+            time_diff = time.time() - self.first_received_time
+            self.real_time_factor = clock_diff / time_diff if time_diff > 0 else 1.0
+            self.real_time_factor_array.append(self.real_time_factor)
 
-    def get_last_msg(self):
-        return self.last_clock_msg
+        self.first_clock_msg = msg
+        self.first_received_time = time.time()
+
+    def get_first_msg(self):
+        return self.first_clock_msg
     
     def get_real_time_factor_avg(self):
         moving_avg = None
         if len(self.real_time_factor_array) >= 100:
             moving_avg = sum(self.real_time_factor_array[-100:]) / 100
         return moving_avg
+    
+    def get_real_time_factor(self):
+        return self.real_time_factor
 
 def run_iteration(iter_num):
+    """
+    Execute a single simulation benchmark iteration and collect system performance metrics.
+    Args:
+        iter_num (int): Sequential identifier of the benchmark iteration, used for logging.
+    Returns:
+        tuple:
+            elapsed (float): Seconds elapsed between launching the simulator and receiving the first image.
+            cpu_mean (float): Average normalized CPU utilization (%) across simulator and robot processes.
+            ram_mean (float): Average RAM usage (MB) across simulator and robot processes.
+            gpu_util_mean (Optional[float]): Average GPU utilization (%) if a GPU is available, otherwise None.
+            gpu_mem_mean (Optional[float]): Average GPU memory usage (MB) if a GPU is available, otherwise None.
+            real_time_factor_mean (Optional[float]): Average real-time factor reported by the clock listener, or None when unavailable.
+            iteration_total_time (float): Total wall-clock time (seconds) spent on the iteration, including post-image wait time.
+    """
     # Lanzar el launch file
     start_time = time.time()
     launch_simulator_process = subprocess.Popen(LAUNCH_SIMULATOR_CMD)
@@ -373,7 +405,7 @@ def run_iteration(iter_num):
     finally:
         print(f"[{iter_num}] Finalizando procesos...")
         # No need for extra sleep here, as interval=0.1 already waits
-        rtf_avg = clock_node.get_real_time_factor_avg()
+        rtf_avg = clock_node.get_real_time_factor()
         if rtf_avg is not None:
             real_time_factor_samples.append(rtf_avg)
         stop_monitor.set()

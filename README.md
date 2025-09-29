@@ -301,17 +301,24 @@ By default, this repository launches **one robot in a simple world**, which corr
 | Category  | Name                            | Description 
 |----|------| --------------------------------| 
 | 0  |         No category                    | No folder
-| 1  |         one_robot_emtpy_world    | One robot without scene results
-| 2  |         two_robot_emtpy_world    | Two robot without scene results
-| 3  |         three_robot_emtpy_world  | Three robot without scene results
-| 4  |         one_robot_simple_world   | One robot in a lightweight scene results
-| 5  |         two_robot_simple_world   | Two robot in a lightweight scene results
-| 6  |         three_robot_simple_world | Three robot in a lightweight scene results
+| 1  |         one_robot_emtpy_world          | One robot without scene results
+| 2  |         two_robot_emtpy_world          | Two robot without scene results
+| 3  |         three_robot_emtpy_world        | Three robot without scene results
+| 4  |         one_robot_simple_world         | One robot in a lightweight scene results
+| 5  |         two_robot_simple_world         | Two robot in a lightweight scene results
+| 6  |         three_robot_simple_world       | Three robot in a lightweight scene results
+| 7  |         one_robot_emtpy_world_rviz     | One robot without scene results
+| 8  |         two_robot_emtpy_world_rviz     | Two robot without scene results
+| 9  |         three_robot_emtpy_world_rviz   | Three robot without scene results
+| 10 |         one_robot_simple_world_rviz    | One robot in a lightweight scene results
+| 11 |         two_robot_simple_world_rviz    | Two robot in a lightweight scene results
+| 12 |         three_robot_simple_world_rviz  | Three robot in a lightweight scene results
+___________________________________________________________________________________________
 
 Run `gazebo_harmonic` benchmark:
 
 ```
-TO DO
+python3 ./scripts/benchmark_simulator.py --category 1 --iterations 1 gazebo_harmonic
 ```
 
 Run `isaac_sim` benchmark 
@@ -335,7 +342,15 @@ python3 scripts/benchmark_simulator.py unity --image_topic /robot/top_rgbd_camer
 Run `webots` benchmark:
 
 ```
-python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 4 --iterations 1 webots
+
+python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 1 --iterations 5 webots --ros_args run_rviz:=false world:=empty_world
+
+python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 4 --iterations 5 webots --ros_args run_rviz:=false world:=default_world
+
+python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 7 --iterations 5 webots --ros_args run_rviz:=true world:=empty_world
+
+python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 10 --iterations 5 webots --ros_args run_rviz:=true world:=default_world
+
 ```
 
 ## 3. Results

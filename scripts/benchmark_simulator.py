@@ -180,7 +180,7 @@ CATEGORY = [
 
 parser = argparse.ArgumentParser(description="Benchmark simulator script")
 parser.add_argument("simulator", help="Simulator name (gazebo_harmonic, isaac_sim, webots)")
-#parser.add_argument("--image_topic", default="/robot/front_rgbd_camera/color/image_raw", help="Image topic to subscribe to")
+parser.add_argument("--image_topic", default="", help="Image topic to subscribe to")
 parser.add_argument("--csv_file", default="", help="CSV file to store results")
 parser.add_argument("--iterations", default=1, help="Number of interations")
 parser.add_argument("--category", default=0, help="Category name for an specific set of benchmarks")
@@ -199,7 +199,11 @@ LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LA
 LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_ROBOT_CMD"] + args.ros_args
 NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["NODES_TO_KILL"]
 
-IMAGE_TOPICS = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["TOPICS_TO_LISTEN"]
+# Set IMAGE_TOPICS from --image_topic if provided, otherwise use the dictionary
+if args.image_topic and args.image_topic != "":
+    IMAGE_TOPICS = [args.image_topic]
+else:
+    IMAGE_TOPICS = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["TOPICS_TO_LISTEN"]
 
 CSV_FILE = args.csv_file
 

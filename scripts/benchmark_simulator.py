@@ -344,11 +344,11 @@ def run_iteration(iter_num):
                     proc.cpu_percent(interval=None)
                 time.sleep(0.5)  # Give time for cpu_percent to measure
 
-                for proc in all_procs:
-                    print(f"Process: {proc}, CPU%: {proc.cpu_percent(interval=0.5)}, RAM MB: {proc.memory_info().rss / (1024*1024)}")
+                #for proc in all_procs:
+                #    print(f"Process: {proc}, CPU%: {proc.cpu_percent(interval=0.5)}, RAM MB: {proc.memory_info().rss / (1024*1024)}")
                 cpu = sum([proc.cpu_percent(interval=0.5) for proc in all_procs]) / psutil.cpu_count()  # Normalizar por número de núcleos
                 ram = sum([proc.memory_info().rss for proc in all_procs]) / (1024*1024)  # MB
-                print(f"CPU: {cpu:.2f}%, RAM: {ram:.2f} MB")
+                #print(f"CPU: {cpu:.2f}%, RAM: {ram:.2f} MB")
                 cpu_samples.append(cpu)
                 ram_samples.append(ram)
                 gpu_util, gpu_mem = get_gpu_usage()

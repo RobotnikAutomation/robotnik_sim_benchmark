@@ -185,6 +185,7 @@ parser.add_argument("--csv_file", default="", help="CSV file to store results")
 parser.add_argument("--iterations", default=1, help="Number of interations")
 parser.add_argument("--category", default=0, help="Category name for an specific set of benchmarks")
 parser.add_argument("--ros_args", nargs="*", default=[], help="Additional ROS 2 args to pass to the launch files")
+parser.add_argument("--iteration_time", default=60, help="Time for each iteration in seconds (time to wait after receiving the first image)")
 if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
     parser.print_help()
     sys.exit(0)
@@ -198,6 +199,11 @@ if SELECTED_SIMULATOR not in LAUNCH_CONFIGS:
 LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_SIMULATOR_CMD"] + args.ros_args
 LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_ROBOT_CMD"] + args.ros_args
 NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["NODES_TO_KILL"]
+ITERATION_TIME = int(args.iteration_time)
+if ITERATION_TIME <= 0:
+    print("Error: --iteration_time must be greater than 0. Setting default value of 60 seconds.")
+    ITERATION_TIME = 60
+
 
 # Set IMAGE_TOPICS from --image_topic if provided, otherwise use the dictionary
 if args.image_topic and args.image_topic != "":
@@ -312,8 +318,8 @@ def run_iteration(iter_num):
     start_time = time.time()
     launch_simulator_process = subprocess.Popen(LAUNCH_SIMULATOR_CMD)
     launch_robot_process = subprocess.Popen(LAUNCH_ROBOT_CMD)
+    elapsed = 0
     print(f"[{iter_num}] Launching launch file...")
-    #time.sleep(5)  # Espera para asegurar que ROS 2 inicia
 
     rclpy.init()
     node_listeners = [ImageListener(topic) for topic in IMAGE_TOPICS]
@@ -367,10 +373,12 @@ def run_iteration(iter_num):
     monitor_thread = threading.Thread(target=monitor)
     monitor_thread.start()
 
-    end_time = time.time() + 300  # Timeout de 5 minutos
+    end_time = time.time() + 120  # Timeout of 2 minutes
     image_received = False
     try:
         while rclpy.ok() and time.time() < end_time:
+            elapsed_time = time.time() - start_time
+            print(f"Monitoring for {elapsed_time:.2f} seconds... {end_time - time.time():.2f} seconds to finalize")
             all_nodes_received = all(node.image_received for node in node_listeners)
             for node in node_listeners:
                 rclpy.spin_once(node, timeout_sec=0.1)
@@ -378,12 +386,14 @@ def run_iteration(iter_num):
             if not image_received and all_nodes_received:
                 image_received = True
                 end_time = time.time()
-                elapsed = end_time - start_time
-                # Wait 60 seconds more after receiving the image
-                extra_time = 60
+                elapsed = time.time() - start_time
+                # Wait ITERATION_TIME seconds more after receiving the image
+                extra_time = ITERATION_TIME
                 print(f"Image received, waiting {extra_time} more seconds to stabilize...")
                 end_time = time.time() + extra_time                
                 print(f"[{iter_num}] Image received after {elapsed:.3f} seconds.")
+            elif not image_received:
+                print(f"[{iter_num}] Still waiting for topics images to set the startup time... ({elapsed_time:.2f}s elapsed)")
     finally:
         print(f"[{iter_num}] Finalizing processes...")
         # No need for extra sleep here, as interval=0.1 already waits

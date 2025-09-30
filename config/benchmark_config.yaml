@@ -131,7 +131,8 @@
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
                 "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "two_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -139,9 +140,10 @@
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2", "robot_model:=rbwatcher,rbwatcher2"
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -149,99 +151,109 @@
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2,rbwatcher3", "robot_model:=rbwatcher,rbwatcher2,rbwatcher3"
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "world:=simple"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
                 "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "two_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "world:=simple"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2", "robot_model:=rbwatcher,rbwatcher2"
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "world:=simple"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2,rbwatcher3", "robot_model:=rbwatcher,rbwatcher2,rbwatcher3"
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "rviz:=true"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
                 "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "two_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "rviz:=true"
-            ],
-            "LAUNCH_ROBOT_CMD": [
-                "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2", "robot_model:=rbwatcher,rbwatcher2"
-            ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
-        },
-        "three_robot_empty_world_rviz": {
-            "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "rviz:=true"
-            ],
-            "LAUNCH_ROBOT_CMD": [
-                "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2,rbwatcher3", "robot_model:=rbwatcher,rbwatcher2,rbwatcher3"
-            ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
-        },
-        "one_robot_simple_world_rviz": {
-            "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "world:=simple", "rviz:=true"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
                 "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
+            ],
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
+            ],
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "two_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "world:=simple", "rviz:=true"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2", "robot_model:=rbwatcher,rbwatcher2"
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py", "world:=simple", "rviz:=true"
+                "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-                "robot:=rbwatcher,rbwatcher2,rbwatcher3", "robot_model:=rbwatcher,rbwatcher2,rbwatcher3"
+                "robot:=rbwatcher", "robot_model:=rbwatcher"
             ],
-            "NODES_TO_KILL": ["rviz2", "isaac"]
+            "NODES_TO_KILL": ["rviz2", "isaac"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
     },
     "webots": {
@@ -252,7 +264,7 @@
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver", "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
         },
         "two_robot_empty_world": {
@@ -262,7 +274,7 @@
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
         },
         "three_robot_empty_world": {
@@ -272,37 +284,37 @@
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color"]
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "simple", "1", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
         },
         "two_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "simple", "2", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "simple", "3", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color"]
         },
         "one_robot_empty_world_rviz": {
@@ -312,7 +324,7 @@
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
         },
         "two_robot_empty_world_rviz": {
@@ -322,7 +334,7 @@
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
         },
         "three_robot_empty_world_rviz": {
@@ -332,37 +344,37 @@
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color"]
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "simple", "1", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
         },
         "two_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "simple", "2", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "simple", "3", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
             ],
-            "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color" ]
         },
     },

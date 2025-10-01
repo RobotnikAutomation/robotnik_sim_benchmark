@@ -283,6 +283,32 @@ Go to benchmark repository:
 ```
 cd ~/benchmark_ws/src/robotnik_sim_benchmark
 ```
+Usage of the script:
+
+```
+usage: benchmark_simulator.py [-h] [--image_topic IMAGE_TOPIC] [--csv_file CSV_FILE] [--iterations ITERATIONS]
+                              [--category CATEGORY] [--ros_args [ROS_ARGS ...]] [--iteration_time ITERATION_TIME]
+                              simulator
+
+Benchmark simulator script
+
+positional arguments:
+  simulator             Simulator name (gazebo_harmonic, isaac_sim, webots)
+
+options:
+  -h, --help            show this help message and exit
+  --image_topic IMAGE_TOPIC
+                        Image topic to subscribe to
+  --csv_file CSV_FILE   CSV file to store results
+  --iterations ITERATIONS
+                        Number of interations
+  --category CATEGORY   Category name for an specific set of benchmarks
+  --ros_args [ROS_ARGS ...]
+                        Additional ROS 2 args to pass to the launch files
+  --iteration_time ITERATION_TIME
+                        Time for each iteration in seconds (time to wait after receiving the first image)
+```
+
 
 The benchmark iterations is set by `--iteration`: 
 
@@ -301,24 +327,57 @@ By default, this repository launches **one robot in a simple world**, which corr
 | Category  | Name                            | Description 
 |----|------| --------------------------------| 
 | 0  |         No category                    | No folder
-| 1  |         one_robot_emtpy_world    | One robot without scene results
-| 2  |         two_robot_emtpy_world    | Two robot without scene results
-| 3  |         three_robot_emtpy_world  | Three robot without scene results
-| 4  |         one_robot_simple_world   | One robot in a lightweight scene results
-| 5  |         two_robot_simple_world   | Two robot in a lightweight scene results
-| 6  |         three_robot_simple_world | Three robot in a lightweight scene results
+| 1  |         one_robot_emtpy_world          | One robot without scene results
+| 2  |         two_robot_emtpy_world          | Two robot without scene results
+| 3  |         three_robot_emtpy_world        | Three robot without scene results
+| 4  |         one_robot_simple_world         | One robot in a lightweight scene results
+| 5  |         two_robot_simple_world         | Two robot in a lightweight scene results
+| 6  |         three_robot_simple_world       | Three robot in a lightweight scene results
+| 7  |         one_robot_emtpy_world_rviz     | One robot without scene results
+| 8  |         two_robot_emtpy_world_rviz     | Two robot without scene results
+| 9  |         three_robot_emtpy_world_rviz   | Three robot without scene results
+| 10 |         one_robot_simple_world_rviz    | One robot in a lightweight scene results
+| 11 |         two_robot_simple_world_rviz    | Two robot in a lightweight scene results
+| 12 |         three_robot_simple_world_rviz  | Three robot in a lightweight scene results
+___________________________________________________________________________________________
 
-Run `gazebo_harmonic` benchmark:
+#### 2.1.1 Benchmarking Gazebo Harmonic
+
+
+Run `gazebo_harmonic` single benchmarks:
 
 ```
-TO DO
+python3 ./scripts/benchmark_simulator.py --category 1 --iterations 5 --iteration_time 60 gazebo_harmonic
 ```
 
-Run `isaac_sim` benchmark 
+You can set any of the categories listed above by changing the `--category` argument.
+
+Run `gazebo_harmonic` all benchmarks:
+
+```
+./scripts/run_all_benchmarks.sh -s gazebo_harmonic
+```
+
+It will run all the categories from 1 to 12.
+
+#### 2.1.2 Benchmarking Isaac Sim
+
+Run `isaac_sim` single benchmark:
 
 ```
 python3 scripts/benchmark_simulator.py isaac_sim --category 4 --iterations 1 --image_topic front_rgbd_camera/color/image_raw --ros_args num_robots:=1 world_file:=simple_world.usd
 ```
+
+Run `isaac_sim` all benchmarks:
+
+```
+./scripts/run_all_benchmarks.sh -s isaac_sim
+```
+
+It will run all the categories from 1 to 12.
+
+
+#### 2.1.3 Benchmarking O3DE
 
 Run `o3de` benchmark:
 
@@ -326,17 +385,29 @@ Run `o3de` benchmark:
 TO DO
 ```
 
+#### 2.1.4 Benchmarking Unity
+
 Run `unity` benchmark:
 
 ```
 python3 scripts/benchmark_simulator.py unity --image_topic /robot/top_rgbd_camera/image_raw --iterations 1 --category 5 --ros_args robot_count:=2 world:=simple_world
 ```
 
-Run `webots` benchmark:
+#### 2.1.5 Benchmarking Webots
+
+Run `webots` single benchmarks:
 
 ```
-python3 ./scripts/benchmark_simulator.py --image_topic /robot/robot/front_rgbd_camera_color/image_color --category 4 --iterations 1 webots
+python3 ./scripts/benchmark_simulator.py --category 1 --iterations 5 --iteration_time 60 webots
 ```
+
+Run `webots` all benchmarks:
+
+```
+./scripts/run_all_benchmarks.sh -s webots
+```
+
+It will run all the categories from 1 to 12.
 
 ## 3. Results
 

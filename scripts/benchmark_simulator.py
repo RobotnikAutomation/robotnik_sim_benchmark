@@ -15,80 +15,164 @@ import threading
 import subprocess as sp
 from rosgraph_msgs.msg import Clock
 import argparse
+import json
+import random
+import yaml
 
 def get_gpu_usage():
-    """Return total GPU utilization (%) and memory (MiB) if NVIDIA GPU is present, else (None, None)."""
-    try:
-        result = sp.run([
-            'nvidia-smi',
-            '--query-gpu=utilization.gpu,memory.used',
-            '--format=csv,noheader,nounits'
-        ], capture_output=True, text=True, check=True)
-        lines = result.stdout.strip().split('\n')
-        total_util = 0
-        total_mem = 0
-        for line in lines:
+    """Return total GPU utilization (%) and memory (MiB) if GPU is present, else (None, None)."""
+    def _try_float(value):
+        try:
+            return float(str(value).strip().split()[0])
+        except (ValueError, AttributeError):
+            return None
+
+    def _extract_json(text):
+        if not text:
+            return None
+        start = text.find('{')
+        end = text.rfind('}')
+        if start == -1 or end == -1 or end <= start:
+            return None
+        try:
+            return json.loads(text[start:end + 1])
+        except json.JSONDecodeError:
+            return None
+
+    def query_nvidia():
+        try:
+            result = sp.run(
+                [
+                    'nvidia-smi',
+                    '--query-gpu=utilization.gpu,memory.used',
+                    '--format=csv,noheader,nounits'
+                ],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except Exception:
+            return None
+        total_util = 0.0
+        total_mem = 0.0
+        for line in result.stdout.strip().splitlines():
             util, mem = line.split(',')
             total_util += float(util.strip())
             total_mem += float(mem.strip())
         return total_util, total_mem
-    except Exception:
-        return None, None
 
-LAUNCH_CONFIGS = {
-    "gazebo_harmonic": {
-        "LAUNCH_SIMULATOR_CMD": [
-            "ros2", "launch", "robotnik_gazebo_ignition", "spawn_world.launch.py"
-        ],
-        "LAUNCH_ROBOT_CMD": [
-            "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-            "robot:=rbwatcher", "robot_model:=rbwatcher"
-        ],
-        "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"]
-    },
-    "isaac_sim": {
-        "LAUNCH_SIMULATOR_CMD": [
-            "ros2", "launch", "isaac_sim", "isaac_sim_complete.launch.py"
-        ],
-        "LAUNCH_ROBOT_CMD": [
-            "ros2", "launch", "robotnik_gazebo_ignition", "spawn_robot.launch.py",
-            "robot:=rbwatcher", "robot_model:=rbwatcher"
-        ],
-        "NODES_TO_KILL": ["rviz2", "isaac"]
-    },
-    "webots": {
-        "LAUNCH_SIMULATOR_CMD": [
-            "ros2", "launch", "robotnik_webots", "spawn_world.launch.py"
-        ],
-        "LAUNCH_ROBOT_CMD": [
-            "ros2", "launch", "robotnik_webots", "spawn_robot.launch.py",
-            "robot:=rbwatcher", "robot_id:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
-        ],
-        "NODES_TO_KILL": ["rviz2", "robot_state_publisher", "webots", "Ros2Supervisor", "static_transform_publisher"]
-    },
-    "unity": {
-        "LAUNCH_SIMULATOR_CMD": [
-            "ros2", "launch", "unity_sim", "unity_complete.launch.py"
-        ],
-        "LAUNCH_ROBOT_CMD": [
-            "ros2", "launch", "robotnik_unity", "spawn_robot.launch.py",
-            "robot:=rbwatcher", "robot_id:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
-        ],
-        "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"]
-    }
-}
+    def query_amd():
+        try:
+            util_proc = sp.run(
+                ['rocm-smi', '--showuse', '--json'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+            mem_proc = sp.run(
+                ['rocm-smi', '--showmeminfo', 'vram', '--json'],
+                capture_output=True,
+                text=True,
+                check=True
+            )
+        except Exception:
+            return None
+
+        util_json = _extract_json(util_proc.stdout) or _extract_json(util_proc.stderr)
+        mem_json = _extract_json(mem_proc.stdout) or _extract_json(mem_proc.stderr)
+        if not util_json:
+            return None
+
+        card_items = [(k, v) for k, v in util_json.items() if k.startswith('card')]
+        if not card_items:
+            return None
+
+        total_util = 0.0
+        total_mem_mib = 0.0
+
+        for card_key, card_data in card_items:
+            util_val = (
+                _try_float(card_data.get('GPU use (%)')) or
+                _try_float(card_data.get('GPU (%)')) or
+                _try_float(card_data.get('GPU Utilization (%)'))
+            )
+            if util_val is not None:
+                total_util += util_val
+
+            mem_used_mib = None
+            card_mem = mem_json.get(card_key, {}) if mem_json else {}
+
+            for key in (
+                'VRAM Used Memory (B)', 'GPU Memory Used (B)', 'VRAM Usage (B)',
+                'VRAM Used Memory (MB)', 'GPU Memory Used (MB)', 'VRAM Usage (MB)'
+            ):
+                if key in card_mem:
+                    val = _try_float(card_mem[key])
+                    if val is None:
+                        continue
+                    if key.endswith('(B)'):
+                        mem_used_mib = val / (1024 * 1024)
+                    else:
+                        mem_used_mib = val
+                    break
+
+            if mem_used_mib is None:
+                percent = _try_float(card_data.get('VRAM use (%)'))
+                total_bytes = None
+                for key in (
+                    'VRAM Total Memory (B)', 'Total VRAM Memory (B)',
+                    'GPU Memory Total (B)'
+                ):
+                    if key in card_mem:
+                        val = _try_float(card_mem[key])
+                        if val is not None:
+                            total_bytes = val
+                            break
+                if percent is not None and total_bytes is not None:
+                    mem_used_mib = (percent / 100.0) * (total_bytes / (1024 * 1024))
+
+            if mem_used_mib is not None:
+                total_mem_mib += mem_used_mib
+
+        if total_util == 0.0 and total_mem_mib == 0.0:
+            return None
+        return total_util, total_mem_mib if total_mem_mib > 0 else None
+
+    nvidia = query_nvidia()
+    if nvidia:
+        return nvidia
+    else:
+        amd = query_amd()
+        if amd:
+            return amd
+    return None, None
+
+
+def load_launch_configs(yaml_path):
+    with open(yaml_path, "r") as f:
+        return yaml.safe_load(f)
+
+# Default path for the YAML config file
+DEFAULT_LAUNCH_CONFIGS_PATH = os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "../config", "benchmark_config.yaml"
+)
+
+# Load LAUNCH_CONFIGS from YAML file
+LAUNCH_CONFIGS = load_launch_configs(
+    os.environ.get("LAUNCH_CONFIGS_PATH", DEFAULT_LAUNCH_CONFIGS_PATH)
+)
 
 CATEGORY = [
     "",
-    "one_robot_emtpy_world",
-    "two_robot_emtpy_world",
-    "three_robot_emtpy_world",
+    "one_robot_empty_world",
+    "two_robot_empty_world",
+    "three_robot_empty_world",
     "one_robot_simple_world",
     "two_robot_simple_world",
     "three_robot_simple_world",
-    "one_robot_emtpy_world_rviz",
-    "two_robot_emtpy_world_rviz",
-    "three_robot_emtpy_world_rviz",
+    "one_robot_empty_world_rviz",
+    "two_robot_empty_world_rviz",
+    "three_robot_empty_world_rviz",
     "one_robot_simple_world_rviz",
     "two_robot_simple_world_rviz",
     "three_robot_simple_world_rviz",
@@ -96,29 +180,40 @@ CATEGORY = [
 
 parser = argparse.ArgumentParser(description="Benchmark simulator script")
 parser.add_argument("simulator", help="Simulator name (gazebo_harmonic, isaac_sim, webots)")
-parser.add_argument("--image_topic", default="/robot/front_rgbd_camera/color/image_raw", help="Image topic to subscribe to")
+parser.add_argument("--image_topic", default="", help="Image topic to subscribe to")
 parser.add_argument("--csv_file", default="", help="CSV file to store results")
 parser.add_argument("--iterations", default=1, help="Number of interations")
 parser.add_argument("--category", default=0, help="Category name for an specific set of benchmarks")
 parser.add_argument("--ros_args", nargs="*", default=[], help="Additional ROS 2 args to pass to the launch files")
+parser.add_argument("--iteration_time", default=60, help="Time for each iteration in seconds (time to wait after receiving the first image)")
 if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
     parser.print_help()
     sys.exit(0)
 args = parser.parse_args()
 
+SELECTED_CATEGORY = CATEGORY[int(args.category)]
 SELECTED_SIMULATOR = args.simulator
 if SELECTED_SIMULATOR not in LAUNCH_CONFIGS:
     print(f"Simulator '{SELECTED_SIMULATOR}' not found in LAUNCH_CONFIGS.")
     sys.exit(1)
-LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_SIMULATOR_CMD"] + args.ros_args
-LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["LAUNCH_ROBOT_CMD"] + args.ros_args
-NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR]["NODES_TO_KILL"]
+LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_SIMULATOR_CMD"] + args.ros_args
+LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_ROBOT_CMD"] + args.ros_args
+NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["NODES_TO_KILL"]
+ITERATION_TIME = int(args.iteration_time)
+if ITERATION_TIME <= 0:
+    print("Error: --iteration_time must be greater than 0. Setting default value of 60 seconds.")
+    ITERATION_TIME = 60
 
-SELECTED_SIMULATOR = args.simulator
-IMAGE_TOPIC = args.image_topic
+
+# Set IMAGE_TOPICS from --image_topic if provided, otherwise use the dictionary
+if args.image_topic and args.image_topic != "":
+    IMAGE_TOPICS = [args.image_topic]
+else:
+    IMAGE_TOPICS = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["TOPICS_TO_LISTEN"]
+
 CSV_FILE = args.csv_file
 
-SELECTED_CATEGORY = CATEGORY[int(args.category)]
+
 
 if CSV_FILE == "":
     timestamp = int(time.time())
@@ -130,23 +225,27 @@ else:
 ITERATIONS = int(args.iterations)  # Cambia esto para más/menos iteraciones
 
 class ImageListener(Node):
-    def __init__(self):
-        super().__init__('image_listener')
+    def __init__(self, namespace="image_listener"):
+        super().__init__(f"image_listener_{random.randint(1000, 9999)}")
         self.image_received = False
+        self.namespace = namespace
         self.subscription = self.create_subscription(
             Image,
-            IMAGE_TOPIC,
+            namespace,
             self.image_callback,
             10
         )
-        print(f"Subscribed to {IMAGE_TOPIC}")
+        print(f"Subscribed to {self.namespace}")
 
     def image_callback(self, msg):
         self.image_received = True
+        self.destroy_subscription(self.subscription)
 
 class ClockListener(Node):
     def __init__(self):
         super().__init__('clock_listener')
+        self.first_clock_msg = None
+        self.first_received_time = None
         self.last_clock_msg = None
         self.last_received_time = None
         self.real_time_factor = 1.0
@@ -159,44 +258,74 @@ class ClockListener(Node):
         )
 
     def clock_callback(self, msg):
-
-        if self.last_clock_msg is not None:
-            clock_diff = msg.clock.sec - self.last_clock_msg.clock.sec + (msg.clock.nanosec - self.last_clock_msg.clock.nanosec) * 1e-9
-            time_diff = time.time() - self.last_received_time
-            self.real_time_factor = clock_diff / time_diff if time_diff > 0 else 1.0
-            self.real_time_factor_array.append(self.real_time_factor)
-            
-            #print(f"Clock diff: {clock_diff:.6f} s, Real time diff: {time_diff:.6f} s")
-            #print(f"Real time factor: {self.real_time_factor:.6f}")
-            #if len(self.real_time_factor_array) >= 10:
-            #    moving_avg = sum(self.real_time_factor_array[-10:]) / 10
-                #print(f"Real time factor (moving avg last 10): {moving_avg:.6f}")
+        """
+        Callback for processing simulator clock updates, tracking the real-time factor.
+        Args:
+            msg: ROS 2 Clock message containing the current simulation time.
+        Notes:
+            - On the first received message, initializes the reference simulation time
+              and the wall-clock timestamp for later comparisons.
+            - For subsequent messages, computes the ratio between the simulated time
+              elapsed and the real time elapsed (real-time factor) and appends it to
+              ``real_time_factor_array``.
+            - Updates internal timestamps and the last received clock message for
+              continuous monitoring.
+        """
+        if self.first_clock_msg is None:
+            self.first_clock_msg = msg
+            self.first_received_time = time.time()
 
         self.last_clock_msg = msg
         self.last_received_time = time.time()
+        
+        if self.first_clock_msg is not None:
+            clock_diff = msg.clock.sec - self.first_clock_msg.clock.sec + (msg.clock.nanosec - self.first_clock_msg.clock.nanosec) * 1e-9
+            time_diff = time.time() - self.first_received_time
+            self.real_time_factor = clock_diff / time_diff if time_diff > 0 else 1.0
+            self.real_time_factor_array.append(self.real_time_factor)
 
-    def get_last_msg(self):
-        return self.last_clock_msg
+        self.first_clock_msg = msg
+        self.first_received_time = time.time()
+
+    def get_first_msg(self):
+        return self.first_clock_msg
     
     def get_real_time_factor_avg(self):
         moving_avg = None
         if len(self.real_time_factor_array) >= 100:
             moving_avg = sum(self.real_time_factor_array[-100:]) / 100
         return moving_avg
+    
+    def get_real_time_factor(self):
+        return self.real_time_factor
 
 def run_iteration(iter_num):
+    """
+    Execute a single simulation benchmark iteration and collect system performance metrics.
+    Args:
+        iter_num (int): Sequential identifier of the benchmark iteration, used for logging.
+    Returns:
+        tuple:
+            elapsed (float): Seconds elapsed between launching the simulator and receiving the first image.
+            cpu_mean (float): Average normalized CPU utilization (%) across simulator and robot processes.
+            ram_mean (float): Average RAM usage (MB) across simulator and robot processes.
+            gpu_util_mean (Optional[float]): Average GPU utilization (%) if a GPU is available, otherwise None.
+            gpu_mem_mean (Optional[float]): Average GPU memory usage (MB) if a GPU is available, otherwise None.
+            real_time_factor_mean (Optional[float]): Average real-time factor reported by the clock listener, or None when unavailable.
+            iteration_total_time (float): Total wall-clock time (seconds) spent on the iteration, including post-image wait time.
+    """
     # Lanzar el launch file
     start_time = time.time()
     launch_simulator_process = subprocess.Popen(LAUNCH_SIMULATOR_CMD)
     launch_robot_process = subprocess.Popen(LAUNCH_ROBOT_CMD)
-    print(f"[{iter_num}] Lanzando launch file...")
-    #time.sleep(5)  # Espera para asegurar que ROS 2 inicia
+    elapsed = 0
+    print(f"[{iter_num}] Launching launch file...")
 
     rclpy.init()
-    node = ImageListener()
+    node_listeners = [ImageListener(topic) for topic in IMAGE_TOPICS]
     clock_node = ClockListener()
 
-    print(f"[{iter_num}] Esperando primer mensaje de imagen en {IMAGE_TOPIC}...")
+    print(f"[{iter_num}] Waiting for the first image message on {IMAGE_TOPICS}...")
 
     # Monitor resources in a background thread
     cpu_samples = []
@@ -217,7 +346,7 @@ def run_iteration(iter_num):
                     all_procs.extend(p.children(recursive=True))
                 except Exception:
                     pass
-            print("Monitoring resources for all children processes:", all_procs)
+            #print("Monitoring resources for all children processes:", all_procs)
             try:
 
                 # Initialize cpu_percent for each process if not already done
@@ -225,49 +354,56 @@ def run_iteration(iter_num):
                     proc.cpu_percent(interval=None)
                 time.sleep(0.5)  # Give time for cpu_percent to measure
 
-                for proc in all_procs:
-                    print(f"Process: {proc}, CPU%: {proc.cpu_percent(interval=0.5)}, RAM MB: {proc.memory_info().rss / (1024*1024)}")
+                #for proc in all_procs:
+                #    print(f"Process: {proc}, CPU%: {proc.cpu_percent(interval=0.5)}, RAM MB: {proc.memory_info().rss / (1024*1024)}")
                 cpu = sum([proc.cpu_percent(interval=0.5) for proc in all_procs]) / psutil.cpu_count()  # Normalizar por número de núcleos
                 ram = sum([proc.memory_info().rss for proc in all_procs]) / (1024*1024)  # MB
-                print(f"CPU: {cpu:.2f}%, RAM: {ram:.2f} MB")
+                #print(f"CPU: {cpu:.2f}%, RAM: {ram:.2f} MB")
                 cpu_samples.append(cpu)
                 ram_samples.append(ram)
                 gpu_util, gpu_mem = get_gpu_usage()
                 if gpu_util is not None:
                     gpu_util_samples.append(gpu_util)
-                    gpu_mem_samples.append(gpu_mem)
-                
-                    
+                    if gpu_mem is not None:
+                        gpu_mem_samples.append(gpu_mem)
+
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
 
     monitor_thread = threading.Thread(target=monitor)
     monitor_thread.start()
 
-    end_time = time.time() + 300  # Timeout de 5 minutos
+    end_time = time.time() + 120  # Timeout of 2 minutes
     image_received = False
     try:
         while rclpy.ok() and time.time() < end_time:
-            rclpy.spin_once(node, timeout_sec=0.1)
+            elapsed_time = time.time() - start_time
+            print(f"Monitoring for {elapsed_time:.2f} seconds... {end_time - time.time():.2f} seconds to finalize")
+            all_nodes_received = all(node.image_received for node in node_listeners)
+            for node in node_listeners:
+                rclpy.spin_once(node, timeout_sec=0.1)
             rclpy.spin_once(clock_node, timeout_sec=0.1)
-            if not image_received and node.image_received:
+            if not image_received and all_nodes_received:
                 image_received = True
                 end_time = time.time()
-                elapsed = end_time - start_time
-                # Wait 60 seconds more after receiving the image
-                extra_time = 60
-                print(f"Imagen recibida, esperando {extra_time} segundos más para estabilizar...")
+                elapsed = time.time() - start_time
+                # Wait ITERATION_TIME seconds more after receiving the image
+                extra_time = ITERATION_TIME
+                print(f"Image received, waiting {extra_time} more seconds to stabilize...")
                 end_time = time.time() + extra_time                
-                print(f"[{iter_num}] Imagen recibida tras {elapsed:.3f} segundos.")
+                print(f"[{iter_num}] Image received after {elapsed:.3f} seconds.")
+            elif not image_received:
+                print(f"[{iter_num}] Still waiting for topics images to set the startup time... ({elapsed_time:.2f}s elapsed)")
     finally:
-        print(f"[{iter_num}] Finalizando procesos...")
+        print(f"[{iter_num}] Finalizing processes...")
         # No need for extra sleep here, as interval=0.1 already waits
-        rtf_avg = clock_node.get_real_time_factor_avg()
+        rtf_avg = clock_node.get_real_time_factor()
         if rtf_avg is not None:
             real_time_factor_samples.append(rtf_avg)
         stop_monitor.set()
-        monitor_thread.join()   
-        node.destroy_node()
+        monitor_thread.join()
+        for node in node_listeners:
+            node.destroy_node()
         clock_node.destroy_node()
         rclpy.shutdown()
         launch_simulator_process.send_signal(subprocess.signal.SIGINT)
@@ -279,7 +415,7 @@ def run_iteration(iter_num):
         
         kill_processes_by_name(NODES_TO_KILL)
     
-        print(f"[{iter_num}] Launch file terminado.")
+        print(f"[{iter_num}] All processes finalized.")
 
     # Calcular medias
     cpu_mean = sum(cpu_samples)/len(cpu_samples) if cpu_samples else 0
@@ -292,7 +428,7 @@ def run_iteration(iter_num):
     return elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time
 
 def kill_processes_by_name(names):
-    # Obtener y matar procesos por nombre usando NODES_TO_KILL, evitando matar el propio proceso padre
+    # Get and kill processes by name using NODES_TO_KILL, avoiding killing the parent process itself
     parent_pid = os.getpid()
     for proc in psutil.process_iter(['pid', 'cmdline']):
         if proc.pid == parent_pid:
@@ -302,7 +438,7 @@ def kill_processes_by_name(names):
             continue
         cmdline_str = ' '.join(cmdline)
         if any(node_name in cmdline_str for node_name in names):
-            print(f"Matando proceso: {cmdline_str} (PID: {proc.pid})")
+            print(f"Killing process: {cmdline_str} (PID: {proc.pid})")
             try:
                 proc.kill()
             except Exception:
@@ -327,7 +463,7 @@ def main():
         timestamp = datetime.now().isoformat()
         write_csv_row(CSV_PATH, [SELECTED_SIMULATOR, timestamp, i, elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time])
         time.sleep(5)  # Espera entre iteraciones
-        print(f"[{i}] Iteración {i} completada y registrada.")
+        print(f"[{i}] Iteration {i} completed and recorded.")
 
 if __name__ == "__main__":
     main()

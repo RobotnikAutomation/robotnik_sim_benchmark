@@ -2,7 +2,7 @@
     "gazebo_harmonic": {
         "one_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "1", "rbwatcher", "false"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "1", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -12,7 +12,7 @@
         },
         "two_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "2", "rbwatcher", "false"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "2", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -22,7 +22,7 @@
         },
         "three_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "3", "rbwatcher", "false"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "3", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -33,7 +33,7 @@
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "1", "rbwatcher", "false"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "1", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -43,7 +43,7 @@
         },
         "two_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "2", "rbwatcher", "false"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "2", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -53,7 +53,7 @@
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "3", "rbwatcher", "false"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "3", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -63,7 +63,7 @@
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "1", "rbwatcher", "true"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "1", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -73,7 +73,7 @@
         },
         "two_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "2", "rbwatcher", "true"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "2", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -83,7 +83,7 @@
         },
         "three_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "3", "rbwatcher", "true"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "3", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -93,7 +93,7 @@
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "1", "rbwatcher", "true"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "1", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -103,7 +103,7 @@
         },
         "two_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "2", "rbwatcher", "true"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "2", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -113,7 +113,128 @@
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "3", "rbwatcher", "true"
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "3", "rbwatcher", "true", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "1", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "2", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "3", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+            
+        },
+        "one_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "1", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "2", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "3", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "1", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "2", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "empty", "3", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "1", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "2", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for gazebo harmonic"
+            ],
+            "NODES_TO_KILL": ["parameter_bridge", "rviz2", "gz", "robot_state_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/gazebo_harmonic/benchmark_harmonic.sh", "demo", "3", "rbwatcher", "true", "false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for gazebo harmonic"
@@ -259,7 +380,7 @@
     "webots": {
         "one_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -269,7 +390,7 @@
         },
         "two_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "empty", "2", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "empty", "2", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -279,7 +400,7 @@
         },
         "three_robot_empty_world": {
            "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -289,7 +410,7 @@
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -299,7 +420,7 @@
         },
         "two_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -309,7 +430,7 @@
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "false"
+                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "false", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -319,7 +440,7 @@
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -329,7 +450,7 @@
         },
         "two_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "empty", "2", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "empty", "2", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -339,7 +460,7 @@
         },
         "three_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -349,7 +470,7 @@
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -359,7 +480,7 @@
         },
         "two_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "true", "true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"
@@ -369,7 +490,128 @@
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "true"
+                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "true", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color" ]
+        },
+        # HEADLESS (NO GUI) MODE
+        "one_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver", "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
+        },
+        "two_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "empty", "2", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
+        },
+        "three_robot_empty_world_headless": {
+           "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color"]
+        },
+        "one_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
+        },
+        "two_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
+        },
+        "three_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color"]
+        },
+        "one_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
+        },
+        "two_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "empty", "2", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
+        },
+        "three_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color"]
+        },
+        "one_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "demo", "1", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color"]
+        },
+        "two_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "demo", "2", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for webots"
+            ],
+            "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
+        },
+        "three_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/webots/benchmark_webots.sh", "demo", "3", "rbwatcher", "true", "false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "echo", "No robot launch for webots"

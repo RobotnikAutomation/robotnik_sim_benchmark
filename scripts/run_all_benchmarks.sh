@@ -23,9 +23,17 @@ ITERATIONS=1
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 		-s|--simulator)
-			SIMULATOR="$2"; shift 2;;
+			if [[ -n "${2:-}" && ! "$2" =~ ^- ]]; then
+				SIMULATOR="$2"; shift 2
+			else
+				echo "Error: Missing argument for -s|--simulator"; show_help; exit 1
+			fi
+			;;
 		-h|--help)
 			show_help; exit 0;;
+		*)
+			shift
+			;;
 	esac
 done
 

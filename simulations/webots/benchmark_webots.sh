@@ -3,13 +3,14 @@
 set -Eeuo pipefail
 
 print_usage() {
-    echo "Usage: $0 [<world>] [num_robots] [robot_model] [run_rviz]"
+    echo "Usage: $0 [<world>] [num_robots] [robot_model] [run_rviz] [gui]"
     echo ""
     echo "Arguments:"
     echo "  [world]        : Name of the Gazebo world to launch (default: empty)"
     echo "  [num_robots]   : Number of robots to spawn (default: 1)"
     echo "  [robot_model]  : Robot model to use (default: rbwatcher)"
     echo "  [run_rviz]     : true/false to launch RViz (default: true)"
+    echo "  [gui]          : true/false to run the simulation without gui / headless (default: true)"
     echo ""
     echo "Example:"
     echo "  $0 harmonic 5 rbwatcher true    "
@@ -24,10 +25,11 @@ WORLD_NAME="${1:-empty}"
 NUM_ROBOTS="${2:-1}"
 ROBOT_MODEL="${3:-rbwatcher}"
 RUN_RVIZ="${4:-true}"
+GUI="${5:-true}"
 
 echo "Launching Webots world: $WORLD_NAME"
 
-ros2 launch robotnik_webots spawn_world.launch.py world:="$WORLD_NAME" &
+ros2 launch robotnik_webots spawn_world.launch.py world:="$WORLD_NAME" gui:="$GUI" &
 world_pid=$!
 
 # Wait for the world to be up (adjust as needed)

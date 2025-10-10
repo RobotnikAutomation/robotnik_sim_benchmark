@@ -15,7 +15,6 @@ EOF
 }
 
 SIMULATOR="webots"
-
 ITERATION_TIME=10
 ITERATIONS=1
 
@@ -38,7 +37,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$SIMULATOR" == "webots" || "$SIMULATOR" == "gazebo_harmonic" ]]; then
-	for CATEGORY in {1..12}; do
+	for CATEGORY in {1..24}; do
 		echo -e "\n\n\n------------------------------------------------------------------------------------------------------------------------------------------"
 		# Print the current test in color with command verbosity
 		echo -e "\033[1;34mRunning benchmark for CATEGORY $CATEGORY with simulator $SIMULATOR (iterations: $ITERATIONS, iteration_time: $ITERATION_TIME)\033[0m"

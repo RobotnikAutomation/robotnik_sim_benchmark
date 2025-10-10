@@ -44,7 +44,7 @@ if [[ "$SIMULATOR" == "webots" || "$SIMULATOR" == "gazebo_harmonic" ]]; then
 		sleep 10
 	done
 elif [[ "$SIMULATOR" == "isaac_sim" ]]; then
-	"$(dirname "$0")/../simulations/isaac_sim/utils/run_isaac_benchmarks.sh"
+	$(dirname "$0")/../simulations/isaac_sim/utils/run_isaac_benchmarks.sh
 else
 	echo "Unknown simulator: $SIMULATOR"
 	exit 1

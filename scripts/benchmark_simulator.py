@@ -176,6 +176,18 @@ CATEGORY = [
     "one_robot_simple_world_rviz",
     "two_robot_simple_world_rviz",
     "three_robot_simple_world_rviz",
+    "one_robot_empty_world_headless",
+    "two_robot_empty_world_headless",
+    "three_robot_empty_world_headless",
+    "one_robot_simple_world_headless",
+    "two_robot_simple_world_headless",
+    "three_robot_simple_world_headless",
+    "one_robot_empty_world_rviz_headless",
+    "two_robot_empty_world_rviz_headless",
+    "three_robot_empty_world_rviz_headless",
+    "one_robot_simple_world_rviz_headless",
+    "two_robot_simple_world_rviz_headless",
+    "three_robot_simple_world_rviz_headless",
 ]
 
 parser = argparse.ArgumentParser(description="Benchmark simulator script")

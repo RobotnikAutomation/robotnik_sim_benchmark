@@ -520,7 +520,7 @@
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color"]
         },
         "three_robot_empty_world_headless": {
-           "LAUNCH_SIMULATOR_CMD": [
+            "LAUNCH_SIMULATOR_CMD": [
                 "./simulations/webots/benchmark_webots.sh", "empty", "3", "rbwatcher", "false", "false"
             ],
             "LAUNCH_ROBOT_CMD": [

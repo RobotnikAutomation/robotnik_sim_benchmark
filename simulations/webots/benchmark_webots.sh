@@ -6,7 +6,7 @@ print_usage() {
     echo "Usage: $0 [<world>] [num_robots] [robot_model] [run_rviz] [gui]"
     echo ""
     echo "Arguments:"
-    echo "  [world]        : Name of the Gazebo world to launch (default: empty)"
+    echo "  [world]        : Name of the Webots world to launch (default: empty)"
     echo "  [num_robots]   : Number of robots to spawn (default: 1)"
     echo "  [robot_model]  : Robot model to use (default: rbwatcher)"
     echo "  [run_rviz]     : true/false to launch RViz (default: true)"

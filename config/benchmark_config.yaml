@@ -498,7 +498,7 @@
             "NODES_TO_KILL": ["rviz2", "robot_state_publisher",  "webots-bin", "spawn_robot.launch.py",  "webots_ros2_driver",  "Ros2Supervisor", "static_transform_publisher"],
             "TOPICS_TO_LISTEN": ["/rbwatcher1/rbwatcher1/front_rgbd_camera_color/image_color", "/rbwatcher2/rbwatcher2/front_rgbd_camera_color/image_color", "/rbwatcher3/rbwatcher3/front_rgbd_camera_color/image_color" ]
         },
-        # HEADLESS (NO GUI) MODE
+        # Headless (no GUI) mode
         "one_robot_empty_world_headless": {
             "LAUNCH_SIMULATOR_CMD": [
                 "./simulations/webots/benchmark_webots.sh", "empty", "1", "rbwatcher", "false", "false"

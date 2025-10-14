@@ -10,6 +10,7 @@ print_usage() {
     echo "  [num_robots]   : Number of robots to spawn (default: 1)"
     echo "  [robot_model]  : Robot model to use (default: rbwatcher)"
     echo "  [run_rviz]     : true/false to launch RViz (default: true)"
+    echo "  [gui]          : true/false to run the simulation without gui / headless (default: true)"
     echo ""
     echo "Example:"
     echo "  $0 harmonic 5 rbwatcher true    "
@@ -24,10 +25,11 @@ WORLD_NAME="${1:-empty}"
 NUM_ROBOTS="${2:-1}"
 ROBOT_MODEL="${3:-rbwatcher}"
 RUN_RVIZ="${4:-true}"
+GUI="${5:-true}"
 
 echo "Launching Gazebo Harmonic world: $WORLD_NAME"
 
-ros2 launch robotnik_gazebo_ignition spawn_world.launch.py world:="$WORLD_NAME" &
+ros2 launch robotnik_gazebo_ignition spawn_world.launch.py world:="$WORLD_NAME" gui:="$GUI" &
 world_pid=$!
 
 # Wait for the world to be up (adjust as needed)

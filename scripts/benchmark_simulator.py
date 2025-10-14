@@ -176,6 +176,18 @@ CATEGORY = [
     "one_robot_simple_world_rviz",
     "two_robot_simple_world_rviz",
     "three_robot_simple_world_rviz",
+    "one_robot_empty_world_headless",
+    "two_robot_empty_world_headless",
+    "three_robot_empty_world_headless",
+    "one_robot_simple_world_headless",
+    "two_robot_simple_world_headless",
+    "three_robot_simple_world_headless",
+    "one_robot_empty_world_rviz_headless",
+    "two_robot_empty_world_rviz_headless",
+    "three_robot_empty_world_rviz_headless",
+    "one_robot_simple_world_rviz_headless",
+    "two_robot_simple_world_rviz_headless",
+    "three_robot_simple_world_rviz_headless",
 ]
 
 parser = argparse.ArgumentParser(description="Benchmark simulator script")
@@ -191,17 +203,36 @@ if "--help" in sys.argv or "-h" in sys.argv or len(sys.argv) < 2:
     sys.exit(0)
 args = parser.parse_args()
 
-SELECTED_CATEGORY = CATEGORY[int(args.category)]
+try:
+    SELECTED_CATEGORY = CATEGORY[int(args.category)]
+except (IndexError, ValueError):
+    print(f"Error: category index {args.category} is invalid. Please select a valid category index.")
+    print("Available categories:")
+    for idx, cat in enumerate(CATEGORY):
+        print(f"{idx}: {cat}")
+    sys.exit(1)
+
 SELECTED_SIMULATOR = args.simulator
 if SELECTED_SIMULATOR not in LAUNCH_CONFIGS:
     print(f"Simulator '{SELECTED_SIMULATOR}' not found in LAUNCH_CONFIGS.")
     sys.exit(1)
-LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_SIMULATOR_CMD"] + args.ros_args
-LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_ROBOT_CMD"] + args.ros_args
-NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["NODES_TO_KILL"]
+try:
+    LAUNCH_SIMULATOR_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_SIMULATOR_CMD"] + args.ros_args
+    LAUNCH_ROBOT_CMD = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["LAUNCH_ROBOT_CMD"] + args.ros_args
+except KeyError as e:
+    print(f"Error: Could not find configuration for simulator '{SELECTED_SIMULATOR}' and category '{SELECTED_CATEGORY}'.")
+    print(f"Missing key: {e}")
+    sys.exit(1)
+
+try:
+    NODES_TO_KILL = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["NODES_TO_KILL"]
+except KeyError:
+    print(f"Warning: 'NODES_TO_KILL' not found for simulator '{SELECTED_SIMULATOR}' and category '{SELECTED_CATEGORY}'. Using empty list.")
+    NODES_TO_KILL = []
+
 ITERATION_TIME = int(args.iteration_time)
 if ITERATION_TIME <= 0:
-    print("Error: --iteration_time must be greater than 0. Setting default value of 60 seconds.")
+    print("Warning: --iteration_time must be greater than 0. Setting default value of 60 seconds.")
     ITERATION_TIME = 60
 
 
@@ -209,10 +240,13 @@ if ITERATION_TIME <= 0:
 if args.image_topic and args.image_topic != "":
     IMAGE_TOPICS = [args.image_topic]
 else:
-    IMAGE_TOPICS = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["TOPICS_TO_LISTEN"]
+    try:
+        IMAGE_TOPICS = LAUNCH_CONFIGS[SELECTED_SIMULATOR][SELECTED_CATEGORY]["TOPICS_TO_LISTEN"]
+    except KeyError:
+        print(f"Error: 'TOPICS_TO_LISTEN' not found for simulator '{SELECTED_SIMULATOR}' and category '{SELECTED_CATEGORY}'.")
+        sys.exit(1)
 
 CSV_FILE = args.csv_file
-
 
 
 if CSV_FILE == "":
@@ -223,6 +257,9 @@ else:
     CSV_PATH = "ros2_launch_timings.csv"
 
 ITERATIONS = int(args.iterations)  # Cambia esto para más/menos iteraciones
+if ITERATIONS <= 0:
+    print("Warning: --iterations must be greater than 0. Setting default value of 1 iteration.")
+    ITERATIONS = 1
 
 class ImageListener(Node):
     def __init__(self, namespace="image_listener"):

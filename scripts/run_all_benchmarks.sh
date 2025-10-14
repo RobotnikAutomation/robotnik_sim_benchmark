@@ -15,22 +15,29 @@ EOF
 }
 
 SIMULATOR="webots"
-
-ITERATION_TIME=10
+ITERATION_TIME=60
 ITERATIONS=1
 
 # Parse options
 while [[ $# -gt 0 ]]; do
 	case "$1" in
 		-s|--simulator)
-			SIMULATOR="$2"; shift 2;;
+			if [[ -n "${2:-}" && ! "$2" =~ ^- ]]; then
+				SIMULATOR="$2"; shift 2
+			else
+				echo "Error: Missing argument for -s|--simulator"; show_help; exit 1
+			fi
+			;;
 		-h|--help)
 			show_help; exit 0;;
+		*)
+			shift
+			;;
 	esac
 done
 
 if [[ "$SIMULATOR" == "webots" || "$SIMULATOR" == "gazebo_harmonic" ]]; then
-	for CATEGORY in {1..12}; do
+	for CATEGORY in {1..24}; do
 		echo -e "\n\n\n------------------------------------------------------------------------------------------------------------------------------------------"
 		# Print the current test in color with command verbosity
 		echo -e "\033[1;34mRunning benchmark for CATEGORY $CATEGORY with simulator $SIMULATOR (iterations: $ITERATIONS, iteration_time: $ITERATION_TIME)\033[0m"

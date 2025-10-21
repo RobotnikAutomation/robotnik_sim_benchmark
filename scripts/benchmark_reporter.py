@@ -9,18 +9,30 @@ if not os.path.exists(bench_dir):
 # Orden fijo de categorías
 CATEGORY_ORDER = [
     "",
-    "one_robot_emtpy_world",
-    "two_robot_emtpy_world",
-    "three_robot_emtpy_world",
+    "one_robot_empty_world",
+    "two_robot_empty_world",
+    "three_robot_empty_world",
     "one_robot_simple_world",
     "two_robot_simple_world",
     "three_robot_simple_world",
-    "one_robot_emtpy_world_rviz",
-    "two_robot_emtpy_world_rviz",
-    "three_robot_emtpy_world_rviz",
+    "one_robot_empty_world_rviz",
+    "two_robot_empty_world_rviz",
+    "three_robot_empty_world_rviz",
     "one_robot_simple_world_rviz",
     "two_robot_simple_world_rviz",
     "three_robot_simple_world_rviz",
+    "one_robot_empty_world_headless",
+    "two_robot_empty_world_headless",
+    "three_robot_empty_world_headless",
+    "one_robot_simple_world_headless",
+    "two_robot_simple_world_headless",
+    "three_robot_simple_world_headless",
+    "one_robot_empty_world_rviz_headless",
+    "two_robot_empty_world_rviz_headless",
+    "three_robot_empty_world_rviz_headless",
+    "one_robot_simple_world_rviz_headless",
+    "two_robot_simple_world_rviz_headless",
+    "three_robot_simple_world_rviz_headless",
 ]
 
 md_blocks = []
@@ -47,7 +59,7 @@ for sim_folder in sorted(os.listdir(bench_dir)):
         mean_data = all_data.mean(numeric_only=True)
 
         timestamp = all_data['timestamp'].max()
-        iterations = int(all_data['iteration'].sum())
+        iterations = len(all_data)
         duration = mean_data['elapsed_seconds']
         cpu = mean_data['cpu_mean_percent']
         ram = mean_data['ram_mean_mb']
@@ -65,7 +77,8 @@ for sim_folder in sorted(os.listdir(bench_dir)):
             "RealTime Factor": f"{rtf:.2f}",
             "RAM": f"{ram:.2f} MB",
             "CPU": f"{cpu:.2f} %",
-            "GPU": f"{gpu:.2f} %"
+            "GPU": f"{gpu:.2f} %",
+            "GPU RAM": f"{gpu_mem:.2f} MB",
         }
 
         # Bloque de detalle de la categoría dentro de un acordeón
@@ -100,7 +113,7 @@ for sim_folder in sorted(os.listdir(bench_dir)):
 
     if category_blocks:
         # Tabla resumen siempre visible, usando el orden definido
-        metrics = ["Startup time (s)", "RealTime Factor", "RAM", "CPU", "GPU"]
+        metrics = ["Startup time (s)", "RealTime Factor", "RAM", "CPU", "GPU", "GPU RAM"]
         table_header = "| Category | " + " | ".join(metrics) + " |"
         table_sep = "|" + "---|"*(len(metrics)+1)
         table_rows = []

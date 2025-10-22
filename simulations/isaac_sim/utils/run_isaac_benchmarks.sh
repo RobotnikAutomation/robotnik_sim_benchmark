@@ -30,9 +30,8 @@ isaac_benchmark() {
 
     sleep 0.5
 
-    python3 scripts/benchmark_simulator.py isaac_sim \
-        --category "$category" \
-        --iterations 1 \
+    python3 scripts/benchmark_simulator.py \
+        --category "$category" --iterations "1" --iteration_time "30" "isaac_sim" \
         --image_topic front_rgbd_camera/color/image_raw \
         --ros_args "num_robots:=$num_robots" "world_file:=$world_file" "run_rviz:=$run_rviz"
 }

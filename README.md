@@ -365,13 +365,13 @@ It will run all the categories from 1 to 12.
 Run `isaac_sim` single benchmark:
 
 ```
-python3 scripts/benchmark_simulator.py isaac_sim --category 4 --iterations 1 --image_topic front_rgbd_camera/color/image_raw --ros_args num_robots:=1 world_file:=simple_world.usd
+python3 scripts/benchmark_simulator.py isaac_sim --category 1 --iterations 5 --image_topic front_rgbd_camera/color/image_raw --ros_args num_robots:=1 world_file:=simple_world.usd
 ```
 
 Run `isaac_sim` all benchmarks:
 
 ```
-./scripts/run_all_benchmarks.sh -s isaac_sim
+./simulations/isaac_sim/utils/run_isaac_benchmarks.sh
 ```
 
 It will run all the categories from 1 to 12.

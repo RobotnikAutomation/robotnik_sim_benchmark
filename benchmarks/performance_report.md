@@ -4,73 +4,73 @@
 
 ### Summary Table
 
-| Category | Startup time (s) | RealTime Factor | RAM | CPU | GPU |
-|---|---|---|---|---|---|
-| one_robot_emtpy_world | 11.32 s | 0.79 | 5022.97 MB | 43.16 % | 59.71 % |
-| two_robot_emtpy_world | 11.99 s | 0.36 | 5227.97 MB | 47.18 % | 63.57 % |
-| three_robot_emtpy_world | 11.83 s | 0.80 | 5622.24 MB | 35.92 % | 71.60 % |
-| one_robot_simple_world | 11.05 s | 0.83 | 4823.32 MB | 43.60 % | 64.95 % |
-| two_robot_simple_world | 11.84 s | 0.45 | 5360.21 MB | 40.48 % | 74.95 % |
-| three_robot_simple_world | 12.42 s | 0.32 | 5611.32 MB | 43.35 % | 81.76 % |
-| one_robot_emtpy_world_rviz | 11.43 s | 0.87 | 5050.70 MB | 40.22 % | 62.71 % |
-| two_robot_emtpy_world_rviz | 12.92 s | 1.88 | 5410.24 MB | 40.85 % | 73.53 % |
-| three_robot_emtpy_world_rviz | 12.23 s | 0.38 | 6128.30 MB | 43.46 % | 69.06 % |
-| one_robot_simple_world_rviz | 11.67 s | 0.72 | 5061.05 MB | 44.65 % | 67.82 % |
-| two_robot_simple_world_rviz | 11.46 s | 0.51 | 5807.72 MB | 43.53 % | 82.88 % |
-| three_robot_simple_world_rviz | 11.95 s | 0.22 | 6045.27 MB | 44.16 % | 81.31 % |
+| Category | Startup time (s) | RealTime Factor | RAM | CPU | GPU | GPU RAM |
+|---|---|---|---|---|---|---|
+| one_robot_empty_world | 11.20 s | 0.99 | 4494.82 MB | 28.80 % | 52.24 % | 4644.43 MB |
+| two_robot_empty_world | 11.62 s | 1.00 | 4775.65 MB | 31.84 % | 71.81 % | 5114.38 MB |
+| three_robot_empty_world | 12.12 s | 0.60 | 5059.16 MB | 36.51 % | 65.95 % | 5608.19 MB |
+| one_robot_simple_world | 11.29 s | 0.80 | 4573.03 MB | 40.70 % | 61.62 % | 4579.62 MB |
+| two_robot_simple_world | 11.75 s | 0.80 | 4859.45 MB | 43.18 % | 68.43 % | 5163.86 MB |
+| three_robot_simple_world | 12.29 s | 0.20 | 5107.21 MB | 50.08 % | 59.23 % | 5772.05 MB |
+| one_robot_empty_world_rviz | 11.18 s | 0.80 | 4779.15 MB | 40.78 % | 55.47 % | 6360.76 MB |
+| two_robot_empty_world_rviz | 11.23 s | 0.60 | 5089.43 MB | 41.73 % | 65.12 % | 6864.53 MB |
+| three_robot_empty_world_rviz | 12.18 s | 0.60 | 5463.49 MB | 41.64 % | 58.00 % | 7409.22 MB |
+| one_robot_simple_world_rviz | 11.28 s | 1.00 | 4796.30 MB | 46.48 % | 64.82 % | 6350.41 MB |
+| two_robot_simple_world_rviz | 11.33 s | 0.80 | 5175.49 MB | 43.54 % | 71.18 % | 6931.29 MB |
+| three_robot_simple_world_rviz | 12.22 s | 0.60 | 5433.32 MB | 40.24 % | 68.50 % | 7420.22 MB |
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_emtpy_world</summary>
+<summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_empty_world</summary>
 
-**Timestamp:** 2025-09-19T15:50:11.887203  
+**Timestamp:** 2025-10-21T15:27:46.632886  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.32 s  
+**Average measured duration per iteration:** 11.20 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 43.16 %                    |
-| RAM average               | 5022.97 MB (~4.91 GB) |
-| GPU average               | 59.7 %                    |
-| GPU Memory average        | 5131.10 MB (~5.01 GB) |
+| CPU average               | 28.80 %                    |
+| RAM average               | 4494.82 MB (~4.39 GB) |
+| GPU average               | 52.2 %                    |
+| GPU Memory average        | 4644.43 MB (~4.54 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.7890 (~79 % of real-time) |
-| Average iteration time      | 74.68 s        |
+| Real Time Factor (RTF)     | 0.9901 (~99 % of real-time) |
+| Average iteration time      | 42.21 s        |
 
-> Simulation runs at ~79 % of real-time (1 s simulated → 1.3 s real).
+> Simulation runs at ~99 % of real-time (1 s simulated → 1.0 s real).
 
 </details>
 
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_emtpy_world_rviz</summary>
+<summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_empty_world_rviz</summary>
 
-**Timestamp:** 2025-09-19T15:58:10.766075  
+**Timestamp:** 2025-10-21T15:32:36.970299  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.43 s  
+**Average measured duration per iteration:** 11.18 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 40.22 %                    |
-| RAM average               | 5050.70 MB (~4.93 GB) |
-| GPU average               | 62.7 %                    |
-| GPU Memory average        | 7295.35 MB (~7.12 GB) |
+| CPU average               | 40.78 %                    |
+| RAM average               | 4779.15 MB (~4.67 GB) |
+| GPU average               | 55.5 %                    |
+| GPU Memory average        | 6360.76 MB (~6.21 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.8674 (~87 % of real-time) |
-| Average iteration time      | 75.36 s        |
+| Real Time Factor (RTF)     | 0.7967 (~80 % of real-time) |
+| Average iteration time      | 42.25 s        |
 
-> Simulation runs at ~87 % of real-time (1 s simulated → 1.2 s real).
+> Simulation runs at ~80 % of real-time (1 s simulated → 1.3 s real).
 
 </details>
 
@@ -78,27 +78,27 @@
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_simple_world</summary>
 
-**Timestamp:** 2025-09-19T15:54:08.756984  
+**Timestamp:** 2025-10-21T15:30:10.747667  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.05 s  
+**Average measured duration per iteration:** 11.29 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 43.60 %                    |
-| RAM average               | 4823.32 MB (~4.71 GB) |
-| GPU average               | 65.0 %                    |
-| GPU Memory average        | 5135.19 MB (~5.01 GB) |
+| CPU average               | 40.70 %                    |
+| RAM average               | 4573.03 MB (~4.47 GB) |
+| GPU average               | 61.6 %                    |
+| GPU Memory average        | 4579.62 MB (~4.47 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.8313 (~83 % of real-time) |
-| Average iteration time      | 73.46 s        |
+| Real Time Factor (RTF)     | 0.7970 (~80 % of real-time) |
+| Average iteration time      | 42.23 s        |
 
-> Simulation runs at ~83 % of real-time (1 s simulated → 1.2 s real).
+> Simulation runs at ~80 % of real-time (1 s simulated → 1.3 s real).
 
 </details>
 
@@ -106,83 +106,83 @@
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_simple_world_rviz</summary>
 
-**Timestamp:** 2025-09-19T16:02:12.436427  
+**Timestamp:** 2025-10-21T15:35:03.331410  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.67 s  
+**Average measured duration per iteration:** 11.28 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 44.65 %                    |
-| RAM average               | 5061.05 MB (~4.94 GB) |
-| GPU average               | 67.8 %                    |
-| GPU Memory average        | 7277.94 MB (~7.11 GB) |
+| CPU average               | 46.48 %                    |
+| RAM average               | 4796.30 MB (~4.68 GB) |
+| GPU average               | 64.8 %                    |
+| GPU Memory average        | 6350.41 MB (~6.20 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.7249 (~72 % of real-time) |
-| Average iteration time      | 75.28 s        |
+| Real Time Factor (RTF)     | 0.9959 (~100 % of real-time) |
+| Average iteration time      | 42.10 s        |
 
-> Simulation runs at ~72 % of real-time (1 s simulated → 1.4 s real).
+> Simulation runs at ~100 % of real-time (1 s simulated → 1.0 s real).
 
 </details>
 
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">Category: three_robot_emtpy_world</summary>
+<summary style="font-size:1.25em; font-weight:bold;">Category: three_robot_empty_world</summary>
 
-**Timestamp:** 2025-09-19T15:52:49.494718  
+**Timestamp:** 2025-10-21T15:29:22.678263  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.83 s  
+**Average measured duration per iteration:** 12.12 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 35.92 %                    |
-| RAM average               | 5622.24 MB (~5.49 GB) |
-| GPU average               | 71.6 %                    |
-| GPU Memory average        | 6319.05 MB (~6.17 GB) |
+| CPU average               | 36.51 %                    |
+| RAM average               | 5059.16 MB (~4.94 GB) |
+| GPU average               | 66.0 %                    |
+| GPU Memory average        | 5608.19 MB (~5.48 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.8017 (~80 % of real-time) |
-| Average iteration time      | 72.04 s        |
+| Real Time Factor (RTF)     | 0.5976 (~60 % of real-time) |
+| Average iteration time      | 42.20 s        |
 
-> Simulation runs at ~80 % of real-time (1 s simulated → 1.2 s real).
+> Simulation runs at ~60 % of real-time (1 s simulated → 1.7 s real).
 
 </details>
 
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">Category: three_robot_emtpy_world_rviz</summary>
+<summary style="font-size:1.25em; font-weight:bold;">Category: three_robot_empty_world_rviz</summary>
 
-**Timestamp:** 2025-09-19T16:00:51.363667  
+**Timestamp:** 2025-10-21T15:34:15.411849  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 12.23 s  
+**Average measured duration per iteration:** 12.18 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 43.46 %                    |
-| RAM average               | 6128.30 MB (~5.98 GB) |
-| GPU average               | 69.1 %                    |
-| GPU Memory average        | 8568.62 MB (~8.37 GB) |
+| CPU average               | 41.64 %                    |
+| RAM average               | 5463.49 MB (~5.34 GB) |
+| GPU average               | 58.0 %                    |
+| GPU Memory average        | 7409.22 MB (~7.24 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.3757 (~38 % of real-time) |
-| Average iteration time      | 73.89 s        |
+| Real Time Factor (RTF)     | 0.5967 (~60 % of real-time) |
+| Average iteration time      | 44.65 s        |
 
-> Simulation runs at ~38 % of real-time (1 s simulated → 2.7 s real).
+> Simulation runs at ~60 % of real-time (1 s simulated → 1.7 s real).
 
 </details>
 
@@ -190,27 +190,27 @@
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: three_robot_simple_world</summary>
 
-**Timestamp:** 2025-09-19T15:56:49.605529  
+**Timestamp:** 2025-10-21T15:31:48.897888  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 12.42 s  
+**Average measured duration per iteration:** 12.29 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 43.35 %                    |
-| RAM average               | 5611.32 MB (~5.48 GB) |
-| GPU average               | 81.8 %                    |
-| GPU Memory average        | 6397.95 MB (~6.25 GB) |
+| CPU average               | 50.08 %                    |
+| RAM average               | 5107.21 MB (~4.99 GB) |
+| GPU average               | 59.2 %                    |
+| GPU Memory average        | 5772.05 MB (~5.64 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.3155 (~32 % of real-time) |
-| Average iteration time      | 74.22 s        |
+| Real Time Factor (RTF)     | 0.1991 (~20 % of real-time) |
+| Average iteration time      | 44.27 s        |
 
-> Simulation runs at ~32 % of real-time (1 s simulated → 3.2 s real).
+> Simulation runs at ~20 % of real-time (1 s simulated → 5.0 s real).
 
 </details>
 
@@ -218,83 +218,83 @@
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: three_robot_simple_world_rviz</summary>
 
-**Timestamp:** 2025-09-19T16:04:51.229171  
+**Timestamp:** 2025-10-21T15:36:41.759556  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.95 s  
+**Average measured duration per iteration:** 12.22 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 44.16 %                    |
-| RAM average               | 6045.27 MB (~5.90 GB) |
-| GPU average               | 81.3 %                    |
-| GPU Memory average        | 8645.75 MB (~8.44 GB) |
+| CPU average               | 40.24 %                    |
+| RAM average               | 5433.32 MB (~5.31 GB) |
+| GPU average               | 68.5 %                    |
+| GPU Memory average        | 7420.22 MB (~7.25 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.2248 (~22 % of real-time) |
-| Average iteration time      | 73.65 s        |
+| Real Time Factor (RTF)     | 0.5964 (~60 % of real-time) |
+| Average iteration time      | 44.65 s        |
 
-> Simulation runs at ~22 % of real-time (1 s simulated → 4.4 s real).
+> Simulation runs at ~60 % of real-time (1 s simulated → 1.7 s real).
 
 </details>
 
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">Category: two_robot_emtpy_world</summary>
+<summary style="font-size:1.25em; font-weight:bold;">Category: two_robot_empty_world</summary>
 
-**Timestamp:** 2025-09-19T15:51:31.669064  
+**Timestamp:** 2025-10-21T15:28:34.656426  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.99 s  
+**Average measured duration per iteration:** 11.62 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 47.18 %                    |
-| RAM average               | 5227.97 MB (~5.11 GB) |
-| GPU average               | 63.6 %                    |
-| GPU Memory average        | 5732.10 MB (~5.60 GB) |
+| CPU average               | 31.84 %                    |
+| RAM average               | 4775.65 MB (~4.66 GB) |
+| GPU average               | 71.8 %                    |
+| GPU Memory average        | 5114.38 MB (~4.99 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.3640 (~36 % of real-time) |
-| Average iteration time      | 73.98 s        |
+| Real Time Factor (RTF)     | 0.9953 (~100 % of real-time) |
+| Average iteration time      | 42.20 s        |
 
-> Simulation runs at ~36 % of real-time (1 s simulated → 2.7 s real).
+> Simulation runs at ~100 % of real-time (1 s simulated → 1.0 s real).
 
 </details>
 
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">Category: two_robot_emtpy_world_rviz</summary>
+<summary style="font-size:1.25em; font-weight:bold;">Category: two_robot_empty_world_rviz</summary>
 
-**Timestamp:** 2025-09-19T15:59:31.702167  
+**Timestamp:** 2025-10-21T15:33:24.920269  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 12.92 s  
+**Average measured duration per iteration:** 11.23 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 40.85 %                    |
-| RAM average               | 5410.24 MB (~5.28 GB) |
-| GPU average               | 73.5 %                    |
-| GPU Memory average        | 7613.18 MB (~7.43 GB) |
+| CPU average               | 41.73 %                    |
+| RAM average               | 5089.43 MB (~4.97 GB) |
+| GPU average               | 65.1 %                    |
+| GPU Memory average        | 6864.53 MB (~6.70 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 1.8755 (~188 % of real-time) |
-| Average iteration time      | 75.15 s        |
+| Real Time Factor (RTF)     | 0.5977 (~60 % of real-time) |
+| Average iteration time      | 42.13 s        |
 
-> Simulation runs at ~188 % of real-time (1 s simulated → 0.5 s real).
+> Simulation runs at ~60 % of real-time (1 s simulated → 1.7 s real).
 
 </details>
 
@@ -302,27 +302,27 @@
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: two_robot_simple_world</summary>
 
-**Timestamp:** 2025-09-19T15:55:29.604591  
+**Timestamp:** 2025-10-21T15:30:58.807753  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.84 s  
+**Average measured duration per iteration:** 11.75 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 40.48 %                    |
-| RAM average               | 5360.21 MB (~5.23 GB) |
-| GPU average               | 75.0 %                    |
-| GPU Memory average        | 5761.10 MB (~5.63 GB) |
+| CPU average               | 43.18 %                    |
+| RAM average               | 4859.45 MB (~4.75 GB) |
+| GPU average               | 68.4 %                    |
+| GPU Memory average        | 5163.86 MB (~5.04 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.4541 (~45 % of real-time) |
-| Average iteration time      | 75.06 s        |
+| Real Time Factor (RTF)     | 0.7970 (~80 % of real-time) |
+| Average iteration time      | 42.23 s        |
 
-> Simulation runs at ~45 % of real-time (1 s simulated → 2.2 s real).
+> Simulation runs at ~80 % of real-time (1 s simulated → 1.3 s real).
 
 </details>
 
@@ -330,27 +330,27 @@
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: two_robot_simple_world_rviz</summary>
 
-**Timestamp:** 2025-09-19T16:03:31.799660  
+**Timestamp:** 2025-10-21T15:35:51.287146  
 **Total iterations:** 1  
-**Average measured duration per iteration:** 11.46 s  
+**Average measured duration per iteration:** 11.33 s  
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | 43.53 %                    |
-| RAM average               | 5807.72 MB (~5.67 GB) |
-| GPU average               | 82.9 %                    |
-| GPU Memory average        | 8026.38 MB (~7.84 GB) |
+| CPU average               | 43.54 %                    |
+| RAM average               | 5175.49 MB (~5.05 GB) |
+| GPU average               | 71.2 %                    |
+| GPU Memory average        | 6931.29 MB (~6.77 GB) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | 0.5067 (~51 % of real-time) |
-| Average iteration time      | 73.57 s        |
+| Real Time Factor (RTF)     | 0.7953 (~80 % of real-time) |
+| Average iteration time      | 42.13 s        |
 
-> Simulation runs at ~51 % of real-time (1 s simulated → 2.0 s real).
+> Simulation runs at ~80 % of real-time (1 s simulated → 1.3 s real).
 
 </details>
 
@@ -360,15 +360,15 @@
 
 ### Summary Table
 
-| Category | Startup time (s) | RealTime Factor | RAM | CPU | GPU |
-|---|---|---|---|---|---|
-| one_robot_simple_world | 3.24 s | 1.26 | 1170.36 MB | 3.49 % | 19.71 % |
+| Category | Startup time (s) | RealTime Factor | RAM | CPU | GPU | GPU RAM |
+|---|---|---|---|---|---|---|
+| one_robot_simple_world | 3.24 s | 1.26 | 1170.36 MB | 3.49 % | 19.71 % | 3725.33 MB |
 
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">Category: one_robot_simple_world</summary>
 
 **Timestamp:** 2025-09-18T16:41:41.574716  
-**Total iterations:** 55  
+**Total iterations:** 10  
 **Average measured duration per iteration:** 3.24 s  
 
 #### System Resources

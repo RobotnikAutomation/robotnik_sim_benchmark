@@ -246,7 +246,7 @@
     "isaac_sim": {
         "one_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=1", "world_file=empty_world.usd", "run_rviz=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -256,7 +256,7 @@
         },
         "two_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=2", "world_file=empty_world.usd", "run_rviz=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -266,7 +266,7 @@
         },
         "three_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=3", "world_file=empty_world.usd", "run_rviz=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -276,7 +276,7 @@
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=1", "world_file=simple_world.usd", "run_rviz=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -286,7 +286,7 @@
         },
         "two_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=2", "world_file=simple_world.usd", "run_rviz=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -296,7 +296,7 @@
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=3", "world_file=simple_world.usd", "run_rviz=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -306,7 +306,7 @@
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=1", "world_file=empty_world.usd", "run_rviz=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -316,7 +316,7 @@
         },
         "two_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=2", "world_file=empty_world.usd", "run_rviz=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -326,7 +326,7 @@
         },
         "three_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=3", "world_file=empty_world.usd", "run_rviz=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -336,7 +336,7 @@
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=1", "world_file=simple_world.usd", "run_rviz=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -346,7 +346,7 @@
         },
         "two_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=2", "world_file=simple_world.usd", "run_rviz=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -356,7 +356,7 @@
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots=3", "world_file=simple_world.usd", "run_rviz=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=true"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"

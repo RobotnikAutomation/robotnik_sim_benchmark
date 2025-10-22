@@ -371,7 +371,7 @@ python3 scripts/benchmark_simulator.py isaac_sim --category 1 --iterations 5 --i
 Run `isaac_sim` all benchmarks:
 
 ```
-./simulations/isaac_sim/utils/run_isaac_benchmarks.sh
+./scripts/run_all_benchmarks.sh -s isaac_sim
 ```
 
 It will run all the categories from 1 to 12.

@@ -1,0 +1,2 @@
+simulator,timestamp,iteration,elapsed_seconds,cpu_mean_percent,ram_mean_mb,gpu_mean_percent,gpu_mem_mean_mb,real_time_factor_mean,iteration_total_time
+webots,2025-10-23T19:24:43.625546,1,10.300025939941406,27.494791666666668,4382.0859375,70.0,9435.0,0.663317740012209,75.37475609779358

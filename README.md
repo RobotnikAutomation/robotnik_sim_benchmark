@@ -324,21 +324,33 @@ The benchmark results are saved under the category folder specified by the `--ca
 
 By default, this repository launches **one robot in a simple world**, which corresponds to **category 4**.
 
-| Category  | Name                            | Description 
-|----|------| --------------------------------| 
-| 0  |         No category                    | No folder
-| 1  |         one_robot_emtpy_world          | One robot without scene results
-| 2  |         two_robot_emtpy_world          | Two robot without scene results
-| 3  |         three_robot_emtpy_world        | Three robot without scene results
-| 4  |         one_robot_simple_world         | One robot in a lightweight scene results
-| 5  |         two_robot_simple_world         | Two robot in a lightweight scene results
-| 6  |         three_robot_simple_world       | Three robot in a lightweight scene results
-| 7  |         one_robot_emtpy_world_rviz     | One robot without scene results
-| 8  |         two_robot_emtpy_world_rviz     | Two robot without scene results
-| 9  |         three_robot_emtpy_world_rviz   | Three robot without scene results
-| 10 |         one_robot_simple_world_rviz    | One robot in a lightweight scene results
-| 11 |         two_robot_simple_world_rviz    | Two robot in a lightweight scene results
-| 12 |         three_robot_simple_world_rviz  | Three robot in a lightweight scene results
+| Category  | Name                                     | Description 
+|----|------| -----------------------------------------| 
+| 0  |         No category                             | No folder
+| 1  |         one_robot_emtpy_world                   | One robot without scene results
+| 2  |         two_robot_emtpy_world                   | Two robot without scene results
+| 3  |         three_robot_emtpy_world                 | Three robot without scene results
+| 4  |         one_robot_simple_world                  | One robot in a lightweight scene results
+| 5  |         two_robot_simple_world                  | Two robot in a lightweight scene results
+| 6  |         three_robot_simple_world                | Three robot in a lightweight scene results
+| 7  |         one_robot_emtpy_world_rviz              | One robot without scene results
+| 8  |         two_robot_emtpy_world_rviz              | Two robot without scene results
+| 9  |         three_robot_emtpy_world_rviz            | Three robot without scene results
+| 10 |         one_robot_simple_world_rviz             | One robot in a lightweight scene results
+| 11 |         two_robot_simple_world_rviz             | Two robot in a lightweight scene results
+| 12 |         three_robot_simple_world_rviz           | Three robot in a lightweight scene results
+| 13 |         one_robot_emtpy_world_headless          | One robot without scene results
+| 14 |         two_robot_emtpy_world_headless          | Two robot without scene results
+| 15 |         three_robot_emtpy_world_headless        | Three robot without scene results
+| 16 |         one_robot_simple_world_headless         | One robot in a lightweight scene results
+| 17 |         two_robot_simple_world_headless         | Two robot in a lightweight scene results
+| 18 |         three_robot_simple_world_headless       | Three robot in a lightweight scene results
+| 19 |         one_robot_emtpy_world_rviz_headless     | One robot without scene results
+| 20 |         two_robot_emtpy_world_rviz_headless     | Two robot without scene results
+| 21 |         three_robot_emtpy_world_rviz_headless   | Three robot without scene results
+| 22 |         one_robot_simple_world_rviz_headless    | One robot in a lightweight scene results
+| 23 |         two_robot_simple_world_rviz_headless    | Two robot in a lightweight scene results
+| 14 |         three_robot_simple_world_rviz_headless  | Three robot in a lightweight scene results
 ___________________________________________________________________________________________
 
 #### 2.1.1 Benchmarking Gazebo Harmonic
@@ -379,23 +391,29 @@ It will run all the categories from 1 to 12.
 
 #### 2.1.3 Benchmarking O3DE
 
-Run `o3de` benchmark:
+Run `o3de` all benchmarks:
 
 ```
-TO DO
+./scripts/run_all_benchmarks.sh -s o3de
 ```
 
 #### 2.1.4 Benchmarking Unity
 
-Run `unity` benchmark:
+Run `unity` single benchmarks:
 
 ```
 python3 scripts/benchmark_simulator.py unity --image_topic /robot/top_rgbd_camera/image_raw --iterations 1 --category 5 --ros_args robot_count:=2 world:=simple_world
 ```
 
+Run `unity` all benchmarks:
+
+```
+./scripts/run_all_benchmarks.sh -s unity
+```
+
 #### 2.1.5 Benchmarking Webots
 
-Run `webots` single benchmarks:
+Run `webots` single benchmark:
 
 ```
 python3 ./scripts/benchmark_simulator.py --category 1 --iterations 5 --iteration_time 60 webots
@@ -407,7 +425,7 @@ Run `webots` all benchmarks:
 ./scripts/run_all_benchmarks.sh -s webots
 ```
 
-It will run all the categories from 1 to 12.
+It will run all the categories from 1 to 24.
 
 ## 3. Results
 

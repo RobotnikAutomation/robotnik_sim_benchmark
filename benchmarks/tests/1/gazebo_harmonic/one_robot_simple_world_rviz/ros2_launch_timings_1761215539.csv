@@ -1,0 +1,2 @@
+simulator,timestamp,iteration,elapsed_seconds,cpu_mean_percent,ram_mean_mb,gpu_mean_percent,gpu_mem_mean_mb,real_time_factor_mean,iteration_total_time
+gazebo_harmonic,2025-10-23T12:33:27.537646,1,4.699069976806641,13.88935185185185,3077.672309027778,34.666666666666664,4145.777777777777,0.9958223129703931,68.39766430854797

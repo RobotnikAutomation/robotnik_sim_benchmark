@@ -111,16 +111,65 @@ ros2 launch isaac_sim isaac_sim_complete.launch.py num_robots:=1 world_file:=sim
 <summary style="font-size:1.25em; font-weight:bold;">O3DE</summary>
 
 ## 1. Prerequisites
+
+- ROS 2 Humble installed and sourced. *(Also works on ROS 2 Jazzy.)*
+- O3DE with ROS 2 Gem installed and sourced. Follow the instructions at: [O3DE](https://docs.o3de.org/docs/welcome-guide/setup/installing-linux/) and [ROS 2 Gem](https://docs.o3de.org/docs/user-guide/interactivity/robotics/project-configuration/).
+- Install required ROS 2 packages:
+```bash
+source /opt/ros/humble/setup.bash
+sudo apt update
+sudo apt install ros-${ROS_DISTRO}-ackermann-msgs ros-${ROS_DISTRO}-control-msgs ros-${ROS_DISTRO}-nav-msgs ros-${ROS_DISTRO}-gazebo-msgs ros-${ROS_DISTRO}-xacro ros-${ROS_DISTRO}-vision-msgs
 ```
-TO DO
+- Clone the O3DE simulation repository:
+```bash
+export O3DE_HOME=${HOME}/o3de
+export O3DE_EXTRAS_HOME=${HOME}/o3de-extras
+export PROJECT_NAME=robotnik_roscon25
+export PROJECT_PATH=${HOME}/projects/robotnik_o3de/project/${PROJECT_NAME}
+cd ${HOME}/projects
+git clone -b humble-devel https://github.com/RobotnikAutomation/robotnik_o3de.git
+cd ${PROJECT_PATH}
+${O3DE_HOME}/scripts/o3de.sh register --project-path ${PROJECT_PATH}
+```
+- Build the O3DE project (Editor and GameLauncher):
+```bash
+cd ${PROJECT_PATH}
+cmake --build build/linux --config profile --target ${PROJECT_NAME} Editor ${PROJECT_NAME}.Assets
+cmake --build build/linux --config profile --target ${PROJECT_NAME} ${PROJECT_NAME}.Assets ${PROJECT_NAME}.GameLauncher
 ```
 
-## 2. Recommended: Run with Launch File
+## 2. Run O3DE Simulation
 
+### 2.1 Editor
+Run the O3DE Editor with the ROS 2 project:
+```bash
+cd ${PROJECT_PATH}
+./build/linux/bin/profile/Editor
 ```
-TO DO
+
+### 2.2 Game Launcher
+Run the O3DE Game Launcher with the ROS 2 project:
+```bash
+cd $PROJECT_PATH
+./build/linux/bin/profile/${PROJECT_NAME}.GameLauncher
 ```
-</details>
+
+## 3. ROS 2 Integration
+
+Run O3DE simulation:
+
+1. Spawn world:
+```
+source /opt/ros/humble/setup.bash
+ros2 launch robotnik_o3de spawn_world.launch.py
+```
+
+2. Spawn a robot instance (e.g., `robot_a`):
+```
+ros2 launch robotnik_o3de spawn_robot.launch.py robot_id:=robot_a robot:=rbwatcher
+```
+
+> **Note**: Spawn world launch file requires to edit where the Game Launcher binary is located in your system. Edit the `executable` parameter in `spawn_world.launch.py` accordingly.
 
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">1.4 Unity</summary>

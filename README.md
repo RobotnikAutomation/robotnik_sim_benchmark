@@ -171,6 +171,8 @@ ros2 launch robotnik_o3de spawn_robot.launch.py robot_id:=robot_a robot:=rbwatch
 
 > **Note**: Spawn world launch file requires to edit where the Game Launcher binary is located in your system. Edit the `executable` parameter in `spawn_world.launch.py` accordingly.
 
+</details>
+
 <details>
 <summary style="font-size:1.25em; font-weight:bold;">1.4 Unity</summary>
 

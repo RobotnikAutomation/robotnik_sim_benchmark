@@ -262,7 +262,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -272,7 +272,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -292,7 +292,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -302,7 +302,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -322,7 +322,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -332,7 +332,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -352,7 +352,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -362,7 +362,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
     },
     "webots": {

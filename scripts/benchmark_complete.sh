@@ -5,11 +5,11 @@ ROOT_DIR="$(pwd)"
 echo $ROOT_DIR
 
 ROS_SOURCE="/opt/ros/humble/setup.bash"
-GAZEBO_SOURCE="/home/robotnik/workspaces/robotnik_gazebo_harmonic_ws/install/setup.bash"
-WEBOTS_SOURCE="/home/robotnik/workspaces/robotnik_webots_ws/install/setup.bash"
-ISAAC_SIM_SOURCE="/home/robotnik/workspaces/sim_ws/install/setup.bash"
-UNITY_SOURCE="/home/robotnik/workspaces/sim_ws/install/setup.bash"
-O3DE_SOURCE="/home/robotnik/workspaces/robotnik_gazebo_ws/install/setup.bash"
+GAZEBO_SOURCE="~/workspaces/robotnik_gazebo_harmonic_ws/install/setup.bash"
+WEBOTS_SOURCE="~/workspaces/robotnik_webots_ws/install/setup.bash"
+ISAAC_SIM_SOURCE="~/workspaces/robotnik_isaac_ws/install/setup.bash"
+UNITY_SOURCE="~/workspaces/robotnik_unity_ws/install/setup.bash"
+O3DE_SOURCE="4/workspaces/robotnik_o3de_ws/install/setup.bash"
 
 source $ROS_SOURCE
 source $GAZEBO_SOURCE

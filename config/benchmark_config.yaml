@@ -262,7 +262,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -272,7 +272,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -292,7 +292,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -302,7 +302,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -322,7 +322,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -332,7 +332,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -352,7 +352,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
@@ -362,7 +362,7 @@
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
         },
     },
     "webots": {
@@ -611,14 +611,365 @@
     "unity": {
         "one_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2", "launch", "unity_sim", "unity_complete.launch.py"
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=1", "world:=empty_world", "run_rviz:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
-                "ros2", "launch", "robotnik_unity", "spawn_robot.launch.py",
-                "robot:=rbwatcher", "robot_id:=robot", "x:=2.0", "y:=2.0", "z:=0.0"
+                "echo", "No robot launch for unity"
             ],
-            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"]
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw"]
         },
-        # Add other categories as needed, following the same pattern as above
-    }
+        "two_robot_empty_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=2", "world:=empty_world", "run_rviz:=false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw"]
+        },
+        "three_robot_empty_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=3", "world:=empty_world", "run_rviz:=false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw", "/robot_3/front_rgbd_camera/image_raw"]
+        },
+        "one_robot_simple_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=1", "world:=simple_world", "run_rviz:=false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw"]
+        },
+        "two_robot_simple_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=2", "world:=simple_world", "run_rviz:=false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw"]
+        },
+        "three_robot_simple_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=3", "world:=simple_world", "run_rviz:=false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw", "/robot_3/front_rgbd_camera/image_raw"]
+        },
+        "one_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=1", "world:=empty_world", "run_rviz:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw"]
+        },
+        "two_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=2", "world:=empty_world", "run_rviz:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw"]
+        },
+        "three_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=3", "world:=empty_world", "run_rviz:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw", "/robot_3/front_rgbd_camera/image_raw"]
+        },
+        "one_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=1", "world:=simple_world", "run_rviz:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw"]
+        },
+        "two_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=2", "world:=simple_world", "run_rviz:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw"]
+        },
+        "three_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2", "launch", "unity_sim", "unity_complete.launch.py", "robot_count:=3", "world:=simple_world", "run_rviz:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for unity"
+            ],
+            "NODES_TO_KILL": ["rviz2", "ros_tcp_endpoint", "PI_simulation_Unity_Robotnik.x86_64"],
+            "TOPICS_TO_LISTEN": ["/robot/front_rgbd_camera/image_raw","/robot_2/front_rgbd_camera/image_raw", "/robot_3/front_rgbd_camera/image_raw"]
+        },
+    },
+    "o3de": {
+        "one_robot_empty_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "1", "rbwatcher", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "2", "rbwatcher", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "3", "rbwatcher", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "1", "rbwatcher", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "2", "rbwatcher", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "3", "rbwatcher", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "1", "rbwatcher", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "2", "rbwatcher", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "3", "rbwatcher", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "1", "rbwatcher", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "2", "rbwatcher", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_rviz": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "3", "rbwatcher", "true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "1", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "2", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "3", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "1", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "2", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "3", "rbwatcher", "false", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "1", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "2", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "EmptyLevel", "3", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "1", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "2", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw","/rbwatcher_2/front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "./simulations/o3de/benchmark_o3de.sh", "BasicLevel", "3", "rbwatcher", "true", "false"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "echo", "No robot launch for o3de"
+            ],
+            "NODES_TO_KILL": ["rviz2",  "GameLauncher"],
+            "TOPICS_TO_LISTEN": ["/rbwatcher_1/front_rgbd_camera/color/image_raw", "/rbwatcher_2/front_rgbd_camera/color/image_raw", "/rbwatcher_3/front_rgbd_camera/color/image_raw"]
+        },
+    },
 }

@@ -36,7 +36,7 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
-if [[ "$SIMULATOR" == "webots" || "$SIMULATOR" == "gazebo_harmonic" || "$SIMULATOR" == "isaac_sim" ]]; then
+if [[ "$SIMULATOR" == "webots" || "$SIMULATOR" == "gazebo_harmonic" || "$SIMULATOR" == "isaac_sim" || "$SIMULATOR" == "unity"  || "$SIMULATOR" == "o3de" ]]; then
 	for CATEGORY in {1..24}; do
 		echo -e "\n\n\n------------------------------------------------------------------------------------------------------------------------------------------"
 		# Print the current test in color with command verbosity

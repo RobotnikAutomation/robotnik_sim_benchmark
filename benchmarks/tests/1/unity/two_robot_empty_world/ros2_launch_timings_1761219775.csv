@@ -1,2 +1,0 @@
-simulator,timestamp,iteration,elapsed_seconds,cpu_mean_percent,ram_mean_mb,gpu_mean_percent,gpu_mem_mean_mb,real_time_factor_mean,iteration_total_time
-unity,2025-10-23T13:44:03.468444,1,6.750555038452148,6.503958333333332,758.325,25.45,1173.7,0.16623403309403076,67.55180335044861

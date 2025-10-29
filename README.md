@@ -108,7 +108,7 @@ ros2 launch isaac_sim isaac_sim_complete.launch.py num_robots:=1 world_file:=sim
 </details>
 
 <details>
-<summary style="font-size:1.25em; font-weight:bold;">O3DE</summary>
+<summary style="font-size:1.25em; font-weight:bold;">1.3 O3DE</summary>
 
 ## 1. Prerequisites
 

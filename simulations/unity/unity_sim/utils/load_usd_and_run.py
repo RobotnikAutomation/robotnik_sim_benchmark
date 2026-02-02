@@ -6,11 +6,13 @@
 #
 # Usage:
 #   python3 load_usd_and_run.py unity_simulation_only.tar.gz
-#   python3 load_usd_and_run.py unity_simulation.tar.gz
+#   python3 load_usd_and_run.py unity_simulation.tar.gz --batchmode
+#   python3 load_usd_and_run.py -b  # batchmode with default archive
 #
 # If no argument is given, it falls back to ARCHIVE_NAME.
 
 import sys
+import argparse
 import subprocess
 from pathlib import Path
 from typing import Optional
@@ -75,7 +77,7 @@ def ensure_extracted(worlds_dir: Path, archive_name: str, binary_name: str) -> P
 
     return sim_binary
 
-def main(archive_name: str, binary_name: str = BINARY_NAME):
+def main(archive_name: str, binary_name: str = BINARY_NAME, batchmode: bool = False):
     # Base path is the folder of this script
     script_dir = Path(__file__).resolve().parent
     worlds_dir = script_dir.parent / "worlds"
@@ -90,20 +92,57 @@ def main(archive_name: str, binary_name: str = BINARY_NAME):
     except Exception as e:
         print(f"[WARN] Could not change executable permissions: {e}")
 
+    # Unity CLI args
+    unity_args = [str(sim_binary)]
+    
+    # Add batchmode if requested
+    if batchmode:
+        unity_args.append("-batchmode")
+        unity_args.append("-logFile")
+        unity_args.append("-")
+        print("[INFO] Running in batchmode (headless)")
+    else:
+        print("[INFO] Running in normal mode (with UI)")
+    
+    # "-nographics",          # Enable this ONLY if you do not need camera rendering
+    # "-quit",               # Optional: auto-quit when done (usually not desired for sim servers)
+
+    print(f"[INFO] Starting Unity simulation: {' '.join(unity_args)}")
     # Run the simulation with its folder as CWD (keeps relative assets consistent)
-    print(f"[INFO] Starting Unity simulation: {sim_binary}")
     try:
-        subprocess.run([str(sim_binary)], cwd=sim_binary.parent, check=False)
+        subprocess.run(unity_args, cwd=sim_binary.parent, check=False)
     except Exception as e:
         print(f"[ERROR] Failed to start simulation: {e}")
         sys.exit(1)
 
 if __name__ == "__main__":
-    # Read the archive name from the first command-line argument (optional).
-    if len(sys.argv) >= 2 and sys.argv[1].strip():
-        archive_to_load = sys.argv[1]
-    else:
-        archive_to_load = ARCHIVE_NAME
-        print(f"[INFO] No archive name provided. Using default: {archive_to_load}")
+    # Parse command-line arguments
+    parser = argparse.ArgumentParser(
+        description="Load and run Unity simulation from a tar.gz archive.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python3 load_usd_and_run.py                           # Normal mode with default archive
+  python3 load_usd_and_run.py my_simulation.tar.gz      # Normal mode with specific archive
+  python3 load_usd_and_run.py my_simulation.tar.gz -b   # Batchmode with specific archive
+  python3 load_usd_and_run.py --batchmode               # Batchmode with default archive
+        """
+    )
+    parser.add_argument(
+        "archive",
+        nargs="?",
+        default=ARCHIVE_NAME,
+        help=f"Path to the Unity simulation tar.gz archive (default: {ARCHIVE_NAME})"
+    )
+    parser.add_argument(
+        "-b", "--batchmode",
+        action="store_true",
+        help="Run Unity in batchmode (headless, no UI)"
+    )
+    
+    args = parser.parse_args()
+    
+    if args.archive == ARCHIVE_NAME and len(sys.argv) == 1:
+        print(f"[INFO] No archive name provided. Using default: {args.archive}")
 
-    main(archive_name=archive_to_load)
+    main(archive_name=args.archive, batchmode=args.batchmode)

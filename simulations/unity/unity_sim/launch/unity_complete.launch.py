@@ -10,6 +10,7 @@
 #   run_rviz      (bool)  : launch RViz2 (default: true)
 #   robot_count   (int)   : number of robots to spawn [1..5] (default: 1)
 #   world         (str)   : name of the world to load (default: empty_world)
+#   headless      (bool)  : launch Unity in batchmode (default: false)
 
 import os
 from launch import LaunchDescription
@@ -50,8 +51,14 @@ def generate_launch_description():
         description="Name of the world to load"
     )
 
+    headless_arg = DeclareLaunchArgument(
+        "headless",
+        default_value="false",
+        description="Launch Unity in batchmode (headless, no UI)"
+    )
+
     # -------------------------
-    # OpaqueFunction para lanzar Unity con el mundo correcto
+    # OpaqueFunction to launch Unity with the correct world
     # -------------------------
     def launch_unity_with_world(context, *args, **kwargs):
         world_to_filename_map = {
@@ -61,15 +68,25 @@ def generate_launch_description():
         selected_world_name = LaunchConfiguration("world").perform(context)
         world_filename = world_to_filename_map[selected_world_name]
         
+        # Get headless value
+        headless_value = LaunchConfiguration("headless").perform(context).lower()
+        is_headless = headless_value in ["true", "1", "yes"]
+        
         print(f"[INFO] Selected world: '{selected_world_name}' -> using file: '{world_filename}'")
+        print(f"[INFO] Headless mode: {is_headless}")
 
         pkg_share_path = get_package_share_directory("unity_sim")
         autorun_script_path = os.path.join(
             pkg_share_path, "utils", "load_usd_and_run.py"
         )
         
+        # Build command with or without --batchmode
+        cmd = ["python3", autorun_script_path, world_filename]
+        if is_headless:
+            cmd.append("--batchmode")
+        
         unity_bootstrap = ExecuteProcess(
-            cmd=["python3", autorun_script_path, world_filename],
+            cmd=cmd,
             name="unity_sim_bootstrap",
             output="screen"
         )
@@ -103,7 +120,7 @@ def generate_launch_description():
     )
 
     # -------------------------
-    # Helper para generar las llamadas al servicio de spawn
+    # Helper to generate spawn service calls
     # -------------------------
     def build_spawn_calls(context, *args, **kwargs):
         try:
@@ -143,5 +160,6 @@ def generate_launch_description():
         run_rviz_arg,
         robot_count_arg,
         world_arg,
+        headless_arg,
         group,
     ])

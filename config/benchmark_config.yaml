@@ -246,7 +246,7 @@
     "isaac_sim": {
         "one_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=false", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -256,27 +256,27 @@
         },
         "two_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=false", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=false", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=false", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -286,27 +286,27 @@
         },
         "two_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=false", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=false"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=false", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "one_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=true", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -316,27 +316,27 @@
         },
         "two_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=true", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_empty_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=true", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "one_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=true", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
@@ -346,23 +346,143 @@
         },
         "two_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=true", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
         "three_robot_simple_world_rviz": {
             "LAUNCH_SIMULATOR_CMD": [
-                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=true"
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=true", "headless:=false"
             ],
             "LAUNCH_ROBOT_CMD": [
                 "ls"
             ],
             "NODES_TO_KILL": ["rviz2", "kit"],
-            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw", "/rbwatcher2/front_rgbd_camera/color/image_raw", "/rbwatcher3/front_rgbd_camera/color/image_raw"]
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=false", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=false", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=false", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=false", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=false", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=false", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=empty_world.usd", "run_rviz:=true", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=empty_world.usd", "run_rviz:=true", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_empty_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=empty_world.usd", "run_rviz:=true", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "one_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=1", "world_file:=simple_world.usd", "run_rviz:=true", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "two_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=2", "world_file:=simple_world.usd", "run_rviz:=true", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
+        },
+        "three_robot_simple_world_rviz_headless": {
+            "LAUNCH_SIMULATOR_CMD": [
+                "ros2","launch","isaac_sim","isaac_sim_complete.launch.py", "num_robots:=3", "world_file:=simple_world.usd", "run_rviz:=true", "headless:=true"
+            ],
+            "LAUNCH_ROBOT_CMD": [
+                "ls"
+            ],
+            "NODES_TO_KILL": ["rviz2", "kit"],
+            "TOPICS_TO_LISTEN": ["front_rgbd_camera/color/image_raw"]
         },
     },
     "webots": {

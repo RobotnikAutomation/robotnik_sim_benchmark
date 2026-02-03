@@ -44,7 +44,7 @@ def get_gpu_usage(simulator):
             "gazebo_harmonic": ("gazebo", "ign", "gz", "world",),
             "webots": ("webots",),
             "o3de": ("Editor", "GameLauncher", "robotnik_roscon", "AssetProcessor",),
-            "isaac_sim": ("kit", "omni", "isaac",),
+            "isaac_sim": ("kit", "omni", "isaac", "exe", "python3",),
             "unity": ("Unity","PI_simulation_U",)
         }
 

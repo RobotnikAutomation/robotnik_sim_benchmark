@@ -48,13 +48,26 @@ def generate_launch_description():
 
     autorun_script = PathJoinSubstitution([
         FindPackageShare('isaac_sim'),
-        'utils/isaac_sim_launcher.py'
+        'utils/isaac_sim_launcher_headless.py'
     ])
+
+
+    # isaac_sim = ExecuteProcess(
+    #     cmd=[
+    #         os.path.expanduser("~/isaacsim/isaac-sim.sh"),
+    #         "--exec", autorun_script
+    #     ],
+    #     output="screen",
+    #     additional_env={
+    #         'NUM_ROBOTS': num_robots,
+    #         'WORLD_FILE': world_file
+    #     }
+    # )
 
     isaac_sim = ExecuteProcess(
         cmd=[
-            os.path.expanduser("~/isaacsim/isaac-sim.sh"),
-            "--exec", autorun_script
+            os.path.expanduser("~/isaacsim/python.sh"),
+            autorun_script
         ],
         output="screen",
         additional_env={
@@ -62,6 +75,7 @@ def generate_launch_description():
             'WORLD_FILE': world_file
         }
     )
+
 
     # run rviz
     rviz_config = PathJoinSubstitution([

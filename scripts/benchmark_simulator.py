@@ -19,7 +19,7 @@ import json
 import random
 import yaml
 
-def get_gpu_usage():
+def get_gpu_usage(simulator):
     """Return total GPU utilization (%) and memory (MiB) if GPU is present, else (None, None)."""
     def _try_float(value):
         try:
@@ -39,27 +39,53 @@ def get_gpu_usage():
         except json.JSONDecodeError:
             return None
 
-    def query_nvidia():
+    def query_nvidia(nombre_simulador):
+        SIMULADORES_GPU = {
+            "gazebo_harmonic": ("gazebo", "ign", "gz", "world",),
+            "webots": ("webots",),
+            "o3de": ("Editor", "GameLauncher", "robotnik_roscon", "AssetProcessor",),
+            "isaac_sim": ("kit", "omni", "isaac",),
+            "unity": ("Unity","PI_simulation_U",)
+        }
+
+        if nombre_simulador not in SIMULADORES_GPU:
+            return None
+
+        keywords = SIMULADORES_GPU[nombre_simulador]
+
+
         try:
-            result = sp.run(
-                [
-                    'nvidia-smi',
-                    '--query-gpu=utilization.gpu,memory.used',
-                    '--format=csv,noheader,nounits'
-                ],
-                capture_output=True,
-                text=True,
-                check=True
+            res_gpu = sp.run(
+                ['nvidia-smi', '--query-gpu=utilization.gpu', '--format=csv,noheader,nounits'],
+                capture_output=True, text=True, check=True
             )
+            gpu_util_global = float(res_gpu.stdout.strip())
+
+            res_apps = sp.run(
+              'nvidia-smi pmon -c 1 -s m | grep -vE "^#|idx" | awk \'{print $6 "," $4 }\'',
+              shell=True, capture_output=True, text=True, check=True
+              )
         except Exception:
             return None
-        total_util = 0.0
-        total_mem = 0.0
-        for line in result.stdout.strip().splitlines():
-            util, mem = line.split(',')
-            total_util += float(util.strip())
-            total_mem += float(mem.strip())
-        return total_util, total_mem
+
+        memoria_simulador = 0.0
+        encontrado = False
+
+        for line in res_apps.stdout.strip().splitlines():
+            if ',' not in line: continue
+            nombre_proc, mem = line.split(',')
+            nombre_proc = nombre_proc.lower().strip()
+            
+            if any(key.lower() in nombre_proc for key in keywords):
+                memoria_simulador += float(mem.strip())
+                encontrado = True
+
+        if not encontrado:
+            print("no encontrado proceso")
+            return 0.0, 0.0
+
+        return gpu_util_global, memoria_simulador
+
 
     def query_amd():
         try:
@@ -138,7 +164,7 @@ def get_gpu_usage():
             return None
         return total_util, total_mem_mib if total_mem_mib > 0 else None
 
-    nvidia = query_nvidia()
+    nvidia = query_nvidia(simulator)
     if nvidia:
         return nvidia
     else:
@@ -170,24 +196,12 @@ CATEGORY = [
     "one_robot_simple_world",
     "two_robot_simple_world",
     "three_robot_simple_world",
-    "one_robot_empty_world_rviz",
-    "two_robot_empty_world_rviz",
-    "three_robot_empty_world_rviz",
-    "one_robot_simple_world_rviz",
-    "two_robot_simple_world_rviz",
-    "three_robot_simple_world_rviz",
     "one_robot_empty_world_headless",
     "two_robot_empty_world_headless",
     "three_robot_empty_world_headless",
     "one_robot_simple_world_headless",
     "two_robot_simple_world_headless",
     "three_robot_simple_world_headless",
-    "one_robot_empty_world_rviz_headless",
-    "two_robot_empty_world_rviz_headless",
-    "three_robot_empty_world_rviz_headless",
-    "one_robot_simple_world_rviz_headless",
-    "two_robot_simple_world_rviz_headless",
-    "three_robot_simple_world_rviz_headless",
 ]
 
 parser = argparse.ArgumentParser(description="Benchmark simulator script")
@@ -398,7 +412,7 @@ def run_iteration(iter_num):
                 #print(f"CPU: {cpu:.2f}%, RAM: {ram:.2f} MB")
                 cpu_samples.append(cpu)
                 ram_samples.append(ram)
-                gpu_util, gpu_mem = get_gpu_usage()
+                gpu_util, gpu_mem = get_gpu_usage(SELECTED_SIMULATOR)
                 if gpu_util is not None:
                     gpu_util_samples.append(gpu_util)
                     if gpu_mem is not None:
@@ -504,3 +518,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+

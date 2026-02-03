@@ -212,12 +212,6 @@ ros2 launch unity_sim unity_complete.launch.py robot_count:=3 run_rviz:=true
 # 2 robots, no RViz, in simple_world
 ros2 launch unity_sim unity_complete.launch.py robot_count:=2 run_rviz:=false world:=simple_world
 
-# Run Unity in headless mode (no UI, for benchmarks or servers)
-ros2 launch unity_sim unity_complete.launch.py headless:=true
-
-# Combine multiple arguments
-ros2 launch unity_sim unity_complete.launch.py headless:=true robot_count:=3 world:=simple_world
-
 ```
 
 **Arguments**
@@ -226,7 +220,6 @@ ros2 launch unity_sim unity_complete.launch.py headless:=true robot_count:=3 wor
 - `world` (string, default: `empty_world`) — choose the world to load. Available worlds:
   - `empty_world` — empty plane.
   - `simple_world` — simple scene with some objects.
-- `headless` (bool, default: false) — runs Unity in batchmode (headless, no UI). Useful for benchmarks, automated testing, or running on servers without display.
 
 > If the launch prints an error like
 > `Archive not found: .../unity_sim/worlds/unity_simulation.tar.gz`,

@@ -15,6 +15,7 @@ install(DIRECTORY
   launch
   utils
   rviz
+  worlds
   DESTINATION share/${PROJECT_NAME}
 )
 

@@ -4,7 +4,7 @@ from launch.actions import IncludeLaunchDescription, DeclareLaunchArgument, Grou
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution, LaunchConfiguration
 from launch_ros.substitutions import FindPackageShare
-from launch.conditions import IfCondition
+from launch.conditions import IfCondition, UnlessCondition
 from launch_ros.actions import Node
 
 
@@ -36,32 +36,62 @@ def generate_launch_description():
             description="Launch RViz2 with predefined config"
         )
     )
+    
+    declared_arguments.append(
+        DeclareLaunchArgument(
+            "headless",
+            default_value="false",
+            description="Lanzar sin interfaz gráfica"
+        )
+    )
 
     num_robots = LaunchConfiguration('num_robots')
     world_file = LaunchConfiguration('world_file')
     run_rviz = LaunchConfiguration("run_rviz")
+    headless = LaunchConfiguration("headless")
 
     world_path = PathJoinSubstitution([
         FindPackageShare('isaac_sim'),
         'worlds/rbwacther_sim.world'
     ])
 
+    headless_script = PathJoinSubstitution([
+        FindPackageShare('isaac_sim'),
+        'utils/isaac_sim_launcher_headless.py'
+    ])
+    
     autorun_script = PathJoinSubstitution([
         FindPackageShare('isaac_sim'),
         'utils/isaac_sim_launcher.py'
     ])
 
+
     isaac_sim = ExecuteProcess(
+         cmd=[
+             os.path.expanduser("~/isaacsim/isaac-sim.sh"),
+             "--exec", autorun_script
+         ],
+         output="screen",
+         additional_env={
+             'NUM_ROBOTS': num_robots,
+             'WORLD_FILE': world_file
+         },
+         condition = UnlessCondition(headless)
+    )
+
+    isaac_sim_headless = ExecuteProcess(
         cmd=[
-            os.path.expanduser("~/isaacsim/isaac-sim.sh"),
-            "--exec", autorun_script
+            os.path.expanduser("~/isaacsim/python.sh"),
+            headless_script
         ],
         output="screen",
         additional_env={
             'NUM_ROBOTS': num_robots,
             'WORLD_FILE': world_file
-        }
+        },
+        condition = IfCondition(headless)
     )
+
 
     # run rviz
     rviz_config = PathJoinSubstitution([
@@ -82,6 +112,7 @@ def generate_launch_description():
 
     group = GroupAction([
         isaac_sim,
+        isaac_sim_headless,
         rviz
     ])
 

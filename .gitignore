@@ -1,0 +1,5 @@
+# Resultados generados por los benchmarks.
+/benchmarks/*
+!/benchmarks/*/
+!/benchmarks/*/.gitkeep
+/benchmarks/*/*

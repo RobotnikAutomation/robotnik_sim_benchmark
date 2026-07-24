@@ -37,6 +37,22 @@ CATEGORY_ORDER = [
 
 md_blocks = []
 
+
+def mean_metric(dataframe, column):
+    """Return a numeric mean, or None when a CSV does not provide the metric."""
+    if column not in dataframe:
+        return None
+    values = pd.to_numeric(dataframe[column], errors="coerce")
+    mean = values.mean()
+    return None if pd.isna(mean) else mean
+
+
+def format_metric(value, decimals=2, unit=""):
+    """Format optional metrics consistently in Markdown."""
+    if value is None:
+        return "n/d"
+    return f"{value:.{decimals}f}{unit}"
+
 for sim_folder in sorted(os.listdir(bench_dir)):
     sim_path = os.path.join(bench_dir, sim_folder)
     if not os.path.isdir(sim_path):
@@ -56,29 +72,35 @@ for sim_folder in sorted(os.listdir(bench_dir)):
 
         dfs = [pd.read_csv(f) for f in csv_files]
         all_data = pd.concat(dfs, ignore_index=True)
-        mean_data = all_data.mean(numeric_only=True)
-
         timestamp = all_data['timestamp'].max()
         iterations = len(all_data)
-        duration = mean_data['elapsed_seconds']
-        cpu = mean_data['cpu_mean_percent']
-        ram = mean_data['ram_mean_mb']
-        gpu = mean_data['gpu_mean_percent']
-        gpu_mem = mean_data['gpu_mem_mean_mb']
-        rtf = mean_data['real_time_factor_mean']
-        iter_total_time = mean_data['iteration_total_time']
+        duration = mean_metric(all_data, 'elapsed_seconds')
+        cpu = mean_metric(all_data, 'cpu_mean_percent')
+        ram = mean_metric(all_data, 'ram_mean_mb')
+        gpu = mean_metric(all_data, 'gpu_mean_percent')
+        gpu_memory_util = mean_metric(all_data, 'gpu_memory_util_mean_percent')
+        gpu_temperature = mean_metric(all_data, 'gpu_temperature_mean_c')
+        gpu_power = mean_metric(all_data, 'gpu_power_mean_w')
+        gpu_clock = mean_metric(all_data, 'gpu_clock_mean_mhz')
+        gpu_mem = mean_metric(all_data, 'gpu_mem_mean_mb')
+        rtf = mean_metric(all_data, 'real_time_factor_mean')
+        iter_total_time = mean_metric(all_data, 'iteration_total_time')
 
-        ram_gb = ram / 1024
-        gpu_mem_gb = gpu_mem / 1024
+        ram_gb = None if ram is None else ram / 1024
+        gpu_mem_gb = None if gpu_mem is None else gpu_mem / 1024
 
         # Guardar métricas para la tabla resumen
         summary_table[category_folder] = {
-            "Startup time (s)": f"{duration:.2f} s",
-            "RealTime Factor": f"{rtf:.2f}",
-            "RAM": f"{ram:.2f} MB",
-            "CPU": f"{cpu:.2f} %",
-            "GPU": f"{gpu:.2f} %",
-            "GPU RAM": f"{gpu_mem:.2f} MB",
+            "Startup time (s)": format_metric(duration, 2, " s"),
+            "RealTime Factor": format_metric(rtf, 2),
+            "RAM": format_metric(ram, 2, " MB"),
+            "CPU": format_metric(cpu, 2, " %"),
+            "GPU": format_metric(gpu, 2, " %"),
+            "GPU memory bandwidth activity": format_metric(gpu_memory_util, 2, " %"),
+            "GPU Temp.": format_metric(gpu_temperature, 1, " °C"),
+            "GPU Potencia": format_metric(gpu_power, 2, " W"),
+            "GPU Reloj": format_metric(gpu_clock, 1, " MHz"),
+            "GPU RAM": "n/d" if gpu_mem is None else f"{gpu_mem:.2f} MB",
         }
 
         # Bloque de detalle de la categoría dentro de un acordeón
@@ -87,25 +109,29 @@ for sim_folder in sorted(os.listdir(bench_dir)):
 
 **Timestamp:** {timestamp}  
 **Total iterations:** {iterations}  
-**Average measured duration per iteration:** {duration:.2f} s  
+**Average measured duration per iteration:** {format_metric(duration, 2, ' s')}<br>
 
 #### System Resources
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| CPU average               | {cpu:.2f} %                    |
-| RAM average               | {ram:.2f} MB (~{ram_gb:.2f} GB) |
-| GPU average               | {gpu:.1f} %                    |
-| GPU Memory average        | {gpu_mem:.2f} MB (~{gpu_mem_gb:.2f} GB) |
+| CPU average               | {format_metric(cpu, 2, ' %')}                    |
+| RAM average               | {format_metric(ram, 2, ' MB')} (~{format_metric(ram_gb, 2, ' GB')}) |
+| GPU average               | {format_metric(gpu, 1, ' %')}                    |
+| GPU memory bandwidth activity | {format_metric(gpu_memory_util, 1, ' %')} |
+| GPU temperature           | {format_metric(gpu_temperature, 1, ' °C')} |
+| GPU power                 | {format_metric(gpu_power, 2, ' W')} |
+| GPU graphics clock        | {format_metric(gpu_clock, 1, ' MHz')} |
+| GPU Memory average        | {format_metric(gpu_mem, 2, ' MB')} (~{format_metric(gpu_mem_gb, 2, ' GB')}) |
 
 #### Simulation Performance
 
 | Metric                    | Value                          |
 |---------------------------|--------------------------------|
-| Real Time Factor (RTF)     | {rtf:.4f} (~{rtf*100:.0f} % of real-time) |
-| Average iteration time      | {iter_total_time:.2f} s        |
+| Real Time Factor (RTF)     | {format_metric(rtf, 4)} (~{format_metric(None if rtf is None else rtf * 100, 0, ' %')} of real-time) |
+| Average iteration time      | {format_metric(iter_total_time, 2, ' s')}        |
 
-> Simulation runs at ~{rtf*100:.0f} % of real-time (1 s simulated → {1/rtf:.1f} s real).
+{'' if rtf is None or rtf == 0 else f'> Simulation runs at ~{rtf*100:.0f} % of real-time (1 s simulated → {1/rtf:.1f} s real).'}
 
 </details>
 """
@@ -113,7 +139,10 @@ for sim_folder in sorted(os.listdir(bench_dir)):
 
     if category_blocks:
         # Tabla resumen siempre visible, usando el orden definido
-        metrics = ["Startup time (s)", "RealTime Factor", "RAM", "CPU", "GPU", "GPU RAM"]
+        metrics = [
+            "Startup time (s)", "RealTime Factor", "RAM", "CPU", "GPU",
+            "GPU memory bandwidth activity", "GPU Temp.", "GPU Potencia", "GPU Reloj", "GPU RAM",
+        ]
         table_header = "| Category | " + " | ".join(metrics) + " |"
         table_sep = "|" + "---|"*(len(metrics)+1)
         table_rows = []

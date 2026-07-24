@@ -15,12 +15,17 @@ import threading
 import subprocess as sp
 from rosgraph_msgs.msg import Clock
 import argparse
+import fnmatch
 import json
 import random
 import yaml
 
 def get_gpu_usage(simulator):
-    """Return total GPU utilization (%) and memory (MiB) if GPU is present, else (None, None)."""
+    """Return global GPU metrics and simulator VRAM for the selected simulator.
+
+    The tuple contains GPU utilization (%), memory-controller utilization (%),
+    temperature (C), power (W), graphics clock (MHz), and simulator VRAM (MiB).
+    """
     def _try_float(value):
         try:
             return float(str(value).strip().split()[0])
@@ -41,11 +46,11 @@ def get_gpu_usage(simulator):
 
     def query_nvidia(nombre_simulador):
         SIMULADORES_GPU = {
-            "gazebo_harmonic": ("gazebo", "ign", "gz", "world",),
-            "webots": ("webots",),
-            "o3de": ("Editor", "GameLauncher", "robotnik_roscon", "AssetProcessor",),
-            "isaac_sim": ("kit", "omni", "isaac", "exe", "python3",),
-            "unity": ("Unity","PI_simulation_U",)
+            "gazebo_harmonic": ("ruby*",),
+            "webots": ("webots*",),
+            "o3de": ("editor*", "gamelauncher*", "robotnik_roscon*", "assetprocessor*",),
+            "isaac_sim": ("kit*", "omni*", "isaac*", "exe*", "python3*",),
+            "unity": ("unity*", "pi_simulation_u*",)
         }
 
         if nombre_simulador not in SIMULADORES_GPU:
@@ -53,38 +58,98 @@ def get_gpu_usage(simulator):
 
         keywords = SIMULADORES_GPU[nombre_simulador]
 
-
         try:
-            res_gpu = sp.run(
-                ['nvidia-smi', '--query-gpu=utilization.gpu', '--format=csv,noheader,nounits'],
-                capture_output=True, text=True, check=True
-            )
-            gpu_util_global = float(res_gpu.stdout.strip())
-
-            res_apps = sp.run(
-              'nvidia-smi pmon -c 1 -s m | grep -vE "^#|idx" | awk \'{print $6 "," $4 }\'',
-              shell=True, capture_output=True, text=True, check=True
-              )
-        except Exception:
+            import pynvml
+        except ImportError:
             return None
 
-        memoria_simulador = 0.0
-        encontrado = False
+        initialized = False
+        try:
+            pynvml.nvmlInit()
+            initialized = True
+            handle = pynvml.nvmlDeviceGetHandleByIndex(0)
 
-        for line in res_apps.stdout.strip().splitlines():
-            if ',' not in line: continue
-            nombre_proc, mem = line.split(',')
-            nombre_proc = nombre_proc.lower().strip()
-            
-            if any(key.lower() in nombre_proc for key in keywords):
-                memoria_simulador += float(mem.strip())
-                encontrado = True
+            def safe_call(function):
+                try:
+                    return function()
+                except (pynvml.NVMLError, AttributeError, TypeError, ValueError):
+                    return None
 
-        if not encontrado:
-            print("no encontrado proceso")
-            return 0.0, 0.0
+            utilization = safe_call(lambda: pynvml.nvmlDeviceGetUtilizationRates(handle))
+            temperature = safe_call(
+                lambda: pynvml.nvmlDeviceGetTemperature(handle, pynvml.NVML_TEMPERATURE_GPU)
+            )
+            power_mw = safe_call(lambda: pynvml.nvmlDeviceGetPowerUsage(handle))
+            graphics_clock = safe_call(
+                lambda: pynvml.nvmlDeviceGetClockInfo(handle, pynvml.NVML_CLOCK_GRAPHICS)
+            )
 
-        return gpu_util_global, memoria_simulador
+            process_by_pid = {}
+            for process_type in ("compute", "graphics"):
+                base_name = f"nvmlDeviceGet{process_type.capitalize()}RunningProcesses"
+                process_api = None
+                for version in ("_v3", "_v2", "_v1", ""):
+                    process_api = getattr(pynvml, base_name + version, None)
+                    if process_api is not None:
+                        break
+                if process_api is None:
+                    continue
+
+                try:
+                    processes = process_api(handle) or []
+                except pynvml.NVMLError:
+                    continue
+
+                for process in processes:
+                    pid = int(process.pid)
+                    process_name = ""
+                    try:
+                        proc = psutil.Process(pid)
+                        process_name = proc.name().lower()
+                    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess, OSError):
+                        pass
+
+                    if not process_name or not any(
+                        fnmatch.fnmatchcase(process_name, pattern.lower()) for pattern in keywords
+                    ):
+                        continue
+
+                    memory_bytes = getattr(process, "usedGpuMemory", None)
+                    if memory_bytes is not None and memory_bytes > 2**63:
+                        memory_bytes = None
+                    memory_mib = None if memory_bytes is None else memory_bytes / (1024 * 1024)
+
+                    # A process can be reported by both the compute and graphics APIs.
+                    # Keep one entry per PID and prefer the largest valid value.
+                    previous = process_by_pid.get(pid)
+                    if previous is None or (
+                        memory_mib is not None
+                        and (previous is None or previous < memory_mib)
+                    ):
+                        process_by_pid[pid] = memory_mib
+
+            if not process_by_pid:
+                return None
+
+            simulator_memory_mib = sum(
+                memory for memory in process_by_pid.values() if memory is not None
+            )
+            return (
+                None if utilization is None else utilization.gpu,
+                None if utilization is None else utilization.memory,
+                temperature,
+                None if power_mw is None else power_mw / 1000.0,
+                graphics_clock,
+                simulator_memory_mib,
+            )
+        except (pynvml.NVMLError, AttributeError, TypeError, ValueError, OSError):
+            return None
+        finally:
+            if initialized:
+                try:
+                    pynvml.nvmlShutdown()
+                except pynvml.NVMLError:
+                    pass
 
 
     def query_amd():
@@ -162,7 +227,7 @@ def get_gpu_usage(simulator):
 
         if total_util == 0.0 and total_mem_mib == 0.0:
             return None
-        return total_util, total_mem_mib if total_mem_mib > 0 else None
+        return None, None, None, None, None, total_mem_mib if total_mem_mib > 0 else None
 
     nvidia = query_nvidia(simulator)
     if nvidia:
@@ -171,7 +236,7 @@ def get_gpu_usage(simulator):
         amd = query_amd()
         if amd:
             return amd
-    return None, None
+    return None, None, None, None, None, None
 
 
 def load_launch_configs(yaml_path):
@@ -361,6 +426,10 @@ def run_iteration(iter_num):
             cpu_mean (float): Average normalized CPU utilization (%) across simulator and robot processes.
             ram_mean (float): Average RAM usage (MB) across simulator and robot processes.
             gpu_util_mean (Optional[float]): Average GPU utilization (%) if a GPU is available, otherwise None.
+            gpu_memory_util_mean (Optional[float]): Average global GPU memory-controller utilization (%) if available, otherwise None.
+            gpu_temperature_mean (Optional[float]): Average GPU temperature (C) if available, otherwise None.
+            gpu_power_mean (Optional[float]): Average GPU power draw (W) if available, otherwise None.
+            gpu_clock_mean (Optional[float]): Average graphics clock (MHz) if available, otherwise None.
             gpu_mem_mean (Optional[float]): Average GPU memory usage (MB) if a GPU is available, otherwise None.
             real_time_factor_mean (Optional[float]): Average real-time factor reported by the clock listener, or None when unavailable.
             iteration_total_time (float): Total wall-clock time (seconds) spent on the iteration, including post-image wait time.
@@ -382,6 +451,10 @@ def run_iteration(iter_num):
     cpu_samples = []
     ram_samples = []
     gpu_util_samples = []
+    gpu_memory_util_samples = []
+    gpu_temperature_samples = []
+    gpu_power_samples = []
+    gpu_clock_samples = []
     gpu_mem_samples = []
     real_time_factor_samples = []
     stop_monitor = threading.Event()
@@ -412,11 +485,26 @@ def run_iteration(iter_num):
                 #print(f"CPU: {cpu:.2f}%, RAM: {ram:.2f} MB")
                 cpu_samples.append(cpu)
                 ram_samples.append(ram)
-                gpu_util, gpu_mem = get_gpu_usage(SELECTED_SIMULATOR)
+                (
+                    gpu_util,
+                    gpu_memory_util,
+                    gpu_temperature,
+                    gpu_power,
+                    gpu_clock,
+                    gpu_mem,
+                ) = get_gpu_usage(SELECTED_SIMULATOR)
                 if gpu_util is not None:
                     gpu_util_samples.append(gpu_util)
-                    if gpu_mem is not None:
-                        gpu_mem_samples.append(gpu_mem)
+                if gpu_memory_util is not None:
+                    gpu_memory_util_samples.append(gpu_memory_util)
+                if gpu_temperature is not None:
+                    gpu_temperature_samples.append(gpu_temperature)
+                if gpu_power is not None:
+                    gpu_power_samples.append(gpu_power)
+                if gpu_clock is not None:
+                    gpu_clock_samples.append(gpu_clock)
+                if gpu_mem is not None:
+                    gpu_mem_samples.append(gpu_mem)
 
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 pass
@@ -472,11 +560,33 @@ def run_iteration(iter_num):
     cpu_mean = sum(cpu_samples)/len(cpu_samples) if cpu_samples else 0
     ram_mean = sum(ram_samples)/len(ram_samples) if ram_samples else 0
     gpu_util_mean = sum(gpu_util_samples)/len(gpu_util_samples) if gpu_util_samples else None
+    gpu_memory_util_mean = (
+        sum(gpu_memory_util_samples) / len(gpu_memory_util_samples)
+        if gpu_memory_util_samples else None
+    )
+    gpu_temperature_mean = (
+        sum(gpu_temperature_samples) / len(gpu_temperature_samples)
+        if gpu_temperature_samples else None
+    )
+    gpu_power_mean = sum(gpu_power_samples) / len(gpu_power_samples) if gpu_power_samples else None
+    gpu_clock_mean = sum(gpu_clock_samples) / len(gpu_clock_samples) if gpu_clock_samples else None
     gpu_mem_mean = sum(gpu_mem_samples)/len(gpu_mem_samples) if gpu_mem_samples else None
     real_time_factor_mean = sum(real_time_factor_samples)/len(real_time_factor_samples) if real_time_factor_samples else None
     iteration_total_time = time.time() - start_time
 
-    return elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time
+    return (
+        elapsed,
+        cpu_mean,
+        ram_mean,
+        gpu_util_mean,
+        gpu_memory_util_mean,
+        gpu_temperature_mean,
+        gpu_power_mean,
+        gpu_clock_mean,
+        gpu_mem_mean,
+        real_time_factor_mean,
+        iteration_total_time,
+    )
 
 def kill_processes_by_name(names):
     # Get and kill processes by name using NODES_TO_KILL, avoiding killing the parent process itself
@@ -502,7 +612,9 @@ def write_csv_row(filename, row):
         if not file_exists:
             writer.writerow([
                 'simulator', 'timestamp', 'iteration', 'elapsed_seconds',
-                'cpu_mean_percent', 'ram_mean_mb', 'gpu_mean_percent', 'gpu_mem_mean_mb', 'real_time_factor_mean', 'iteration_total_time'
+                'cpu_mean_percent', 'ram_mean_mb', 'gpu_mean_percent', 'gpu_memory_util_mean_percent',
+                'gpu_temperature_mean_c', 'gpu_power_mean_w', 'gpu_clock_mean_mhz',
+                'gpu_mem_mean_mb', 'real_time_factor_mean', 'iteration_total_time'
             ])
         writer.writerow(row)
 
@@ -510,13 +622,38 @@ def main():
     kill_processes_by_name(NODES_TO_KILL)
     
     for i in range(1, ITERATIONS + 1):
-        elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time = run_iteration(i)
+        (
+            elapsed,
+            cpu_mean,
+            ram_mean,
+            gpu_util_mean,
+            gpu_memory_util_mean,
+            gpu_temperature_mean,
+            gpu_power_mean,
+            gpu_clock_mean,
+            gpu_mem_mean,
+            real_time_factor_mean,
+            iteration_total_time,
+        ) = run_iteration(i)
         timestamp = datetime.now().isoformat()
-        write_csv_row(CSV_PATH, [SELECTED_SIMULATOR, timestamp, i, elapsed, cpu_mean, ram_mean, gpu_util_mean, gpu_mem_mean, real_time_factor_mean, iteration_total_time])
+        write_csv_row(CSV_PATH, [
+            SELECTED_SIMULATOR,
+            timestamp,
+            i,
+            elapsed,
+            cpu_mean,
+            ram_mean,
+            gpu_util_mean,
+            gpu_memory_util_mean,
+            gpu_temperature_mean,
+            gpu_power_mean,
+            gpu_clock_mean,
+            gpu_mem_mean,
+            real_time_factor_mean,
+            iteration_total_time,
+        ])
         time.sleep(5)  # Espera entre iteraciones
         print(f"[{i}] Iteration {i} completed and recorded.")
 
 if __name__ == "__main__":
     main()
-
-

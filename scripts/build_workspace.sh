@@ -14,6 +14,10 @@ Usage: scripts/build_workspace.sh {gazebo_harmonic|webots|isaac_sim|mujoco|o3de|
 Build one simulator workspace, or all ROS workspaces in dependency order.
 O3DE additionally requires O3DE 26.05, O3DE_HOME, and PROJECT_PATH; see README.md.
 Unity Player archives are validated against Unity Editor 6000.1.14f1.
+
+The individual 'o3de' target builds the O3DE project and its ROS 2 wrapper.
+The 'all' target only builds the O3DE ROS 2 wrapper; build the O3DE project
+first with the individual target.
 EOF
 }
 
@@ -51,6 +55,14 @@ build_ros_workspace() {
     cd "${ROOT_DIR}/${workspace}"
     colcon build --symlink-install "$@"
   )
+}
+
+build_o3de_ros_workspace() {
+  # o3de-extras also contains standalone sample projects and Gems. They are
+  # built by the O3DE project, not as ROS packages. Restrict colcon to the
+  # ROS 2 wrapper packages to avoid configuring unrelated O3DE projects.
+  build_ros_workspace robotnik_benchmark_o3de_ws \
+    --base-paths src/robotnik_common src/robotnik_o3de
 }
 
 build_o3de() {
@@ -93,11 +105,7 @@ PY
     cmake --build build/linux --config profile \
       --target robotnik_roscon25 Editor robotnik_roscon25.Assets robotnik_roscon25.GameLauncher
   )
-  # o3de-extras also contains standalone sample projects and Gems. They are
-  # built by the O3DE project above, not as ROS packages. Restrict colcon to
-  # the ROS 2 wrapper packages to avoid configuring unrelated O3DE projects.
-  build_ros_workspace robotnik_benchmark_o3de_ws \
-    --base-paths src/robotnik_common src/robotnik_o3de
+  build_o3de_ros_workspace
 }
 
 build_unity() {
@@ -133,9 +141,12 @@ build_one() {
 }
 
 if [[ "${simulator}" == all ]]; then
-  for backend in gazebo_harmonic webots isaac_sim mujoco o3de unity; do
-    build_one "${backend}"
-  done
+  build_one gazebo_harmonic
+  build_one webots
+  build_one isaac_sim
+  build_one mujoco
+  build_o3de_ros_workspace
+  build_one unity
 else
   build_one "${simulator}"
 fi

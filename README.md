@@ -337,7 +337,17 @@ cd ~/robotnik_sim_benchmark
 ```
 
 The script sources ROS 2 and builds each workspace independently. It does not
-share `build/`, `install/`, or `log/` directories between simulators.
+share `build/`, `install/`, or `log/` directories between simulators. The `all`
+target assumes that the O3DE project has already been generated and compiled
+with the individual O3DE target:
+
+```bash
+cd ~/robotnik_sim_benchmark
+./scripts/build_workspace.sh o3de
+```
+
+When running `all`, the O3DE project and its Gems are not rebuilt; only the
+`robotnik_common` and `robotnik_o3de` ROS 2 wrapper packages are compiled.
 
 ## 7. Running each simulator
 

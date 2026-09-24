@@ -190,7 +190,7 @@ Para ejecutar la campaña completa de un simulador:
 ```bash
 source /opt/ros/jazzy/setup.bash
 source robotnik_benchmark_<simulador>_ws/install/setup.bash
-./scripts/execute/run_simulator_campaign.sh <simulador>
+./scripts/execute/run_simulator_campaign.sh --simulator <simulador>
 ```
 
 Los resultados se guardan en `benchmarks/<simulador>/` y no se versionan.

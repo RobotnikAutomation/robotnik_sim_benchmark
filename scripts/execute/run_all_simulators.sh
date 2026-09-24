@@ -2,15 +2,16 @@
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+REPOSITORY_ROOT="$(cd -- "${SCRIPT_DIR}/../.." && pwd)"
 
-ROS_SOURCE="${ROS_SOURCE:-/opt/ros/jazzy/setup.bash}"
-WORKSPACE_ROOT="${WORKSPACE_ROOT:-${SCRIPT_DIR}/../../../..}"
-BENCHMARK_SOURCE="${BENCHMARK_SOURCE:-${WORKSPACE_ROOT}/benchmark_ws/install/setup.bash}"
+ROS_SOURCE="${ROS_SOURCE:-/opt/ros/${ROS_DISTRO:-jazzy}/setup.bash}"
+WORKSPACE_ROOT="${WORKSPACE_ROOT:-${REPOSITORY_ROOT}}"
 GAZEBO_SOURCE="${GAZEBO_SOURCE:-${WORKSPACE_ROOT}/robotnik_benchmark_gazebo_ws/install/setup.bash}"
 WEBOTS_SOURCE="${WEBOTS_SOURCE:-${WORKSPACE_ROOT}/robotnik_benchmark_webots_ws/install/setup.bash}"
-UNITY_SOURCE="${UNITY_SOURCE:-${WORKSPACE_ROOT}/unity_ws/install/setup.bash}"
-O3DE_SOURCE="${O3DE_SOURCE:-${WORKSPACE_ROOT}/o3de_ws/install/setup.bash}"
-MUJOCO_SOURCE="${MUJOCO_SOURCE:-${WORKSPACE_ROOT}/mujoco_ws/install/setup.bash}"
+ISAAC_SOURCE="${ISAAC_SOURCE:-${WORKSPACE_ROOT}/robotnik_benchmark_isaac_ws/install/setup.bash}"
+UNITY_SOURCE="${UNITY_SOURCE:-${WORKSPACE_ROOT}/robotnik_benchmark_unity_ws/install/setup.bash}"
+O3DE_SOURCE="${O3DE_SOURCE:-${WORKSPACE_ROOT}/robotnik_benchmark_o3de_ws/install/setup.bash}"
+MUJOCO_SOURCE="${MUJOCO_SOURCE:-${WORKSPACE_ROOT}/robotnik_benchmark_mujoco_ws/install/setup.bash}"
 
 SIMULATOR_COOLDOWN=60
 BENCHMARK_ARGS=()
@@ -153,14 +154,14 @@ run_simulator() {
 }
 
 run_simulator gazebo_harmonic \
-  "${BENCHMARK_SOURCE}" "${GAZEBO_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
+  "${GAZEBO_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
 run_simulator webots \
-  "${BENCHMARK_SOURCE}" "${WEBOTS_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
+  "${WEBOTS_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
 run_simulator isaac_sim \
-  "${BENCHMARK_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
+  "${ISAAC_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
 run_simulator unity \
-  "${BENCHMARK_SOURCE}" "${GAZEBO_SOURCE}" "${UNITY_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
+  "${GAZEBO_SOURCE}" "${UNITY_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
 run_simulator o3de \
-  "${BENCHMARK_SOURCE}" "${GAZEBO_SOURCE}" "${O3DE_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
+  "${GAZEBO_SOURCE}" "${O3DE_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
 run_simulator mujoco \
-  "${MUJOCO_SOURCE}" "${BENCHMARK_SOURCE}" -- "${BENCHMARK_ARGS[@]}"
+  "${MUJOCO_SOURCE}" -- "${BENCHMARK_ARGS[@]}"

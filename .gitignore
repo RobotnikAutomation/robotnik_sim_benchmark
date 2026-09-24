@@ -1,4 +1,4 @@
-# Resultados generados por los benchmarks.
+# Benchmark-generated results.
 /benchmarks/*
 !/benchmarks/*/
 !/benchmarks/*/.gitkeep

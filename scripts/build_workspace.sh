@@ -44,11 +44,13 @@ require_command() {
 require_command colcon
 
 build_ros_workspace() {
-  local workspace="$1"
-  shift
-  echo "==> Building ${workspace}"
-  cd "${ROOT_DIR}/${workspace}"
-  colcon build --symlink-install "$@"
+  (
+    local workspace="$1"
+    shift
+    echo "==> Building ${workspace}"
+    cd "${ROOT_DIR}/${workspace}"
+    colcon build --symlink-install "$@"
+  )
 }
 
 build_o3de() {
@@ -78,13 +80,15 @@ PY
   git -C "${extras_path}" lfs pull
   "${O3DE_HOME}/scripts/o3de.sh" register --all-gems-path "${extras_path}/Gems"
   "${O3DE_HOME}/scripts/o3de.sh" register --all-templates-path "${extras_path}/Templates"
-  cd "${project_path}"
-  cmake -B build/linux -G "Ninja Multi-Config" \
-    -DLY_DISABLE_TEST_MODULES=ON \
-    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-    -DLY_STRIP_DEBUG_SYMBOLS=ON
-  cmake --build build/linux --config profile \
-    --target robotnik_roscon25 Editor robotnik_roscon25.Assets robotnik_roscon25.GameLauncher
+  (
+    cd "${project_path}"
+    cmake -B build/linux -G "Ninja Multi-Config" \
+      -DLY_DISABLE_TEST_MODULES=ON \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+      -DLY_STRIP_DEBUG_SYMBOLS=ON
+    cmake --build build/linux --config profile \
+      --target robotnik_roscon25 Editor robotnik_roscon25.Assets robotnik_roscon25.GameLauncher
+  )
   build_ros_workspace robotnik_benchmark_o3de_ws
 }
 

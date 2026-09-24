@@ -491,16 +491,36 @@ Each run writes performance CSV files, metadata JSON, and optional ROS topic
 CSV files below `benchmarks/`. Generate Markdown summaries with:
 
 ```bash
-python3 scripts/report/performance_report.py \
-  --benchmarks-dir benchmarks --output performance_report.md
-python3 scripts/report/ros_report.py \
-  --benchmarks-dir benchmarks --output ros_report.md
+python3 scripts/report/performance_report.py
+python3 scripts/report/ros_report.py
+python3 scripts/report/generate_graphics.py
 ```
 
-The generated reports contain grouped summaries by simulator, category, and
-render-FPS cap. Keep raw CSV and JSON data with the report when results need
-to be audited. Benchmark outputs, generated simulator projects, and all
+The reports are written to `benchmarks/summary/` by default. The performance
+report shows a compact summary by simulator, robot count, world, and mode;
+the detailed category table is collapsible and retains the render-FPS cap. The ROS report is
+grouped by simulator and category, with collapsible simulator/category sections
+and an aggregated summary by robot count, world, and mode. Its topic tables
+include message counts, rates, payloads, and maximum gaps. Keep raw CSV and JSON
+data with the report when results need to be audited. Benchmark outputs,
+generated simulator projects, and all
 `build/`, `install/`, and `log/` directories are ignored by Git.
+
+The legacy-compatible graphics generator reads the performance CSV files
+directly from the `benchmarks/<simulator>/<category>/` layout:
+
+```bash
+python3 scripts/report/generate_graphics.py \
+  --input-dir benchmarks \
+  --output-dir benchmarks/summary/graphics
+```
+
+It recreates the absolute metric charts for every execution mode, normalized
+comparisons, presentation tables, simulator comparison, and GUI summaries
+under `benchmarks/summary/graphics/`. The output keeps the complete metric
+tree, including a `No data available` chart when a metric is not produced by a
+mode. Install `matplotlib` and `numpy` if they are not already available in
+the Python environment.
 
 Validate the repository before sharing results:
 

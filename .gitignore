@@ -9,6 +9,10 @@ __pycache__/
 *.py[cod]
 .pytest_cache/
 
+# Per-machine simulator runtime state and diagnostics.
+imgui.ini
+MUJOCO_LOG.TXT
+
 # ROS 2 workspace build artifacts.
 **/build/
 **/install/

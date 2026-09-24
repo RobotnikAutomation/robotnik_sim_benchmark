@@ -26,7 +26,7 @@ incluidos.
 Clona la rama reproducible e inicializa todos los submódulos:
 
 ```bash
-git clone -b benchmarking-compatibility \
+git clone -b review/jazzy-2026 \
   https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
 cd robotnik_sim_benchmark
 ./scripts/setup_workspace.sh
@@ -226,7 +226,8 @@ Después de probar el workspace, actualiza el commit y la tabla de
 
 ## 9. Publicar cambios
 
-La rama de integración es `benchmarking-compatibility`. Los cambios del
+La rama de integración es `review/jazzy-2026`; incorpora la base de
+`benchmarking-compatibility`. Los cambios del
 repositorio principal se publican directamente en esa rama; no se requiere
 crear un Pull Request para reproducir o ejecutar los benchmarks.
 

@@ -8,3 +8,12 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# ROS 2 workspace build artifacts.
+**/build/
+**/install/
+**/log/
+
+# Generated simulator projects and local runtime caches.
+**/.cache/
+**/.unity_cache/

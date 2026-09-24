@@ -1,0 +1,51 @@
+[submodule "gazebo_robotnik_common"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_common
+	url = https://github.com/RobotnikAutomation/robotnik_common.git
+[submodule "gazebo_robotnik_description"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_description
+	url = https://github.com/RobotnikAutomation/robotnik_description.git
+[submodule "gazebo_robotnik_interfaces"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_interfaces
+	url = https://github.com/RobotnikAutomation/robotnik_interfaces.git
+[submodule "gazebo_robotnik_moveit_configs"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_moveit_configs
+	url = https://github.com/RobotnikAutomation/robotnik_moveit_configs.git
+[submodule "gazebo_robotnik_sensors"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_sensors
+	url = https://github.com/jlgalanRB/robotnik_sensors.git
+[submodule "gazebo_robotnik_simulation"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_simulation
+	url = https://github.com/jlgalanRB/robotnik_simulation.git
+[submodule "gazebo_teleop_panel"]
+	path = robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_teleop_panel
+	url = https://github.com/RobotnikAutomation/teleop_panel.git
+[submodule "webots_robotnik_common"]
+	path = robotnik_benchmark_webots_ws/src/robotnik_common
+	url = https://github.com/RobotnikAutomation/robotnik_common.git
+[submodule "webots_robotnik_webots"]
+	path = robotnik_benchmark_webots_ws/src/robotnik_webots
+	url = https://github.com/jlgalanRB/robotnik_webots.git
+[submodule "isaac_robotnik_isaac"]
+	path = robotnik_benchmark_isaac_ws/src/robotnik_isaac
+	url = https://github.com/jlgalanRB/robotnik_isaac.git
+[submodule "mujoco_ros2_control"]
+	path = robotnik_benchmark_mujoco_ws/src/mujoco_ros2_control
+	url = https://github.com/jlgalanRB/mujoco_ros2_control.git
+[submodule "mujoco_robotnik_mujoco"]
+	path = robotnik_benchmark_mujoco_ws/src/robotnik_mujoco
+	url = https://github.com/jlgalanRB/robotnik_mujoco.git
+[submodule "o3de_extras"]
+	path = robotnik_benchmark_o3de_ws/src/o3de-extras
+	url = https://github.com/jlgalanRB/o3de-extras.git
+[submodule "o3de_robotnik_common"]
+	path = robotnik_benchmark_o3de_ws/src/robotnik_common
+	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_o3de_ws/src/robotnik_common
+[submodule "o3de_robotnik_o3de"]
+	path = robotnik_benchmark_o3de_ws/src/robotnik_o3de
+	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_o3de_ws/src/robotnik_o3de
+[submodule "unity_ros_tcp_endpoint"]
+	path = robotnik_benchmark_unity_ws/src/ROS-TCP-Endpoint
+	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_unity_ws/src/ROS-TCP-Endpoint
+[submodule "unity_robotnik_unity"]
+	path = robotnik_benchmark_unity_ws/src/robotnik_unity
+	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_unity_ws/src/robotnik_unity

@@ -1,0 +1,91 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ROS_DISTRO="${ROS_DISTRO:-jazzy}"
+ROS_SETUP="/opt/ros/${ROS_DISTRO}/setup.bash"
+
+usage() {
+  cat <<'EOF'
+Usage: scripts/build_workspace.sh {gazebo_harmonic|webots|isaac_sim|mujoco|o3de|unity|all}
+
+Build one simulator workspace, or all ROS workspaces in dependency order.
+O3DE additionally requires O3DE_HOME and PROJECT_PATH; see README.md.
+EOF
+}
+
+simulator="${1:-}"
+case "${simulator}" in
+  gazebo_harmonic|webots|isaac_sim|mujoco|o3de|unity|all) ;;
+  -h|--help|'') usage; exit 0 ;;
+  *) echo "Unknown simulator: ${simulator}" >&2; usage >&2; exit 2 ;;
+esac
+
+[[ -r "${ROS_SETUP}" ]] || {
+  echo "ROS setup not found: ${ROS_SETUP}" >&2
+  exit 1
+}
+# shellcheck source=/dev/null
+source "${ROS_SETUP}"
+
+require_command() {
+  command -v "$1" >/dev/null || {
+    echo "Required command not found: $1" >&2
+    exit 1
+  }
+}
+require_command colcon
+
+build_ros_workspace() {
+  local workspace="$1"
+  shift
+  echo "==> Building ${workspace}"
+  cd "${ROOT_DIR}/${workspace}"
+  colcon build --symlink-install "$@"
+}
+
+build_o3de() {
+  [[ -n "${O3DE_HOME:-}" ]] || { echo "O3DE_HOME is required." >&2; exit 1; }
+  local project_path="${PROJECT_PATH:-${ROOT_DIR}/robotnik_benchmark_o3de_ws/src/robotnik_o3de/project/robotnik_roscon25}"
+  local extras_path="${O3DE_EXTRAS_HOME:-${ROOT_DIR}/robotnik_benchmark_o3de_ws/src/o3de-extras}"
+  [[ -x "${O3DE_HOME}/scripts/o3de.sh" ]] || { echo "Missing ${O3DE_HOME}/scripts/o3de.sh" >&2; exit 1; }
+  git -C "${extras_path}" lfs pull
+  "${O3DE_HOME}/scripts/o3de.sh" register --all-gems-path "${extras_path}/Gems"
+  "${O3DE_HOME}/scripts/o3de.sh" register --all-templates-path "${extras_path}/Templates"
+  cd "${project_path}"
+  cmake -B build/linux -G "Ninja Multi-Config" \
+    -DLY_DISABLE_TEST_MODULES=ON \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DLY_STRIP_DEBUG_SYMBOLS=ON
+  cmake --build build/linux --config profile \
+    --target robotnik_roscon25 Editor robotnik_roscon25.Assets robotnik_roscon25.GameLauncher
+  build_ros_workspace robotnik_benchmark_o3de_ws
+}
+
+build_unity() {
+  local unity_repo="${ROOT_DIR}/robotnik_benchmark_unity_ws/src/robotnik_unity"
+  git -C "${unity_repo}" lfs pull
+  python3 "${unity_repo}/utils/verify_unity_archives.py" \
+    "${unity_repo}/worlds/unity_simulation.tar.gz" \
+    "${unity_repo}/worlds/unity_simulation_only.tar.gz"
+  build_ros_workspace robotnik_benchmark_unity_ws
+}
+
+build_one() {
+  case "$1" in
+    gazebo_harmonic) build_ros_workspace robotnik_benchmark_gazebo_ws ;;
+    webots) build_ros_workspace robotnik_benchmark_webots_ws ;;
+    isaac_sim) build_ros_workspace robotnik_benchmark_isaac_ws ;;
+    mujoco) build_ros_workspace robotnik_benchmark_mujoco_ws ;;
+    o3de) build_o3de ;;
+    unity) build_unity ;;
+  esac
+}
+
+if [[ "${simulator}" == all ]]; then
+  for backend in gazebo_harmonic webots isaac_sim mujoco o3de unity; do
+    build_one "${backend}"
+  done
+else
+  build_one "${simulator}"
+fi

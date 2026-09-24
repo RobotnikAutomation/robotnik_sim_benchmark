@@ -168,13 +168,19 @@ machine can build the Unity ROS 2 wrapper with `colcon` without rebuilding the
 Unity Editor project, but the Unity Player archives must still be verified and
 must have been built with Unity `6000.1.14f1`.
 
-Clone the repository and initialise its pinned submodules:
+The reproducible workspace is currently available on
+`review/jazzy-2026`. Use that branch until the pending Pull Request is merged
+into `main`:
 
 ```bash
-git clone https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
+git clone --branch review/jazzy-2026 \
+  https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
 cd robotnik_sim_benchmark
 ./scripts/setup_workspace.sh
 ```
+
+After the Pull Request is merged, the `--branch review/jazzy-2026` option can
+be omitted when cloning from `main`.
 
 Download Git LFS assets when required by Unity or O3DE:
 

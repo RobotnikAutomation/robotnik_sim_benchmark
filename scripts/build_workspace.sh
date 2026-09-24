@@ -29,7 +29,11 @@ esac
   exit 1
 }
 # shellcheck source=/dev/null
+# ROS 2 setup files may read optional variables before defining them. Keep
+# nounset enabled for this script, but disable it while sourcing the setup.
+set +u
 source "${ROS_SETUP}"
+set -u
 
 require_command() {
   command -v "$1" >/dev/null || {

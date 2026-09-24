@@ -39,13 +39,13 @@
 	url = https://github.com/jlgalanRB/o3de-extras.git
 [submodule "o3de_robotnik_common"]
 	path = robotnik_benchmark_o3de_ws/src/robotnik_common
-	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_o3de_ws/src/robotnik_common
+	url = https://github.com/RobotnikAutomation/robotnik_common.git
 [submodule "o3de_robotnik_o3de"]
 	path = robotnik_benchmark_o3de_ws/src/robotnik_o3de
-	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_o3de_ws/src/robotnik_o3de
+	url = https://github.com/jlgalanRB/robotnik_o3de.git
 [submodule "unity_ros_tcp_endpoint"]
 	path = robotnik_benchmark_unity_ws/src/ROS-TCP-Endpoint
-	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_unity_ws/src/ROS-TCP-Endpoint
+	url = https://github.com/Unity-Technologies/ROS-TCP-Endpoint.git
 [submodule "unity_robotnik_unity"]
 	path = robotnik_benchmark_unity_ws/src/robotnik_unity
-	url = /home/robotnik/jlgalan_dev/repos_structure/robotnik_benchmark_unity_ws/src/robotnik_unity
+	url = https://github.com/jlgalanRB/robotnik_unity.git

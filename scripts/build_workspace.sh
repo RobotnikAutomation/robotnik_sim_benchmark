@@ -78,6 +78,10 @@ PY
   }
   echo "Using O3DE ${EXPECTED_O3DE_DISPLAY_VERSION} (${EXPECTED_O3DE_ENGINE_VERSION})"
   git -C "${extras_path}" lfs pull
+  (
+    cd "${O3DE_HOME}"
+    "${O3DE_HOME}/scripts/o3de.sh" register --this-engine
+  )
   "${O3DE_HOME}/scripts/o3de.sh" register --all-gems-path "${extras_path}/Gems"
   "${O3DE_HOME}/scripts/o3de.sh" register --all-templates-path "${extras_path}/Templates"
   (
@@ -89,7 +93,11 @@ PY
     cmake --build build/linux --config profile \
       --target robotnik_roscon25 Editor robotnik_roscon25.Assets robotnik_roscon25.GameLauncher
   )
-  build_ros_workspace robotnik_benchmark_o3de_ws
+  # o3de-extras also contains standalone sample projects and Gems. They are
+  # built by the O3DE project above, not as ROS packages. Restrict colcon to
+  # the ROS 2 wrapper packages to avoid configuring unrelated O3DE projects.
+  build_ros_workspace robotnik_benchmark_o3de_ws \
+    --base-paths src/robotnik_common src/robotnik_o3de
 }
 
 build_unity() {

@@ -236,6 +236,7 @@ export O3DE_EXTRAS_HOME="$PWD/robotnik_benchmark_o3de_ws/src/o3de-extras"
 export PROJECT_PATH="$PWD/robotnik_benchmark_o3de_ws/src/robotnik_o3de/project/robotnik_roscon25"
 
 git -C "$O3DE_EXTRAS_HOME" lfs pull
+(cd "$O3DE_HOME" && "$O3DE_HOME/scripts/o3de.sh" register --this-engine)
 "$O3DE_HOME/scripts/o3de.sh" register --all-gems-path "$O3DE_EXTRAS_HOME/Gems"
 "$O3DE_HOME/scripts/o3de.sh" register --all-templates-path "$O3DE_EXTRAS_HOME/Templates"
 
@@ -255,9 +256,12 @@ cd ~/robotnik_sim_benchmark
 ./scripts/build_workspace.sh o3de
 ```
 
-The remaining ROS 2 wrapper is built by `build_workspace.sh o3de`. Run the
-engine directly or through the configured ROS 2 launch file, then run the
-benchmark from the repository root.
+The remaining ROS 2 wrapper packages are built by `build_workspace.sh o3de`.
+The script restricts `colcon` to `robotnik_common` and `robotnik_o3de` because
+the `o3de-extras` checkout also contains standalone sample projects. Those
+projects are not benchmark ROS packages and are built by the O3DE project step
+above. Run the engine directly or through the configured ROS 2 launch file,
+then run the benchmark from the repository root.
 
 ### Unity-specific preparation
 

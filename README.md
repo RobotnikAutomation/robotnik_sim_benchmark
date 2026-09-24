@@ -22,38 +22,46 @@ reduces the cost and risk of validating changes.
 
 Official simulator information:
 
-| Simulator | Official information |
-|---|---|
-| Gazebo Harmonic | [Gazebo Harmonic documentation](https://gazebosim.org/docs/harmonic/) |
-| Webots | [Cyberbotics Webots](https://cyberbotics.com/) |
-| NVIDIA Isaac Sim | [Isaac Sim documentation](https://docs.isaacsim.omniverse.nvidia.com/latest/) |
-| MuJoCo | [MuJoCo documentation](https://mujoco.readthedocs.io/) |
-| O3DE | [O3DE documentation](https://docs.o3de.org/docs/) |
-| Unity | [Unity for robotics](https://unity.com/solutions/robotics) |
+| Logo | Simulator | Official information |
+|---|---|---|
+| <img src="docs/assets/logos/gz_logo.png" alt="Gazebo logo" height="48" /> | Gazebo Harmonic | [Gazebo Harmonic documentation](https://gazebosim.org/docs/harmonic/) |
+| <img src="docs/assets/logos/webots_logo.jpeg" alt="Webots logo" height="48" /> | Webots | [Cyberbotics Webots](https://cyberbotics.com/) |
+| <img src="docs/assets/logos/nvidia_isaac_logo.png" alt="NVIDIA Isaac Sim logo" height="48" /> | NVIDIA Isaac Sim | [Isaac Sim documentation](https://docs.isaacsim.omniverse.nvidia.com/latest/) |
+| <img src="docs/assets/logos/mujoco_logo.png" alt="MuJoCo logo" height="48" /> | MuJoCo | [MuJoCo documentation](https://mujoco.readthedocs.io/) |
+| <img src="docs/assets/logos/o3de_mascot_nav_logo_sm.svg" alt="O3DE logo" height="48" /> | O3DE | [O3DE documentation](https://docs.o3de.org/docs/) |
+| <img src="docs/assets/logos/Unity_logo.svg" alt="Unity logo" height="48" /> | Unity | [Unity for robotics](https://unity.com/solutions/robotics) |
 
-The integration branch is `review/jazzy-2026`. This project is published by
-updating that branch directly; it does not require Pull Requests.
+### A quick visual overview
+
+The benchmark uses the `rbwatcher` platform and the two reference worlds below.
+These images are copied into the repository so the README remains useful even
+when GitHub is rendering the project without following submodule file links.
+
+<p align="center">
+  <img src="docs/assets/images/rb-watcher-gazebo.png" alt="RB-Watcher in Gazebo" width="31%" />
+  <img src="docs/assets/images/empty-world.png" alt="Empty benchmark world" width="31%" />
+  <img src="docs/assets/images/demo-world.png" alt="Simple benchmark world" width="31%" />
+</p>
 
 ## 2. Benchmark approach
 
-The benchmark defines one canonical workload and adapts only the launch
-mechanism required by each backend. The comparison is based on:
+The benchmark asks one simple question: how does each simulator handle the
+same robot workload?
 
-- the `rbwatcher` robot model;
-- one, two, or three robot instances;
-- an empty world and a simple world;
-- GUI and headless execution;
-- RViz disabled or enabled;
-- the same canonical sensor intent: two RGB/RGB-D cameras, a 16-channel
-  3D lidar, and an IMU;
-- ROS 2 topic and message-rate monitoring when enabled;
-- independent simulator workspaces and isolated build environments.
+Each backend receives the same scenario choices, robot count, interface
+expectations, and measurement process. Only the launch adapter and the
+backend-specific world or scene name change. This keeps the comparison easy
+to understand while allowing each simulator to use its native ROS 2 bridge.
 
-The adapters map equivalent concepts to backend-specific names. For example,
-Isaac Sim uses USD world files, O3DE uses levels, and Unity uses scene names,
-but all of them represent the same `empty` and `simple` benchmark cases.
-Backend-specific limitations or unavailable sensors must be recorded with the
-result rather than silently changing the common workload.
+The experiment varies four things:
+
+- world complexity: empty or simple;
+- number of `rbwatcher` robots: one, two, or three;
+- visualisation: GUI or headless, with RViz enabled or disabled.
+
+The result combines system performance with ROS 2 observations. Backend
+limitations are reported explicitly rather than hidden by changing the common
+workload.
 
 The source of truth is [`config/benchmark_config.yaml`](config/benchmark_config.yaml)
 and the sensor contract is [`config/canonical_sensor_profile.yaml`](config/canonical_sensor_profile.yaml).
@@ -70,46 +78,54 @@ The current configuration contains 24 categories:
 | Execution mode | GUI, headless | 2 |
 | **Total** | 2 × 3 × 2 × 2 | **24** |
 
-World names are translated per simulator as follows:
-
-| Common case | Gazebo | Webots | Isaac Sim | Unity | O3DE | MuJoCo |
-|---|---|---|---|---|---|---|
-| Empty | `empty` | `empty` | `empty_world.usd` | `empty_world` | `EmptyLevel` | `empty` |
-| Simple | `demo` | `demo` | `simple_world.usd` | `simple_world` | `BasicLevel` | `simple` |
-
 Category names are generated from these dimensions. List them at any time with:
 
 ```bash
 python3 scripts/validate/validate_config.py --category-names
 ```
 
-## 4. Configuration parameters and observations
+## 4. Robot profile and benchmark observations
 
-### Parameters
+### Robot profile
 
-| Parameter | Current values/default | Meaning |
+The benchmark currently uses a fixed `rbwatcher` profile. The profile is
+centralised in [`config/canonical_sensor_profile.yaml`](config/canonical_sensor_profile.yaml)
+so that every adapter can be checked against the same intent. It includes two
+cameras, a 16-channel 3D lidar, an IMU, a 50 Hz physics clock, and the
+canonical ROS 2 QoS settings. These sensor and physics values are part of the
+benchmark definition; they are not currently command-line parameters.
+
+### Execution parameters
+
+The following options are the practical parameters exposed by
+`run_simulator_campaign.sh`:
+
+The campaign script uses hyphenated long options. The lower-level
+`run_benchmark.py` command accepts the equivalent timing options with the
+existing underscore spelling shown by `python3 scripts/execute/run_benchmark.py --help`.
+
+| Option | Default | Meaning |
 |---|---|---|
-| `robot_model` | `rbwatcher` | Robot description used by the workload |
-| `robot_counts` | `1`, `2`, `3` | Number of simultaneous robot instances |
-| `worlds` | `empty`, `simple` | Canonical environments and backend mappings |
-| `modes.gui.headless` | `false` | Rendered execution |
-| `modes.headless.headless` | `true` | Headless execution |
-| `rviz` | `false`, `true` | Whether RViz is included |
-| Physics clock | `50 Hz` | Target simulation clock in the sensor profile |
-| Camera A | `1920×1080`, RGB, `25 Hz` | Main colour camera |
-| Camera B | `1280×720`, RGB-D, `25 Hz`, `32FC1` depth | Depth camera |
-| 3D lidar | `16` channels, `1800` samples/channel, `10 Hz` | `28,800` points per scan |
-| IMU | `100 Hz` | Inertial sensor rate |
-| QoS | best effort, volatile, keep last, depth 5 | Canonical ROS 2 transport profile |
-| Measurement time | `60 s` by default | Time measured after readiness |
-| Iterations | `1` by default | Repetitions per category; use more for statistics |
-| Warm-up | `0 s` by default | Stabilisation time before measurement |
-| Startup timeout | `120 s` by default | Maximum readiness wait |
-| Retries | `3` by default | Retries after a failed iteration |
-| Retry/iteration cooldown | `5 s` / `5 s` | Cleanup and inter-iteration pauses |
-| Category cooldown | `10 s` in campaigns | Pause between categories |
-| Render FPS cap | `60` by default | GUI render cap; not measured for headless runs |
-| ROS monitoring | disabled by default | Enables per-topic transport statistics |
+| `--simulator`, `-s` | `webots` | Backend to run: Gazebo, Webots, Isaac Sim, MuJoCo, O3DE, or Unity |
+| `--iterations`, `-n` | `1` | Number of repetitions per category |
+| `--iteration-time`, `-t` | `60` s | Measurement time after startup |
+| `--category` | all categories in campaigns | Exact category name or number `1`–`24` for `run_benchmark.py` |
+| `--gui` | disabled | Select GUI categories only |
+| `--headless` | disabled | Select headless categories only |
+| `--rviz` | disabled | Select categories that include RViz |
+| `--monitor-ros` | disabled | Collect per-topic ROS 2 transport statistics |
+| `--process-monitor` | disabled | Open the live process monitor |
+| `--render-fps` | `60` | GUI render cap from 1 to 1000 FPS |
+| `--startup-timeout` | `120` s | Readiness timeout for configured image topics |
+| `--warmup-time` | `0` s | Stabilisation time before measurement |
+| `--max-retries` | `3` | Retries after a failed iteration |
+| `--retry-cooldown` | `5` s | Pause before retrying |
+| `--iteration-cooldown` | `5` s | Pause between iterations |
+| `--cooldown` | `10` s | Pause between categories in a campaign |
+| `--sigint-timeout` | `10` s | Cleanup grace period after SIGINT |
+| `--sigterm-timeout` | `5` s | Cleanup grace period after SIGTERM |
+| `--final-cleanup-timeout` | `30` s | Bounded final cleanup before retrying |
+| `--list-only` | disabled | Print the selected categories without launching |
 
 ### Observable results
 
@@ -139,15 +155,23 @@ git lfs install
 
 Each backend has additional requirements. Install the simulator version and
 GPU drivers required by its official documentation before building its
-workspace. In particular, Isaac Sim requires a compatible NVIDIA GPU and
-installation; O3DE requires a compatible engine checkout; and Unity requires
-a host capable of running the distributed Player archives.
+workspace. The two backends that are not self-contained ROS 2 workspaces have
+the following pinned tool versions:
 
-Clone the integration branch and initialise its pinned submodules:
+| Backend | Required external installation | Why it is needed |
+|---|---|---|
+| O3DE | O3DE `26.05` (`engine_version: 2.6.0`) | Generates and builds the O3DE project and its Editor/GameLauncher targets |
+| Unity | Unity Editor `6000.1.14f1` | Required to regenerate the distributed Unity Players; the current repository does not include the Unity source project |
+
+Isaac Sim also requires its own installation and a compatible NVIDIA GPU. A
+machine can build the Unity ROS 2 wrapper with `colcon` without rebuilding the
+Unity Editor project, but the Unity Player archives must still be verified and
+must have been built with Unity `6000.1.14f1`.
+
+Clone the repository and initialise its pinned submodules:
 
 ```bash
-git clone -b review/jazzy-2026 \
-  https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
+git clone https://github.com/RobotnikAutomation/robotnik_sim_benchmark.git
 cd robotnik_sim_benchmark
 ./scripts/setup_workspace.sh
 ```
@@ -202,8 +226,17 @@ share `build/`, `install/`, or `log/` directories between simulators.
 
 ### O3DE-specific preparation
 
-O3DE generates its project locally; generated binaries are not stored in this
-repository.
+Install O3DE `26.05` before running any O3DE build command. This release is the
+one declared compatible by the checked-in project metadata
+(`engine_version: 2.6.0`). The engine is expected at `/opt/O3DE/26.05` by the
+examples below, although `O3DE_HOME` may point to another installation of the
+same version. Generated binaries are not stored in this repository.
+
+Installation resources:
+
+- [O3DE setup guide](https://docs.o3de.org/docs/welcome-guide/setup/)
+- [Linux binary packages](https://o3debinaries.org/download/linux.html)
+- [O3DE system requirements](https://docs.o3de.org/docs/welcome-guide/setup/requirements/)
 
 ```bash
 export O3DE_HOME=/opt/O3DE/26.05
@@ -223,11 +256,28 @@ cmake --build build/linux --config profile \
   --target robotnik_roscon25 Editor robotnik_roscon25.Assets robotnik_roscon25.GameLauncher
 ```
 
+Only after the O3DE project build succeeds should the ROS 2 wrapper be built:
+
+```bash
+./scripts/build_workspace.sh o3de
+```
+
 The remaining ROS 2 wrapper is built by `build_workspace.sh o3de`. Run the
 engine directly or through the configured ROS 2 launch file, then run the
 benchmark from the repository root.
 
 ### Unity-specific preparation
+
+Install Unity Editor `6000.1.14f1` before regenerating or rebuilding Unity
+Players. This exact version is enforced by
+`robotnik_unity/utils/verify_unity_archives.py` and is recorded in the metadata
+inside the distributed archives.
+
+Installation resources:
+
+- [Unity Hub installation](https://docs.unity3d.com/hub/manual/InstallHub.html)
+- [Unity download archive](https://unity.com/releases/editor/archive)
+- [Unity robotics overview](https://unity.com/solutions/robotics)
 
 The Unity integration has two distinct parts:
 
@@ -235,6 +285,8 @@ The Unity integration has two distinct parts:
   `colcon`.
 - Unity Players are distributed as compressed archives in `robotnik_unity`;
   the complete Unity source project is not currently available as a submodule.
+  Rebuilding those Players requires Unity Editor `6000.1.14f1` and is not
+  performed by `colcon`.
 
 After initialising LFS assets, verify and build the ROS packages:
 
@@ -248,6 +300,11 @@ python3 "$UNITY_REPO/utils/verify_unity_archives.py" \
 source robotnik_benchmark_unity_ws/install/setup.bash
 ```
 
+The verification step must pass before running Unity benchmarks. It checks the
+archive hashes, expected worlds, source revision, Player binary, and Unity
+version. If the Unity source project becomes available in a future revision,
+the Player build instructions must remain pinned to `6000.1.14f1`.
+
 Launch Unity with the existing ROS 2 launch integration. If the Unity source
 project is published later, it should be added as a separate submodule with
 its Unity Editor version and Player-generation procedure documented here.
@@ -258,6 +315,10 @@ The normal entry point is the common campaign script. It selects the same
 categories for every backend and applies the backend-specific launch adapter.
 
 ### Gazebo Harmonic
+
+Install [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/install/) and
+follow the [Ubuntu installation guide](https://gazebosim.org/docs/harmonic/install_ubuntu/)
+before building the ROS 2 workspace.
 
 ```bash
 source robotnik_benchmark_gazebo_ws/install/setup.bash
@@ -271,6 +332,10 @@ categories only.
 
 ### Webots
 
+Install Webots using the [official Webots download and installation
+instructions](https://cyberbotics.com/doc/guide/installation-procedure), then
+make sure the Webots executable is available to the ROS 2 integration.
+
 ```bash
 source robotnik_benchmark_webots_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator webots \
@@ -281,6 +346,10 @@ Webots uses its world files and `robotnik_webots` launch integration. Ensure
 the Webots runtime is installed and discoverable before launching.
 
 ### NVIDIA Isaac Sim
+
+Follow NVIDIA's [Isaac Sim installation guide](https://docs.isaacsim.omniverse.nvidia.com/latest/installation/index.html)
+and check the [system requirements](https://docs.isaacsim.omniverse.nvidia.com/latest/installation/requirements.html)
+before building this wrapper.
 
 ```bash
 source robotnik_benchmark_isaac_ws/install/setup.bash
@@ -295,6 +364,10 @@ script.
 
 ### MuJoCo
 
+Install MuJoCo following the [official documentation](https://mujoco.readthedocs.io/en/stable/overview.html)
+and the [Python installation instructions](https://mujoco.readthedocs.io/en/stable/python.html)
+when Python bindings are needed.
+
 ```bash
 source robotnik_benchmark_mujoco_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator mujoco \
@@ -306,6 +379,12 @@ robot-count, GUI, RViz, and render-FPS parameters through the ROS 2 launch
 file.
 
 ### O3DE
+
+Install O3DE `26.05` using the [official setup guide](https://docs.o3de.org/docs/welcome-guide/setup/)
+and check its [system requirements](https://docs.o3de.org/docs/welcome-guide/setup/requirements/)
+before preparing the generated project described above. Do not run the ROS 2
+launch command until the Editor, assets, and GameLauncher targets have been
+generated successfully.
 
 Complete the O3DE preparation above, then run:
 
@@ -320,6 +399,11 @@ the ROS wrapper can start. Its level names are mapped from the common world
 names by `benchmark_config.yaml`.
 
 ### Unity
+
+Install Unity Editor `6000.1.14f1` using the [Unity download archive](https://unity.com/releases/editor/archive)
+and follow the [official Unity robotics overview](https://unity.com/solutions/robotics).
+This repository currently uses distributed Player archives rather than a Unity
+source project; verify those archives before launching the ROS 2 benchmark.
 
 Complete the Unity archive verification above, then run:
 
@@ -385,28 +469,7 @@ The validation checks submodule commits, expected packages, the 24-category
 configuration, and repository hygiene. It does not replace a real simulator
 run; each backend should be smoke-tested on the target machine.
 
-## 9. Updating pinned dependencies
-
-Submodules are pinned for reproducibility. To update one dependency, check
-out the intended branch inside that submodule, test the complete affected
-workspace, record the new commit in the superproject, and update this README
-if the setup or compatibility requirements changed:
-
-```bash
-git -C robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_description \
-  fetch origin benchmarking-compatibility
-git -C robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_description \
-  checkout <tested-commit>
-git add robotnik_benchmark_gazebo_ws/src/robotnik/robotnik_description
-git commit -m "Update pinned robotnik_description dependency"
-git push origin review/jazzy-2026
-```
-
-Do not replace a pinned commit with a floating branch reference. The branch is
-useful for selecting future updates; the commit is what makes a checkout
-reproducible.
-
-## 10. Conclusion and contribution
+## 9. Conclusion and contribution
 
 This repository provides a common, inspectable basis for comparing robotics
 simulators through ROS 2. Its value grows when scenarios, sensor mappings,

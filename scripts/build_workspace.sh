@@ -4,13 +4,16 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ROS_DISTRO="${ROS_DISTRO:-jazzy}"
 ROS_SETUP="/opt/ros/${ROS_DISTRO}/setup.bash"
+EXPECTED_O3DE_DISPLAY_VERSION="26.05"
+EXPECTED_O3DE_ENGINE_VERSION="2.6.0"
 
 usage() {
   cat <<'EOF'
 Usage: scripts/build_workspace.sh {gazebo_harmonic|webots|isaac_sim|mujoco|o3de|unity|all}
 
 Build one simulator workspace, or all ROS workspaces in dependency order.
-O3DE additionally requires O3DE_HOME and PROJECT_PATH; see README.md.
+O3DE additionally requires O3DE 26.05, O3DE_HOME, and PROJECT_PATH; see README.md.
+Unity Player archives are validated against Unity Editor 6000.1.14f1.
 EOF
 }
 
@@ -49,6 +52,25 @@ build_o3de() {
   local project_path="${PROJECT_PATH:-${ROOT_DIR}/robotnik_benchmark_o3de_ws/src/robotnik_o3de/project/robotnik_roscon25}"
   local extras_path="${O3DE_EXTRAS_HOME:-${ROOT_DIR}/robotnik_benchmark_o3de_ws/src/o3de-extras}"
   [[ -x "${O3DE_HOME}/scripts/o3de.sh" ]] || { echo "Missing ${O3DE_HOME}/scripts/o3de.sh" >&2; exit 1; }
+  [[ -r "${O3DE_HOME}/engine.json" ]] || {
+    echo "Missing ${O3DE_HOME}/engine.json; install O3DE ${EXPECTED_O3DE_DISPLAY_VERSION}." >&2
+    exit 1
+  }
+  local o3de_versions
+  o3de_versions="$(python3 - "${O3DE_HOME}/engine.json" <<'PY'
+import json
+import sys
+
+with open(sys.argv[1], encoding="utf-8") as stream:
+    metadata = json.load(stream)
+print(metadata.get("display_version", ""), metadata.get("version", ""))
+PY
+)"
+  [[ "${o3de_versions}" == "${EXPECTED_O3DE_DISPLAY_VERSION} ${EXPECTED_O3DE_ENGINE_VERSION}" ]] || {
+    echo "O3DE ${EXPECTED_O3DE_DISPLAY_VERSION} (${EXPECTED_O3DE_ENGINE_VERSION}) is required; found: ${o3de_versions:-unknown}." >&2
+    exit 1
+  }
+  echo "Using O3DE ${EXPECTED_O3DE_DISPLAY_VERSION} (${EXPECTED_O3DE_ENGINE_VERSION})"
   git -C "${extras_path}" lfs pull
   "${O3DE_HOME}/scripts/o3de.sh" register --all-gems-path "${extras_path}/Gems"
   "${O3DE_HOME}/scripts/o3de.sh" register --all-templates-path "${extras_path}/Templates"
@@ -64,6 +86,7 @@ build_o3de() {
 
 build_unity() {
   local unity_repo="${ROOT_DIR}/robotnik_benchmark_unity_ws/src/robotnik_unity"
+  echo "Unity Player archives must be built with Unity Editor 6000.1.14f1"
   git -C "${unity_repo}" lfs pull
   python3 "${unity_repo}/utils/verify_unity_archives.py" \
     "${unity_repo}/worlds/unity_simulation.tar.gz" \

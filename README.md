@@ -210,25 +210,9 @@ operation.
 
 ## 6. Building the workspaces
 
-Build only the backend you need:
-
-```bash
-./scripts/build_workspace.sh gazebo_harmonic
-./scripts/build_workspace.sh webots
-./scripts/build_workspace.sh isaac_sim
-./scripts/build_workspace.sh mujoco
-./scripts/build_workspace.sh o3de
-./scripts/build_workspace.sh unity
-```
-
-Build all backends in dependency order with:
-
-```bash
-./scripts/build_workspace.sh all
-```
-
-The script sources ROS 2 and builds each workspace independently. It does not
-share `build/`, `install/`, or `log/` directories between simulators.
+O3DE and Unity require external installations and preparation before their
+ROS 2 workspaces can be built. Complete those two sections first. Then build
+the ROS 2 workspaces from the repository root.
 
 ### O3DE-specific preparation
 
@@ -245,9 +229,10 @@ Installation resources:
 - [O3DE system requirements](https://docs.o3de.org/docs/welcome-guide/setup/requirements/)
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 export O3DE_HOME=/opt/O3DE/26.05
-export O3DE_EXTRAS_HOME=$PWD/robotnik_benchmark_o3de_ws/src/o3de-extras
-export PROJECT_PATH=$PWD/robotnik_benchmark_o3de_ws/src/robotnik_o3de/project/robotnik_roscon25
+export O3DE_EXTRAS_HOME="$PWD/robotnik_benchmark_o3de_ws/src/o3de-extras"
+export PROJECT_PATH="$PWD/robotnik_benchmark_o3de_ws/src/robotnik_o3de/project/robotnik_roscon25"
 
 git -C "$O3DE_EXTRAS_HOME" lfs pull
 "$O3DE_HOME/scripts/o3de.sh" register --all-gems-path "$O3DE_EXTRAS_HOME/Gems"
@@ -265,6 +250,7 @@ cmake --build build/linux --config profile \
 Only after the O3DE project build succeeds should the ROS 2 wrapper be built:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 ./scripts/build_workspace.sh o3de
 ```
 
@@ -294,10 +280,18 @@ The Unity integration has two distinct parts:
   Rebuilding those Players requires Unity Editor `6000.1.14f1` and is not
   performed by `colcon`.
 
-After initialising LFS assets, verify and build the ROS packages:
+The pinned `robotnik_unity` commit includes both validated Player archives.
+They are stored directly in that repository because the fork does not accept
+new Git LFS objects. The original Unity source project is still not included,
+so regenerating the Players requires recovering that project, its assets, and
+a reproducible build procedure using Unity `6000.1.14f1`.
+
+Once compatible Player archives have been generated and made available in the
+submodule, verify them and build the ROS packages:
 
 ```bash
-UNITY_REPO=robotnik_benchmark_unity_ws/src/robotnik_unity
+cd "$(git rev-parse --show-toplevel)"
+UNITY_REPO="$PWD/robotnik_benchmark_unity_ws/src/robotnik_unity"
 git -C "$UNITY_REPO" lfs pull
 python3 "$UNITY_REPO/utils/verify_unity_archives.py" \
   "$UNITY_REPO/worlds/unity_simulation.tar.gz" \
@@ -315,6 +309,31 @@ Launch Unity with the existing ROS 2 launch integration. If the Unity source
 project is published later, it should be added as a separate submodule with
 its Unity Editor version and Player-generation procedure documented here.
 
+### Build the ROS 2 workspaces
+
+After O3DE and Unity preparation has been completed, build only the backend
+you need:
+
+```bash
+cd "$(git rev-parse --show-toplevel)"
+./scripts/build_workspace.sh o3de
+./scripts/build_workspace.sh unity
+./scripts/build_workspace.sh gazebo_harmonic
+./scripts/build_workspace.sh webots
+./scripts/build_workspace.sh isaac_sim
+./scripts/build_workspace.sh mujoco
+```
+
+Build all backends in dependency order with:
+
+```bash
+cd "$(git rev-parse --show-toplevel)"
+./scripts/build_workspace.sh all
+```
+
+The script sources ROS 2 and builds each workspace independently. It does not
+share `build/`, `install/`, or `log/` directories between simulators.
+
 ## 7. Running each simulator
 
 The normal entry point is the common campaign script. It selects the same
@@ -327,6 +346,7 @@ follow the [Ubuntu installation guide](https://gazebosim.org/docs/harmonic/insta
 before building the ROS 2 workspace.
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source robotnik_benchmark_gazebo_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator gazebo_harmonic \
   --iterations 3 --iteration-time 60 --monitor-ros
@@ -343,6 +363,7 @@ instructions](https://cyberbotics.com/doc/guide/installation-procedure), then
 make sure the Webots executable is available to the ROS 2 integration.
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source robotnik_benchmark_webots_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator webots \
   --iterations 3 --iteration-time 60 --monitor-ros
@@ -358,6 +379,7 @@ and check the [system requirements](https://docs.isaacsim.omniverse.nvidia.com/l
 before building this wrapper.
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source robotnik_benchmark_isaac_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator isaac_sim \
   --headless --iterations 3 --iteration-time 60 --monitor-ros
@@ -375,6 +397,7 @@ and the [Python installation instructions](https://mujoco.readthedocs.io/en/stab
 when Python bindings are needed.
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source robotnik_benchmark_mujoco_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator mujoco \
   --iterations 3 --iteration-time 60 --monitor-ros
@@ -395,6 +418,7 @@ generated successfully.
 Complete the O3DE preparation above, then run:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source robotnik_benchmark_o3de_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator o3de \
   --iterations 3 --iteration-time 60 --monitor-ros
@@ -414,6 +438,7 @@ source project; verify those archives before launching the ROS 2 benchmark.
 Complete the Unity archive verification above, then run:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source robotnik_benchmark_unity_ws/install/setup.bash
 ./scripts/execute/run_simulator_campaign.sh --simulator unity \
   --iterations 3 --iteration-time 60 --monitor-ros
@@ -428,12 +453,14 @@ source build of a Unity project.
 To inspect the selected categories without launching a simulator:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 ./scripts/execute/run_simulator_campaign.sh --simulator gazebo_harmonic --list-only
 ```
 
 To run one exact category directly:
 
 ```bash
+cd "$(git rev-parse --show-toplevel)"
 source /opt/ros/jazzy/setup.bash
 source robotnik_benchmark_gazebo_ws/install/setup.bash
 python3 scripts/execute/run_benchmark.py gazebo_harmonic \

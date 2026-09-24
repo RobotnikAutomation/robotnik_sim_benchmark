@@ -90,8 +90,19 @@ PY
 
 build_unity() {
   local unity_repo="${ROOT_DIR}/robotnik_benchmark_unity_ws/src/robotnik_unity"
+  local archive
   echo "Unity Player archives must be built with Unity Editor 6000.1.14f1"
   git -C "${unity_repo}" lfs pull
+  for archive in \
+    "${unity_repo}/worlds/unity_simulation.tar.gz" \
+    "${unity_repo}/worlds/unity_simulation_only.tar.gz"; do
+    [[ -f "${archive}" ]] || {
+      echo "Missing Unity Player archive: ${archive}" >&2
+      echo "The pinned robotnik_unity commit does not contain the Player archives." >&2
+      echo "Recover the Unity source project and generate the Player with Unity 6000.1.14f1 first." >&2
+      exit 1
+    }
+  done
   python3 "${unity_repo}/utils/verify_unity_archives.py" \
     "${unity_repo}/worlds/unity_simulation.tar.gz" \
     "${unity_repo}/worlds/unity_simulation_only.tar.gz"

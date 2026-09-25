@@ -155,13 +155,39 @@ git lfs install
 
 Each backend has additional requirements. Install the simulator version and
 GPU drivers required by its official documentation before building its
-workspace. The two backends that are not self-contained ROS 2 workspaces have
-the following pinned tool versions:
+workspace. The following versions are the reference versions used for the
+published benchmark results; other versions are not considered equivalent
+without a new validation run:
 
-| Backend | Required external installation | Why it is needed |
+| Backend | Version used for the benchmark | ROS 2 integration and installation |
 |---|---|---|
-| O3DE | O3DE `26.05` (`engine_version: 2.6.0`) | Generates and builds the O3DE project and its Editor/GameLauncher targets |
-| Unity | Unity Editor `6000.1.14f1` | Required to regenerate the distributed Unity Players; the current repository does not include the Unity source project |
+| Gazebo Harmonic | Gazebo Sim Harmonic, `gz-sim8` (`8.14.0` in the reference environment) | Install `gz-harmonic`, `libgz-sim8-dev`, `ros-jazzy-ros-gz-sim`, `ros-jazzy-ros-gz-bridge` and `ros-jazzy-gz-ros2-control`; the bridge and Robotnik packages are built in `robotnik_benchmark_gazebo_ws` |
+| Webots | `R2025a` | Install the Webots R2025a application and `ros-jazzy-webots-ros2`, `ros-jazzy-webots-ros2-driver` (plus the other dependencies resolved by `rosdep`); the Robotnik launch package is built in `robotnik_benchmark_webots_ws` |
+| NVIDIA Isaac Sim | `6.0.1-rc.7` | Install Isaac Sim separately from NVIDIA; its ROS 2 bridge is included in Isaac Sim. Build the Robotnik wrapper in `robotnik_benchmark_isaac_ws` |
+| MuJoCo | `3.12.0` (the Jazzy `mujoco_vendor` runtime) | Install `ros-jazzy-mujoco-vendor`; build `mujoco_ros2_control` and `robotnik_mujoco` in `robotnik_benchmark_mujoco_ws` |
+| O3DE | `26.05` (`engine_version: 2.6.0`) | Install the O3DE engine, register the ROS 2 Gem from `o3de-extras`, generate the project and build its Editor/GameLauncher targets |
+| Unity | Unity Editor `6000.1.14f1` | Install Unity Hub and this exact Editor version. The distributed Players already contain the ROS-TCP integration; build the `ROS-TCP-Endpoint` and `unity_sim` ROS 2 packages in `robotnik_benchmark_unity_ws` |
+
+The simulator version, ROS 2 distribution, bridge packages and Robotnik
+workspace form one tested combination. Do not mix packages from a different
+ROS distribution or simulator release. For GUI and headless runs alike, use
+compatible NVIDIA/OpenGL drivers; headless mode still renders the benchmark
+camera and lidar sensors.
+
+For the common ROS/Gazebo dependencies, the reference installation is:
+
+```bash
+sudo apt install \
+  gz-harmonic libgz-sim8-dev \
+  ros-jazzy-ros-gz-sim ros-jazzy-ros-gz-bridge ros-jazzy-gz-ros2-control \
+  ros-jazzy-webots-ros2 ros-jazzy-webots-ros2-driver \
+  ros-jazzy-mujoco-vendor
+```
+
+Isaac Sim, Webots, O3DE and Unity are external applications and are not
+installed by `colcon`. Their application-specific preparation is described in
+the corresponding sections below. `rosdep` still installs the ROS-side
+dependencies once the repositories have been cloned.
 
 Isaac Sim also requires its own installation and a compatible NVIDIA GPU. A
 machine can build the Unity ROS 2 wrapper with `colcon` without rebuilding the
@@ -350,11 +376,12 @@ When running `all`, the O3DE project and its Gems are not rebuilt; only
 The normal entry point is the common campaign script. It selects the same
 categories for every backend and applies the backend-specific launch adapter.
 
-### Gazebo Harmonic
+### Gazebo Harmonic (`gz-sim8`, 8.14.0)
 
 Install [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/install/) and
 follow the [Ubuntu installation guide](https://gazebosim.org/docs/harmonic/install_ubuntu/)
-before building the ROS 2 workspace.
+before building the ROS 2 workspace. The benchmark was validated with the
+`gz-sim8` family, version `8.14.0` in the reference environment.
 
 ```bash
 cd ~/robotnik_sim_benchmark
@@ -367,11 +394,13 @@ Gazebo uses `robotnik_gazebo_ignition` and the configured world/spawn launch
 files. Use `--headless` for the headless categories only or `--gui` for GUI
 categories only.
 
-### Webots
+### Webots (`R2025a`)
 
-Install Webots using the [official Webots download and installation
+Install Webots `R2025a` using the [official Webots download and installation
 instructions](https://cyberbotics.com/doc/guide/installation-procedure), then
-make sure the Webots executable is available to the ROS 2 integration.
+make sure the Webots executable is available to the ROS 2 integration. The
+benchmark scripts also look for the standard `~/.ros/webotsR2025a/webots`
+installation when `WEBOTS_HOME` is not set.
 
 ```bash
 cd ~/robotnik_sim_benchmark
@@ -383,9 +412,9 @@ source robotnik_benchmark_webots_ws/install/setup.bash
 Webots uses its world files and `robotnik_webots` launch integration. Ensure
 the Webots runtime is installed and discoverable before launching.
 
-### NVIDIA Isaac Sim
+### NVIDIA Isaac Sim (`6.0.1-rc.7`)
 
-Follow NVIDIA's [Isaac Sim installation guide](https://docs.isaacsim.omniverse.nvidia.com/latest/installation/index.html)
+Install NVIDIA Isaac Sim `6.0.1-rc.7`, then follow NVIDIA's [Isaac Sim installation guide](https://docs.isaacsim.omniverse.nvidia.com/latest/installation/index.html)
 and check the [system requirements](https://docs.isaacsim.omniverse.nvidia.com/latest/installation/requirements.html)
 before building this wrapper.
 
@@ -401,11 +430,13 @@ before the ROS 2 wrapper is launched. Isaac receives USD world files and has
 a longer shutdown grace period automatically configured by the campaign
 script.
 
-### MuJoCo
+### MuJoCo (`3.12.0`)
 
-Install MuJoCo following the [official documentation](https://mujoco.readthedocs.io/en/stable/overview.html)
-and the [Python installation instructions](https://mujoco.readthedocs.io/en/stable/python.html)
-when Python bindings are needed.
+Install the Jazzy `mujoco_vendor` runtime, which provides MuJoCo `3.12.0`,
+and build the pinned `mujoco_ros2_control` workspace from this repository.
+Consult the [official MuJoCo documentation](https://mujoco.readthedocs.io/en/stable/overview.html)
+only when a standalone MuJoCo installation or Python bindings are needed;
+they are not a replacement for the ROS 2 vendor package used by this benchmark.
 
 ```bash
 cd ~/robotnik_sim_benchmark

@@ -148,10 +148,36 @@ tools first:
 
 ```bash
 sudo apt update
-sudo apt install git git-lfs build-essential cmake ninja-build python3-pip
+sudo apt install git git-lfs build-essential cmake ninja-build python3-pip python3-venv mangohud
 sudo apt install ros-jazzy-desktop python3-colcon-common-extensions
 git lfs install
 ```
+
+The non-ROS Python dependencies used by the benchmark scripts, monitoring,
+reports and tests are listed in [`requirements.txt`](requirements.txt). Install
+them in a virtual environment that can also see the ROS 2 Python packages:
+
+```bash
+python3 -m venv --system-site-packages .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
+```
+
+Activate this environment after sourcing ROS 2 whenever running the benchmark
+or its tests. The `--system-site-packages` option is intentional: it makes
+ROS-provided modules such as `rclpy` available inside the environment while
+keeping the benchmark-only packages isolated from the system Python.
+
+The file includes `nvidia-ml-py`, whose import name is `pynvml`. It enables
+NVIDIA GPU metrics; if it is unavailable, the benchmark can still run but GPU
+utilisation, temperature, power and clock fields are left empty. `matplotlib`,
+`numpy` and `pandas` are required when generating the graphics report, while
+`pytest` is required only for repository tests. The ROS Python modules
+(`rclpy`, `rosgraph_msgs`, `sensor_msgs`, `rosidl_runtime_py`, `geometry_msgs`
+and `tf2_ros`) are provided by ROS 2 and are installed through `rosdep`.
+MangoHud is a system dependency rather than a Python dependency; it is used
+for GUI FPS capture and frame-rate limiting. MuJoCo uses its native limiter
+instead, but MangoHud is still required by the other GUI backends.
 
 Each backend has additional requirements. Install the simulator version and
 GPU drivers required by its official documentation before building its

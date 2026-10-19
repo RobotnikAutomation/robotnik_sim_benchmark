@@ -1,0 +1,52 @@
+schema_version: 1
+canonical:
+  # Nominal physics-clock rate for backends using the common 20 ms step.
+  physics_clock_hz: 50.0
+  camera_a: {width: 1920, height: 1080, rate_hz: 25.0, color_encoding: rgb8, depth_enabled: false}
+  camera_b: {width: 1280, height: 720, rate_hz: 25.0, color_encoding: rgb8, depth_enabled: true, depth_encoding: 32FC1}
+  lidar_3d: {channels: 16, horizontal_samples: 1800, points_per_scan: 28800, rate_hz: 10.0}
+  imu: {rate_hz: 100.0}
+  qos: {reliability: best_effort, durability: volatile, history: keep_last, depth: 5}
+
+# Camera A is the front RGB-only camera and camera B is the top RGB-D camera
+# in every backend. Topic values below are relative to the per-robot namespace;
+# camera A's depth topic is retained only as a naming reference and is inactive.
+simulators:
+  gazebo_harmonic:
+    robot_name_template: rbwatcher_{index}
+    camera_a: {color_topic: front_rgbd_camera/color/image_raw, depth_topic: front_rgbd_camera/depth/image_raw, camera_info_topic: front_rgbd_camera/color/camera_info}
+    camera_b: {color_topic: top_ptz_rgbd_camera/color/image_raw, depth_topic: top_ptz_rgbd_camera/depth/image_raw, camera_info_topic: top_ptz_rgbd_camera/color/camera_info}
+    lidar_3d: {topic: top_laser/points}
+    imu: {topic: imu/data}
+  webots:
+    robot_name_template: rbwatcher{index}
+    namespace_template: rbwatcher{index}/rbwatcher{index}
+    camera_a: {color_topic: front_rgbd_camera_color/image_color, depth_topic: front_rgbd_camera_depth/image, camera_info_topic: front_rgbd_camera_color/camera_info}
+    camera_b: {color_topic: top_ptz_camera/image_color, depth_topic: top_ptz_camera_depth/image, camera_info_topic: top_ptz_camera/camera_info}
+    lidar_3d: {topic: "{robot_name}_top_3d_laser_link/point_cloud"}
+    imu: {topic: "/{robot_name}/imu/data"}
+  isaac_sim:
+    robot_name_template: rbwatcher_{index}
+    camera_a: {color_topic: front_rgbd_camera/color/image_raw, depth_topic: front_rgbd_camera/depth/image_raw, camera_info_topic: front_rgbd_camera/color/camera_info}
+    camera_b: {color_topic: top_rgbd_camera/color/image_raw, depth_topic: top_rgbd_camera/depth/image_raw, camera_info_topic: top_rgbd_camera/color/camera_info}
+    lidar_3d: {topic: top_3d_laser/points}
+    imu: {topic: imu/data}
+  unity:
+    robot_name_template: robot_{index}
+    first_robot_name: robot
+    camera_a: {color_topic: front_rgbd_camera/color/image_raw, depth_topic: front_rgbd_camera/depth/image_raw, camera_info_topic: front_rgbd_camera/color/camera_info}
+    camera_b: {color_topic: top_rgbd_camera/color/image_raw, depth_topic: top_rgbd_camera/depth/image_raw, camera_info_topic: top_rgbd_camera/color/camera_info}
+    lidar_3d: {topic: points}
+    imu: {topic: imu/data}
+  o3de:
+    robot_name_template: rbwatcher_{index}
+    camera_a: {color_topic: front_rgbd_camera/color/image_raw, depth_topic: front_rgbd_camera/depth/image_raw, camera_info_topic: front_rgbd_camera/color/camera_info}
+    camera_b: {color_topic: top_rgbd_camera/color/image_raw, depth_topic: top_rgbd_camera/depth/image_raw, camera_info_topic: top_rgbd_camera/color/camera_info}
+    lidar_3d: {topic: top_laser/points}
+    imu: {topic: imu/data}
+  mujoco:
+    robot_name_template: rbwatcher_{index}
+    camera_a: {color_topic: front_rgbd_camera/color/image_raw, depth_topic: front_rgbd_camera/depth/image_raw, camera_info_topic: front_rgbd_camera/color/camera_info}
+    camera_b: {color_topic: top_rgbd_camera/color/image_raw, depth_topic: top_rgbd_camera/depth/image_raw, camera_info_topic: top_rgbd_camera/color/camera_info}
+    lidar_3d: {topic: top_laser/points}
+    imu: {topic: imu/data}

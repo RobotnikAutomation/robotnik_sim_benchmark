@@ -1,0 +1,12 @@
+# Runtime monitoring and benchmark execution
+PyYAML
+psutil
+nvidia-ml-py
+
+# Report generation
+matplotlib
+numpy
+pandas
+
+# Repository tests
+pytest
